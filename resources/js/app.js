@@ -5,6 +5,18 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { createApp } from 'vue';
+
+import { createApp } from 'vue';
+import Login from 'resources/js/Components/Login.vue';
+
+const app = createApp({});
+app.component('login', Login);
+app.mount('#app');
+
+
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

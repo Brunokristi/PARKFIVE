@@ -4,6 +4,10 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Auth\LoginController;
+
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -24,4 +28,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle'])->name('google.redirect');
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
+
 require __DIR__.'/auth.php';
+
+Route::get('/login', function () {
+    return view('auth.custom-login');
+})->name('login');
+
+Route::post('/login', [LoginController::class, 'login']);

@@ -13,13 +13,26 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('name', 100);
+            $table->string('email', 255)->unique();
+            $table->string('password', 255);
+            $table->string('google_id')->nullable()->unique();
+            $table->string('role', 100)->nullable();
+            $table->string('billing_name', 100)->nullable();
+            $table->string('street', 255)->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('zip_code', 10)->nullable();
+            $table->string('phone', 15)->nullable();
+            $table->boolean('is_company')->default(false);
+            $table->string('ICO', 20)->nullable();
+            $table->string('DIC', 20)->nullable();
+            $table->string('ICDPH', 20)->nullable();
+            $table->string('BIC_SWIFT', 10)->nullable();
+            $table->string('IBAN', 100)->nullable();
+            $table->string('account_owner', 100)->nullable();
             $table->timestamps();
         });
+        
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
