@@ -37,4 +37,4 @@ Route::get('/login', function () {
     return view('auth.custom-login');
 })->name('login');
 
-Route::post('/login', [LoginController::class, 'login']);
+Route::post('/login', [LoginController::class, 'login'])->name('login');
