@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Izby</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
         .color-picker {
-            width: 100%; /* Makes the color input full width */
+            width: 100%;
         }
     </style>
+
 </head>
 
 <body class="bg-light">
@@ -20,7 +22,7 @@
             <h1 class="h4">Izby</h1>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="createNewButton">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRoom" id="createNewButton">
                 Pridať izbu
             </button>        
         </div>
@@ -32,34 +34,48 @@
                     <th scope="col">Názov</th>
                     <th scope="col">Opis</th>
                     <th scope="col">Cena</th>
-                    <th scope="col">Akcie</th>
+                    <th scope="col" class="text-end"></th>
                 </tr>
             </thead>
             <tbody>
+                @foreach ($rooms as $room)
                 <tr>
-                    <td>Apartmán 1</td>
-                    <td>Lorem Ipsum is simply dummy text of the printing...</td>
-                    <td>50€</td>
-                    <td>
+                    <td>{{ $room->name }}</td>
+                    <td>{{ $room->description }}</td>
+                    <td>{{ $room->price_per_night }}</td>
+                    <td class="text-end"> <!-- Align buttons -->
                         <button class="btn btn-sm btn-secondary me-2">upraviť</button>
-                        <button class="btn btn-sm btn-danger">vymazať</button>
+                        <button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal" data-bs-target="#delete" id="createNewButton">
+                            Vymazať
+                        </button> 
                     </td>
                 </tr>
-                <tr>
-                    <td>Apartmán 2</td>
-                    <td>Lorem Ipsum is simply dummy text of the printing...</td>
-                    <td>50€</td>
-                    <td>
-                        <button class="btn btn-sm btn-secondary me-2">upraviť</button>
-                        <button class="btn btn-sm btn-danger">vymazať</button>
-                    </td>
-                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
 
+
+    <div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Naozaj vymazať?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Stlačením tlačidla "Vymazať" navždy vymažete izbu.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zavrieť</button>
+                    <button type="button" class="btn btn-danger delete-button" data-room-id="{{ $room->id }}">Vymazať</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="newRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -242,6 +258,26 @@
         checked = !checked;
         checkboxes.forEach((checkbox) => {
             checkbox.checked = checked;
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.delete-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const roomId = this.dataset.roomId;
+                fetch(`/rooms/${roomId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    window.location.reload();
+                })
+                .catch(error => console.error('Error:', error));
+            });
         });
     });
 

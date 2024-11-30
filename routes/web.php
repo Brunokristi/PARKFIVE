@@ -47,5 +47,7 @@ Route::get('/register', function () {
 Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms');
-
 Route::post('/rooms/store', [RoomsController::class, 'store'])->name('rooms.store');
+Route::get('/rooms/{id}/edit', [RoomsController::class, 'edit'])->name('rooms.edit');
+Route::delete('/rooms/{id}', [RoomsController::class, 'destroy'])->name('rooms.destroy');
+
