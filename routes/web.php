@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\RoomsController;
 
 
 
@@ -44,3 +45,7 @@ Route::get('/register', function () {
 })->name('register');
 
 Route::post('/register', [RegisterController::class, 'store']);
+
+Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms');
+
+Route::post('/rooms/store', [RoomsController::class, 'store'])->name('rooms.store');
