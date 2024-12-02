@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RoomsController;
 
 
@@ -49,5 +50,8 @@ Route::post('/register', [RegisterController::class, 'store']);
 Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms');
 Route::post('/rooms/store', [RoomsController::class, 'store'])->name('rooms.store');
 Route::get('/rooms/{id}/edit', [RoomsController::class, 'edit'])->name('rooms.edit');
+Route::put('/rooms/{id}', [RoomsController::class, 'update'])->name('rooms.update');
 Route::delete('/rooms/{id}', [RoomsController::class, 'destroy'])->name('rooms.destroy');
+Route::delete('/images/{id}', [ImageController::class, 'destroy'])->name('images.destroy');
+
 

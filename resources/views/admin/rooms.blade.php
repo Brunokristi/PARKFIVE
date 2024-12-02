@@ -7,6 +7,7 @@
     <title>Izby</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    @vite('resources/js/room.js')
     <style>
         .color-picker {
             width: 100%;
@@ -27,6 +28,8 @@
             </button>        
         </div>
 
+        
+
         <!-- Table Section -->
         <table class="table table-hover">
             <thead class="table-light">
@@ -38,43 +41,157 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($rooms as $room)
-                <tr>
-                    <td>{{ $room->name }}</td>
-                    <td>{{ $room->description }}</td>
-                    <td>{{ $room->price_per_night }}</td>
-                    <td class="text-end"> <!-- Align buttons -->
-                        <button class="btn btn-sm btn-secondary me-2">upraviť</button>
-                        <button type="button" class="btn btn-sm btn-danger me-2" data-bs-toggle="modal" data-bs-target="#delete" id="createNewButton">
-                            Vymazať
-                        </button> 
-                    </td>
-                </tr>
-                @endforeach
+                @if ($rooms->isEmpty())
+                    <tr>
+                        <td colspan="4" class="text-center">Žiadne izby neboli nájdené.</td>
+                    </tr>
+                @else
+                    @foreach ($rooms as $room)
+                    <tr>
+                        <td>{{ $room->name }}</td>
+                        <td>{{ $room->description }}</td>
+                        <td>{{ $room->price_per_night }}</td>
+                        <td class="text-end">
+                            <button type="button" 
+                                    class="btn btn-sm btn-secondary me-2 edit-room-button" 
+                                    data-bs-toggle="modal" 
+                                    data-room-id="{{ $room->id }}" 
+                                    data-bs-target="#editRoom">
+                                Upraviť
+                            </button>
+                            <button type="button" 
+                                    class="btn btn-sm btn-danger delete-button" 
+                                    data-bs-toggle="modal" 
+                                    data-room-id="{{ $room->id }}" 
+                                    data-bs-target="#deleteConfirmationModal">
+                                Vymazať
+                            </button>
+                        </td>
+                    </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>
 
 
-    <div class="modal fade" id="delete" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="editRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editRoomLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Naozaj vymazať?</h1>
+                    <h1 class="modal-title fs-5" id="editRoomLabel">Upraviť izbu</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Stlačením tlačidla "Vymazať" navždy vymažete izbu.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Zavrieť</button>
-                    <button type="button" class="btn btn-danger delete-button" data-room-id="{{ $room->id }}">Vymazať</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editRoomForm" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+
+                        <div class="mb-3">
+                            <label for="editRoomName" class="form-label">Názov</label>
+                            <input type="text" class="form-control" id="editRoomName" name="room_name" maxlength="100" required>
+                            <small id="editRoomNameCounter" class="form-text text-muted">0 / 100 znakov</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editRoomDescription" class="form-label">Popis</label>
+                            <textarea class="form-control" id="editRoomDescription" name="room_description" rows="3" maxlength="255" required></textarea>
+                            <small id="editRoomDescriptionCounter" class="form-text text-muted">0 / 255 znakov</small>
+                        </div>
+
+
+                        <hr>
+
+
+                        <div class="mb-3">
+                            <label class="form-label">Obrázky izby</label>
+                            <div id="editRoomImages" class="d-flex flex-wrap gap-2">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="newRoomImages" class="form-label">Pridať nové obrázky</label>
+                            <input class="form-control" type="file" id="newRoomImages" name="images[]" multiple>
+                        </div>
+
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="editRoomPrice" class="form-label">Cena</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" id="editRoomPrice" name="price" required>
+                                <span class="input-group-text">€</span>
+                        </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="editRoomCount" class="form-label">Počet izieb</label>
+                                <input type="number" class="form-control" id="editRoomCount" name="room_count" min="1" required>
+                            </div>
+
+                            <div class="col">
+                                <label for="editRoomColor" class="form-label">Farba tokenu</label>
+                                <input type="color" class="form-control form-control-color" id="editRoomColor" name="token_color" required>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="mb-3">
+                            <label for="editRoomGuests" class="form-label">Max. počet osôb</label>
+                            <input type="number" class="form-control" id="editRoomGuests" name="max_guests" min="1" required>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col mb-3">
+                                <label class="form-label">Lôžka</label>
+                                <div id="editBeds">
+                                    <!-- Beds will be populated dynamically -->
+                                </div>
+                            </div>
+
+                            <div class="col mb-3">
+                                <label class="form-label">Iné služby</label>
+                                <div id="editFeatures">
+                                    <!-- Features will be populated dynamically -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmationLabel">Potvrdiť vymazanie</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Ste si istý, že chcete vymazať túto izbu? Táto akcia je nevratná.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušiť</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Vymazať</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="newRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -128,7 +245,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label for="roomCount" class="form-label">Počet izieb</label>
-                                <input type="number" class="form-control" id="roomCount" name="room_count" required>
+                                <input type="number" class="form-control" id="roomCount" name="room_count" min="1" required>
                             </div>
                             <div class="col">
                                 <label for="tokenColor" class="form-label">Farba tokenu</label>
@@ -141,7 +258,7 @@
                         <div class="row mb-3">
                             <div class="col-6">
                                 <label for="maxGuests" class="form-label">Max. počet osôb na izbu</label>
-                                <input type="number" class="form-control" id="maxGuests" name="max_guests" required>
+                                <input type="number" class="form-control" id="maxGuests" name="max_guests" min="1" required>
                             </div>
                         </div>
 
@@ -185,102 +302,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-            <!-- Success Message -->
-            @if (session('success'))
-                <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                    <div class="toast-header">
-                        <strong class="me-auto">Success</strong>
-                        <small class="text-muted">just now</small>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                        {{ session('success') }}
-                    </div>
-                </div>
-            @endif
-
-            <!-- Error Messages -->
-            @if ($errors->any())
-                @foreach ($errors->all() as $error)
-                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header">
-                            <strong class="me-auto">Warning</strong>
-                            <small class="text-muted">just now</small>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            {{ $error }}
-                        </div>
-                    </div>
-                @endforeach
-            @endif
-        </div>
     </div>
 </body>
-
-<script>
-    const roomNameInput = document.getElementById('roomName');
-    const roomNameCounter = document.getElementById('roomNameCounter');
-
-    roomNameInput.addEventListener('input', () => {
-        roomNameCounter.textContent = `${roomNameInput.value.length} / ${roomNameInput.maxLength} znakov`;
-    });
-
-    const roomDescriptionInput = document.getElementById('roomDescription');
-    const roomDescriptionCounter = document.getElementById('roomDescriptionCounter');
-
-    roomDescriptionInput.addEventListener('input', () => {
-        roomDescriptionCounter.textContent = `${roomDescriptionInput.value.length} / ${roomDescriptionInput.maxLength} znakov`;
-    });
-
-    function randomcolor() {
-        return '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0');
-    }
-
-    const button = document.getElementById('createNewButton');
-
-    button.addEventListener('click', () => {
-        const roomColor = document.getElementById('exampleColorInput');
-        roomColor.value = randomcolor();
-
-        const checkboxes = document.querySelectorAll('.form-check-input');
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = false;
-        });
-    });
-
-    var checked = false;
-
-    document.getElementById('selectAll').addEventListener('click', function () {
-        const checkboxes = document.querySelectorAll('.feature');
-        checked = !checked;
-        checkboxes.forEach((checkbox) => {
-            checkbox.checked = checked;
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.delete-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const roomId = this.dataset.roomId;
-                fetch(`/rooms/${roomId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Accept': 'application/json',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    window.location.reload();
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-    });
-
-</script>
 
 </html>
