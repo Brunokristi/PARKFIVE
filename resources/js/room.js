@@ -85,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
         button.addEventListener('click', function () {
             const roomId = this.dataset.roomId;
 
+
             fetch(`/rooms/${roomId}/edit`, {
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
@@ -111,17 +112,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
                     const roomImages = document.getElementById('editRoomImages');
+                    roomImages.innerHTML = '';
+                    const layoutImages = document.getElementById('editRoomLayout');
+                    layoutImages.innerHTML = '';
 
                     data.images.forEach(image => {
-                        // Construct the correct image URL
                         const imageUrl = `/storage/${image.image_path}`;
 
-                        // Append the image and delete button to the container
-                        roomImages.innerHTML += `
-                        <div class="position-relative">
-                            <img src="${imageUrl}" alt="Room Image" class="img-thumbnail" style="width: 100px; height: 100px;">
-                            <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-image-button" data-image-id="${image.id}">&times;</button>
-                        </div>`;
+                        if (image.type === 'image') {
+                            roomImages.innerHTML += `
+                            <div class="position-relative">
+                                <img src="${imageUrl}" alt="Room Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-image-button" data-image-id="${image.id}">&times;</button>
+                            </div>`;
+                        }
+                        else {
+                            layoutImages.innerHTML += `
+                            <div class="position-relative">
+                                <img src="${imageUrl}" alt="Layout Image" class="img-thumbnail" style="width: 100px; height: 100px;">
+                                <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 delete-image-button" data-image-id="${image.id}">&times;</button>
+                            </div>`;
+                        }
                     });
 
                     // Add event listeners to delete buttons

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -117,6 +117,21 @@
 
                         <hr>
 
+
+                        <div class="mb-3">
+                            <label class="form-label">Rozloženie izby</label>
+                            <div id="editRoomLayout" class="d-flex flex-wrap gap-2">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="newRoomLayouts" class="form-label">Zmeniť rozloženie</label>
+                            <input class="form-control" type="file" id="newRoomLayouts" name="images[]" multiple>
+                        </div>
+
+
+                        <hr>
+
                         <div class="mb-3">
                             <label for="editRoomPrice" class="form-label">Cena</label>
                             <div class="input-group mb-3">
@@ -165,8 +180,8 @@
                         </div>
 
                         <div class="mt-3">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavrieť</button>
+                            <button type="submit" class="btn btn-primary">Uložiť</button>
                         </div>
                     </form>
                 </div>
@@ -294,8 +309,8 @@
                         <hr>
 
                         <div class="mt-3">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavrieť</button>
+                            <button type="submit" class="btn btn-primary">Uložiť</button>
                         </div>
                     </form>
 
