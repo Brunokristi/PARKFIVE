@@ -35,6 +35,17 @@
         <!-- Header Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1 class="h4">Zákazníci</h1>
+
+            <form action="{{ route('users.index') }}" method="GET" class="d-flex">
+            <input 
+                type="text" 
+                name="search" 
+                class="form-control me-2" 
+                placeholder="Hľadať zákazníkov..." 
+                value="{{ request('search') }}">
+            <button type="submit" class="btn btn-primary">Hľadať</button>
+        </form>
+
         </div>
 
     
@@ -42,10 +53,22 @@
         <table class="table table-hover">
         <thead class="table-light">
             <tr>
-                <th scope="col">Meno</th>
-                <th scope="col">Email</th>
+                <th scope="col">
+                    <a href="{{ route('users.index', ['search' => request('search'), 'sort' => 'name', 'order' => $sortField === 'name' && $sortOrder === 'asc' ? 'desc' : 'asc']) }}">
+                        Meno
+                    </a>
+                </th>
+                <th scope="col">
+                    <a href="{{ route('users.index', ['search' => request('search'), 'sort' => 'email', 'order' => $sortField === 'email' && $sortOrder === 'asc' ? 'desc' : 'asc']) }}">
+                        Email
+                    </a>
+                </th >
                 <th scope="col"></th>
-                <th scope="col">Telefón</th>
+                <th scope="col">
+                    <a href="{{ route('users.index', ['search' => request('search'), 'sort' => 'phone', 'order' => $sortField === 'phone' && $sortOrder === 'asc' ? 'desc' : 'asc']) }}">
+                        Telefón
+                    </a>
+                </th>
                 <th scope="col"></th>
                 <th scope="col" class="text-end"></th>
             </tr>
@@ -75,8 +98,8 @@
                             data-bs-toggle="modal" 
                             data-bs-target="#editCustomer" 
                             data-user-id="{{ $user->id }}">
-                        Viac informáci
-                    </button>
+                            Upraviť
+                        </button>
                     </td>
                 </tr>
                 @endforeach

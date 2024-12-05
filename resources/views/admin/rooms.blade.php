@@ -25,7 +25,17 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newRoom" id="createNewButton">
                 Pridať izbu
-            </button>        
+            </button>
+            
+            <form action="{{ route('rooms.index') }}" method="GET" class="d-flex">
+            <input 
+                type="text" 
+                name="search" 
+                class="form-control me-2" 
+                placeholder="Hľadať izby..." 
+                value="{{ request('search') }}">
+            <button type="submit" class="btn btn-primary">Hľadať</button>
+        </form>
         </div>
 
         
@@ -75,6 +85,7 @@
     </div>
 
 
+    <!-- EDIT -->
     <div class="modal fade" id="editRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editRoomLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
@@ -167,14 +178,12 @@
                             <div class="col mb-3">
                                 <label class="form-label">Lôžka</label>
                                 <div id="editBeds">
-                                    <!-- Beds will be populated dynamically -->
                                 </div>
                             </div>
 
                             <div class="col mb-3">
                                 <label class="form-label">Iné služby</label>
                                 <div id="editFeatures">
-                                    <!-- Features will be populated dynamically -->
                                 </div>
                             </div>
                         </div>
@@ -189,6 +198,8 @@
         </div>
     </div>
 
+
+     <!-- DELETE -->
     <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -207,6 +218,8 @@
         </div>
     </div>
 
+
+    <!-- CREATE -->
     <div class="modal fade" id="newRoom" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">

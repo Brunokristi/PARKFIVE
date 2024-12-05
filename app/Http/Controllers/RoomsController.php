@@ -14,12 +14,31 @@ use Illuminate\Support\Facades\Log;
 
 class RoomsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        // Initialize the query for Room
+        $query = Room::with(['beds', 'features', 'images']);
+
+        // Apply search filters
+        if ($search = $request->input('search')) {
+            $query->where('name', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%")
+                ->orWhere('price_per_night', 'like', "%{$search}%");
+        }
+
+        // Execute the query
+        $rooms = $query->get();
+
+        // Fetch additional data
         $beds = DB::table('beds')->get();
         $features = DB::table('features')->get();
-        $rooms = Room::with(['beds', 'features', 'images'])->get();
-        return view('admin.rooms', ['beds' => $beds, 'features' => $features, 'rooms' => $rooms]);
+
+        // Return the view with data
+        return view('admin.rooms', [
+            'beds' => $beds,
+            'features' => $features,
+            'rooms' => $rooms,
+        ]);
     }
 
     public function store(Request $request)
@@ -139,7 +158,13 @@ class RoomsController extends Controller
             'max_guests' => 'required|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'layouts.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'beds' => 'nullable|array',
+            'beds.*' => 'integer|exists:beds,id',
+            'features' => 'nullable|array',
+            'features.*' => 'integer|exists:features,id',
         ]);
+
+        Log::info('Request Data:', $request->all());
 
         $room->update([
             'name' => $validatedData['room_name'],
@@ -165,6 +190,9 @@ class RoomsController extends Controller
                 $room->images()->create(['image_path' => $path, 'type' => 'layout']);
             }
         }
+
+        $room->beds()->sync($request['beds'] ?? []);
+        $room->features()->sync($request['features'] ?? []);
 
         return redirect()->back()->with('success', 'Room updated successfully!');
     }

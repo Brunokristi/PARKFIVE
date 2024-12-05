@@ -1,11 +1,11 @@
 
 document.addEventListener('DOMContentLoaded', function () {
+
+    //count the number of words
     const roomNameInput = document.getElementById('roomName');
     const roomNameCounter = document.getElementById('roomNameCounter');
     const roomDescriptionInput = document.getElementById('roomDescription');
     const roomDescriptionCounter = document.getElementById('roomDescriptionCounter');
-
-
 
     roomNameInput.addEventListener('input', () => {
         roomNameCounter.textContent = `${roomNameInput.value.length} / ${roomNameInput.maxLength} znakov`;
@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     roomDescriptionInput.addEventListener('input', () => {
         roomDescriptionCounter.textContent = `${roomDescriptionInput.value.length} / ${roomDescriptionInput.maxLength} znakov`;
     });
+
 
 
 
@@ -46,12 +47,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Delete room
     let roomIdToDelete = null;
 
+
+
     // Handle delete button click
     document.querySelectorAll('.delete-button').forEach(button => {
         button.addEventListener('click', function () {
             roomIdToDelete = this.dataset.roomId; // Store the room ID for deletion
         });
     });
+
+
 
     // Handle confirmation button click
     document.getElementById('confirmDeleteButton').addEventListener('click', function () {

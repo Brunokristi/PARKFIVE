@@ -8,11 +8,26 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('role', '!=', 'admin')->get();
-        return view('admin.customers', ['users' => $users]);
+        // Get search and sorting parameters
+        $search = $request->input('search');
+        $sortField = $request->input('sort', 'name'); // Default to 'name'
+        $sortOrder = $request->input('order', 'asc'); // Default to ascending order
+
+        // Query the users table
+        $users = User::where('role', '!=', 'admin')
+            ->when($search, function ($query, $search) {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            })
+            ->orderBy($sortField, $sortOrder) // Apply sorting
+            ->get();
+
+        return view('admin.customers', compact('users', 'search', 'sortField', 'sortOrder'));
     }
+
 
     public function edit($id)
     {

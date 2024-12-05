@@ -48,7 +48,7 @@ Route::get('/register', function () {
 
 Route::post('/register', [RegisterController::class, 'store']);
 
-Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms');
+Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms.index');
 Route::post('/rooms/store', [RoomsController::class, 'store'])->name('rooms.store');
 Route::get('/rooms/{id}/edit', [RoomsController::class, 'edit'])->name('rooms.edit');
 Route::put('/rooms/{id}', [RoomsController::class, 'update'])->name('rooms.update');
