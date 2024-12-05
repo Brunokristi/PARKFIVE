@@ -28,5 +28,9 @@ return [
     'min' => [
         'string' => 'Heslo musí mať aspoň :min znakov.',
     ],
-    // Add other translations as needed
+    'required' => 'Toto pole je povinné.',
+    'numeric' => 'Pole musí obsahovať číslo.',
+    'max' => [
+        'string' => 'Pole :attribute nesmie byť dlhšie ako :max znakov.',
+    ],
 ];

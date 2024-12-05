@@ -105,7 +105,7 @@
 
                         <div class="mb-3">
                             <label class="form-label">Obrázky izby</label>
-                            <div id="editRoomImages" class="d-flex flex-wrap gap-2">
+                            <div id="editRoomImages" class="d-flex flex-wrap gap-2">                      
                             </div>
                         </div>
 
@@ -126,7 +126,7 @@
 
                         <div class="mb-3">
                             <label for="newRoomLayouts" class="form-label">Zmeniť rozloženie</label>
-                            <input class="form-control" type="file" id="newRoomLayouts" name="images[]" multiple>
+                            <input class="form-control" type="file" id="newRoomLayouts" name="layouts[]" multiple>
                         </div>
 
 
@@ -135,7 +135,7 @@
                         <div class="mb-3">
                             <label for="editRoomPrice" class="form-label">Cena</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" id="editRoomPrice" name="price" required>
+                                <input type="text" class="form-control" id="editRoomPrice" name="price" min="0" required>
                                 <span class="input-group-text">€</span>
                         </div>
                         </div>

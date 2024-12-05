@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RoomsController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -54,4 +55,8 @@ Route::put('/rooms/{id}', [RoomsController::class, 'update'])->name('rooms.updat
 Route::delete('/rooms/{id}', [RoomsController::class, 'destroy'])->name('rooms.destroy');
 Route::delete('/images/{id}', [ImageController::class, 'destroy'])->name('images.destroy');
 
+
+Route::get('/customers', [UserController::class, 'index'])->name('users.index');
+Route::get('/customers/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 

@@ -22,7 +22,22 @@ class User extends Authenticatable
         'email',
         'password',
         'google_id',
+        'role',
+        'billing_name',
+        'street',
+        'city',
+        'zip_code',
+        'phone',
+        'is_company',
+        'ICO',
+        'DIC',
+        'ICDPH',
+        'BIC_SWIFT',
+        'IBAN',
+        'account_owner',
+        'company_name', // Add this line
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.

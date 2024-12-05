@@ -94,9 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(response => response.json())
                 .then(data => {
-
-                    console.log('Room Data:', data.images);
-
                     // Populate input fields with fetched data
                     const editRoomName = document.getElementById('editRoomName');
                     const editRoomNameCounter = document.getElementById('editRoomNameCounter');
@@ -197,6 +194,58 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('editRoomForm').action = `/rooms/${roomId}`;
                 });
         });
+    });
+
+
+    const form = document.getElementById('editRoomForm');
+    let priceInput = document.getElementById('editRoomPrice');
+    form.addEventListener('submit', function (event) {
+        console.log('Form submitted');
+        let priceRaw = priceInput.value;
+        priceRaw = priceRaw.replace(',', '.');
+        priceInput.value = priceRaw;
+        const isValidNumber = /^[0-9]+(\.[0-9]{1,2})?$/.test(priceRaw);
+
+        let valid = true;
+
+        if (!isValidNumber || parseFloat(priceRaw) < 0) {
+            valid = false;
+            alert('Cena za noc je v nesprávnom fomráte.');
+        }
+
+        const existingImages = document.getElementById('editRoomImages').querySelectorAll('img').length;
+        const existingLayouts = document.getElementById('editRoomLayout').querySelectorAll('img').length;
+
+        const newImages = document.getElementById('newRoomImages').files.length;
+        const newLayouts = document.getElementById('newRoomLayouts').files.length;
+
+        if (existingImages === 0 && newImages === 0) {
+            valid = false;
+            alert('Musíte pridať aspoň jednu fotografiu izby.');
+        }
+
+        if (existingLayouts === 0 && newLayouts === 0) {
+            valid = false;
+            alert('Musíte pridať aspoň jednu fotografiu rozloženia izby.');
+        }
+
+        if (existingLayouts + newLayouts > 1) {
+            valid = false;
+            alert('Fotka rozloženia môže byť iba jedna.');
+        }
+
+        const guests = document.getElementById('editRoomGuests');
+        const guestsValue = guests.value;
+
+        if (guestsValue < 1) {
+            valid = false;
+            alert('Počet hostí musí byť aspoň 1.');
+        }
+
+
+        if (!valid) {
+            event.preventDefault();
+        }
     });
 });
 

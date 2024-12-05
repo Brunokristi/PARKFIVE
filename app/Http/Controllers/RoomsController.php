@@ -96,8 +96,6 @@ class RoomsController extends Controller
 
     public function edit($id)
     {
-        Log::info('Image URL:', ['url' => asset('storage/8TKmIdEk0BCGTC5oe4dbd0PWl0OUorVODb8cC3ZL.png')]);
-
         $room = Room::with(['beds', 'features', 'images'])->findOrFail($id);
 
         // Attach `selected` attribute to beds and features
@@ -124,43 +122,47 @@ class RoomsController extends Controller
             'features' => $features,
             'images' => $room->images,
         ];
-        Log::info('Response data:', $response);
 
         return response()->json($response);
     }
 
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
+        $room = Room::findOrFail($id);
+
+        $validatedData = $request->validate([
             'room_name' => 'required|string|max:100',
             'room_description' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'room_count' => 'required|integer',
+            'price' => 'required|numeric|min:0',
+            'room_count' => 'required|integer|min:1',
             'token_color' => 'required|string',
-            'max_guests' => 'required|integer',
-            'beds' => 'nullable|array',
-            'beds.*' => 'integer|exists:beds,id',
-            'features' => 'nullable|array',
-            'features.*' => 'integer|exists:features,id',
+            'max_guests' => 'required|integer|min:1',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'layouts.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $room = Room::findOrFail($id);
         $room->update([
-            'name' => $validated['room_name'],
-            'description' => $validated['room_description'],
-            'price_per_night' => $validated['price'],
-            'ammount' => $validated['room_count'],
-            'color' => $validated['token_color'],
-            'guests' => $validated['max_guests'],
+            'name' => $validatedData['room_name'],
+            'description' => $validatedData['room_description'],
+            'price_per_night' => $validatedData['price'],
+            'ammount' => $validatedData['room_count'],
+            'color' => $validatedData['token_color'],
+            'guests' => $validatedData['max_guests'],
         ]);
 
-        $room->beds()->sync($validated['beds'] ?? []);
-        $room->features()->sync($validated['features'] ?? []);
-
+        // Handle new room images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('rooms/images', 'public');
                 $room->images()->create(['image_path' => $path, 'type' => 'image']);
+            }
+        }
+
+        // Handle new layout images
+        if ($request->hasFile('layouts')) {
+            foreach ($request->file('layouts') as $layout) {
+                $path = $layout->store('rooms/layouts', 'public');
+                $room->images()->create(['image_path' => $path, 'type' => 'layout']);
             }
         }
 

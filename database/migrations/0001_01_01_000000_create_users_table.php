@@ -17,13 +17,14 @@ return new class extends Migration
             $table->string('email', 255)->unique();
             $table->string('password', 255);
             $table->string('google_id')->nullable()->unique();
-            $table->string('role', 100)->nullable();
+            $table->string('role', 100)->default('customer');
             $table->string('billing_name', 100)->nullable();
             $table->string('street', 255)->nullable();
             $table->string('city', 100)->nullable();
             $table->string('zip_code', 10)->nullable();
             $table->string('phone', 15)->nullable();
             $table->boolean('is_company')->default(false);
+            $table->string('company_name', 100)->nullable();
             $table->string('ICO', 20)->nullable();
             $table->string('DIC', 20)->nullable();
             $table->string('ICDPH', 20)->nullable();
