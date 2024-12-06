@@ -10,7 +10,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\UserController;
-
+use App\Http\Controllers\QRCodeController;
 
 
 
@@ -59,4 +59,7 @@ Route::delete('/images/{id}', [ImageController::class, 'destroy'])->name('images
 Route::get('/customers', [UserController::class, 'index'])->name('users.index');
 Route::get('/customers/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+
+
+Route::get('/qr-generator', [QRCodeController::class, 'index'])->name('qr.generator');
 
