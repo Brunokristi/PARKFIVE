@@ -13,7 +13,6 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\QRCodeController;
 
 
-
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'laravelVersion' => Application::VERSION,
@@ -61,5 +60,6 @@ Route::get('/customers/{id}/edit', [UserController::class, 'edit'])->name('users
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
 
-Route::get('/qr-generator', [QRCodeController::class, 'index'])->name('qr.generator');
 
+Route::get('/generate-qrcode', [QRCodeController::class, 'showForm']);
+Route::post('/generate-qrcode', [QRCodeController::class, 'generateQRCode']);
