@@ -11,6 +11,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QRCodeController;
+use App\Http\Controllers\InvoiceController;
 
 
 Route::get('/', function () {
@@ -63,3 +64,7 @@ Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update
 
 Route::get('/generate-qrcode', [QRCodeController::class, 'showForm']);
 Route::post('/generate-qrcode', [QRCodeController::class, 'generateQRCode']);
+
+
+Route::get('/payments', [InvoiceController::class, 'showForm'])->name('admin.payments');
+Route::post('/invoice', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
