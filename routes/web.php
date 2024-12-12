@@ -15,10 +15,7 @@ use App\Http\Controllers\InvoiceController;
 
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
+    return view('homepage');
 });
 
 Route::get('/dashboard', function () {
