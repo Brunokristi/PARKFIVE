@@ -18,7 +18,7 @@
                 justify-content: center;
                 align-items: center;
                 min-height: 100vh;
-                background-color: #f4f4f4;
+                background-color: #fff;
                 padding: 20px;
                 display: block;
             }
@@ -157,6 +157,92 @@
                 color: #D9D9D9;     
             }
 
+            .section-1 {
+                display: flex;
+                width: 100%;
+                margin-top: 20px;
+            }
+
+            .section-1 h1 {
+                color: #B19D9C;
+            }
+
+            .section-1 p {
+                color: #B19D9C;                
+            }
+
+            .section-1 .text {
+                margin-top: 20px;
+                width: 30%;
+                padding: 20px; 
+            }
+
+            .section-1 .layout {
+                width: 70%;
+                padding: 20px;
+            }
+
+            .section-1 .text .fist-section {
+                margin-bottom: 120px;
+                width: 700px;
+            }
+
+            ellipse {
+                cursor: pointer;
+                transition: transform 0.2s ease;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+            }
+
+            .tooltip {
+                position: fixed;
+                background-color: #fff;
+                color: #B19D9C;
+                padding: 20px;
+                border-radius: 50px;
+                font-size: 12px;
+                visibility: hidden;
+                opacity: 0;
+                transition: opacity 0.2s ease;
+                pointer-events: none;
+                z-index: 1000;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                max-width: 300px;
+            }
+
+            .tooltip h3 {
+                font-size: 16px;
+                margin-bottom: 10px;
+                font-family: 'Gotu', sans-serif;
+                color: #B89080;
+            }
+
+            .tooltip p {
+                font-size: 12px;
+                font-family: 'Inter', sans-serif;
+                color: #B19D9C;
+            }
+
+            .section-2 {
+                display: flex;
+                width: 100%;
+                margin-top: 20px;
+                background-image: linear-gradient(to bottom, #B19D9C, #B89080);
+                padding: 20px;
+                border-radius: 50px;
+            }
+
+            .section-2 .columns-1 {
+                width: 50%;
+                padding: 20px;
+            }
+
+            .section-2 .column-2 {
+                width: 50%;
+                padding: 20px;
+            }
+
+
 
 
         
@@ -232,7 +318,51 @@
     </div>
 
     <div class="section-1">
+        <div class="text">
+            <div class="fist-section"> 
+                <h1>Toto je dôvod, prečo prísť!</h1>
+                <p>Miesto, kde sa spája relax a zábava! Užite si krištáľovo čistú vodu, ktorá vás osvieži počas horúcich dní alebo horúcu saunu v chladnejšom počasí.</p>
+            </div>
+
+            <div class="second-section">
+                <h1>Súkromie na prvom mieste</h1>
+                <p>Do bazénu majú prístup len hostia aoartmánov. Žiadne bitie sa o lehátko a slnečník ani žiadne zvedavé pohľady.</p> 
+            </div>  
             
+        </div>
+        <div class="layout">
+            <svg id="eMbAp7FBxZ81" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1920 1080" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" project-id="47c0fa7cd2434aeaac1a939cd5e01861" export-id="7f992ff2418f4988abc18089148dbe16" cached="false">
+
+            <rect width="1809.333125" height="523.14584" rx="0" ry="0" transform="translate(53.688213 522.630951)" fill="#b19d9c" stroke-width="0"/>
+            <rect width="975.685261" height="398.751371" rx="0" ry="0" transform="translate(887.336078 62.397558)" fill="none" stroke="#b19d9c"/>
+            <rect width="255.609852" height="368.078188" rx="50" ry="50" transform="translate(904.376734 79.438215)" fill="#b19d9c" stroke-width="0"/>
+            <rect width="410.125504" height="268.977254" rx="50" ry="50" transform="translate(1177.047554 79.438215)" fill="#b19d9c" stroke-width="0"/>
+            <rect width="240.889129" height="271.041857" rx="50" ry="50" transform="matrix(1 0 0 0.984765 1608.674769 80.470575)" fill="#b19d9c" stroke-width="0"/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="translate(703.01345 707.569766)" fill="#fff" stroke-width="0" data-heading="Bazén" data-description="Veľký vonkajší bazén, ideálny na relaxáciu a osvieženie počas slnečných dní. Možné plávanie s protiprúdom."/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1729.119334 213.926843)" fill="#fff" stroke-width="0" data-heading="Ochladzovací bazén" data-description="Osviežujúci bazén určený na ochladenie po saunovaní, poskytujúci revitalizujúci zážitok."/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1382.110306 213.926842)" fill="#fff" stroke-width="0" data-heading="Vírivka" data-description="Vírivka s prúdmi teplej vody, ktoré vám pomôžu dokonale zrelaxovať a uvoľniť sa."/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1032.18166 213.926843)" fill="#fff" stroke-width="0" data-heading="Sauna" data-description="Tradičná sauna so suchým teplom a dreveným interiérom, ideálna na detoxikáciu a zmiernenie stresu."/>
+            </svg>
+        </div>
+        <div id="tooltip" class="tooltip">
+            <h3 id="tooltip-heading"></h3>
+            <p id="tooltip-description"></p>
+        </div>
+        
+    </div>
+
+
+    <div class="section-2">
+        <div class="columns-1">
+            <h1>Výlety akurát na víkend</h1>
+            <p>Zažite neobjavené krásy nášho regiónu ktoré vyplnia víkendový program</p>
+            <iframe src="https://snazzymaps.com/embed/668211" width="100%" height="600px" style="border:none;border-radius: 50px;"></iframe>        
+        </div>
+
+        <div class="column-2">
+            <h1>Kam vyrazíte?</h1>
+            <p>Stiahnite si našich sprievodcov okolitiou krajinou</p>
+        </div>
     </div>
 
 
@@ -241,4 +371,34 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+  const tooltip = document.getElementById('tooltip');
+  const tooltipHeading = document.getElementById('tooltip-heading');
+  const tooltipDescription = document.getElementById('tooltip-description');
+
+  document.querySelectorAll('.hover-target').forEach((ellipse) => {
+    ellipse.addEventListener('mouseenter', (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const heading = e.target.getAttribute('data-heading');
+      const description = e.target.getAttribute('data-description');
+
+      tooltipHeading.textContent = heading;
+      tooltipDescription.textContent = description;
+
+      tooltip.style.left = `${rect.x +20}px`;
+      tooltip.style.top = `${rect.y - 40}px`;
+      tooltip.style.visibility = 'visible';
+      tooltip.style.opacity = 1;
+    });
+
+    ellipse.addEventListener('mouseleave', () => {
+      tooltip.style.visibility = 'hidden';
+      tooltip.style.opacity = 0;
+    });
+  });
+});
+
+</script>
 </html>
