@@ -121,6 +121,7 @@
                 margin-top: 20px;
                 padding: 30px;
                 background-image: linear-gradient(to bottom right, #B89080, #B19D9C);
+                overflow: auto;
             }
 
             .stories .story-tokens{
@@ -193,7 +194,7 @@
             }
 
             .tooltip {
-                position: fixed;
+                position: absolute;;
                 background-color: #fff;
                 color: #B19D9C;
                 padding: 20px;
@@ -202,10 +203,9 @@
                 visibility: hidden;
                 opacity: 0;
                 transition: opacity 0.2s ease;
-                pointer-events: none;
-                z-index: 1000;
+                pointer-events: auto;                
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                max-width: 300px;
+                width: 300px;
             }
 
             .tooltip h3 {
@@ -219,6 +219,23 @@
                 font-size: 12px;
                 font-family: 'Inter', sans-serif;
                 color: #B19D9C;
+            }
+
+            .tooltip-images {
+                margin-top: 10px;
+                display: flex;
+                overflow-x: scroll;
+                width: 100%;
+                gap: 10px;
+                border-radius: 50px;
+            }
+
+            .tooltip img {
+                width: 150px;
+                height: 200px;
+                border-radius: 50px;
+                object-fit: cover;
+                margin-right: 10px;
             }
 
             .section-2 {
@@ -292,6 +309,7 @@
                 position: sticky;
                 bottom: 0;
                 align-items: center;
+                z-index: 1000;
             }
 
             .booking h1 {
@@ -311,8 +329,6 @@
                 display: flex;
                 align-items: center;
                 margin-right: 20px;
-
-                
             }
 
             .booking input {
@@ -454,19 +470,19 @@
             <rect width="255.609852" height="368.078188" rx="50" ry="50" transform="translate(904.376734 79.438215)" fill="#b19d9c" stroke-width="0"/>
             <rect width="410.125504" height="268.977254" rx="50" ry="50" transform="translate(1177.047554 79.438215)" fill="#b19d9c" stroke-width="0"/>
             <rect width="240.889129" height="271.041857" rx="50" ry="50" transform="matrix(1 0 0 0.984765 1608.674769 80.470575)" fill="#b19d9c" stroke-width="0"/>
-            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="translate(703.01345 707.569766)" fill="#fff" stroke-width="0" data-heading="Bazén" data-description="Veľký vonkajší bazén, ideálny na relaxáciu a osvieženie počas slnečných dní. Možné plávanie s protiprúdom."/>
-            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1729.119334 213.926843)" fill="#fff" stroke-width="0" data-heading="Ochladzovací bazén" data-description="Osviežujúci bazén určený na ochladenie po saunovaní, poskytujúci revitalizujúci zážitok."/>
-            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1382.110306 213.926842)" fill="#fff" stroke-width="0" data-heading="Vírivka" data-description="Vírivka s prúdmi teplej vody, ktoré vám pomôžu dokonale zrelaxovať a uvoľniť sa."/>
-            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1032.18166 213.926843)" fill="#fff" stroke-width="0" data-heading="Sauna" data-description="Tradičná sauna so suchým teplom a dreveným interiérom, ideálna na detoxikáciu a zmiernenie stresu."/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="translate(703.01345 707.569766)" fill="#fff" stroke-width="0" data-heading="Bazén" data-description="Veľký vonkajší bazén, ideálny na relaxáciu a osvieženie počas slnečných dní. Možné plávanie s protiprúdom." data-images="images/wellness_pool.jpg,images/wellness_pool.jpg,images/wellness_pool.jpg"/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1729.119334 213.926843)" fill="#fff" stroke-width="0" data-heading="Ochladzovací bazén" data-description="Osviežujúci bazén určený na ochladenie po saunovaní, poskytujúci revitalizujúci zážitok." data-images="images/wellness_pool.jpg,images/wellness_pool.jpg,images/wellness_pool.jpg"/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1382.110306 213.926842)" fill="#fff" stroke-width="0" data-heading="Vírivka" data-description="Vírivka s prúdmi teplej vody, ktoré vám pomôžu dokonale zrelaxovať a uvoľniť sa." data-images="images/wellness_pool.jpg,images/wellness_pool.jpg,images/wellness_pool.jpg"/>
+            <ellipse class="hover-target" rx="34.384853" ry="34.384853" transform="matrix(.64115 0 0 0.64115 1032.18166 213.926843)" fill="#fff" stroke-width="0" data-heading="Sauna" data-description="Tradičná sauna so suchým teplom a dreveným interiérom, ideálna na detoxikáciu a zmiernenie stresu." data-images="images/wellness_pool.jpg,images/wellness_pool.jpg,images/wellness_pool.jpg"/>
             </svg>
         </div>
         <div id="tooltip" class="tooltip">
-            <h3 id="tooltip-heading"></h3>
-            <p id="tooltip-description"></p>
+            <h3 id="tooltip-heading" class="tooltip-heading"></h3>
+            <p id="tooltip-description" class="tooltip-description"></p>
+            <div id="tooltip-images" class="tooltip-images"></div>
         </div>
         
     </div>
-
 
     <div class="section-2">
         <div class="column-1">
@@ -487,8 +503,7 @@
 
 
             <div class="minisection">
-  
-            <img src="{{ asset('images/vylety_park.jpg') }}" alt="">     
+                <img src="{{ asset('images/trips_park.png') }}" alt="">     
                 <a href="#">
                     sprievodca prírodou
                     <i class="bi bi-cloud-download"></i>
@@ -496,7 +511,7 @@
             </div>
 
             <div class="minisection">
-                <img src="{{ asset('images/vylety_hrad.jpg') }}" alt="">     
+                <img src="{{ asset('images/trips_castle.png') }}" alt="">     
                 <a href="#">
                     sprievodca históriou
                     <i class="bi bi-cloud-download"></i>
@@ -553,32 +568,62 @@
 </body>
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-  const tooltip = document.getElementById('tooltip');
-  const tooltipHeading = document.getElementById('tooltip-heading');
-  const tooltipDescription = document.getElementById('tooltip-description');
+   document.addEventListener('DOMContentLoaded', () => {
+    const tooltip = document.getElementById('tooltip');
+    let hideTimeout;
 
-  document.querySelectorAll('.hover-target').forEach((ellipse) => {
-    ellipse.addEventListener('mouseenter', (e) => {
-      const rect = e.target.getBoundingClientRect();
-      const heading = e.target.getAttribute('data-heading');
-      const description = e.target.getAttribute('data-description');
+    document.querySelectorAll('.hover-target').forEach(ellipse => {
+        ellipse.addEventListener('mouseenter', (e) => {
+            clearTimeout(hideTimeout); // Cancel any hide timeout
+            const heading = e.target.getAttribute('data-heading');
+            const description = e.target.getAttribute('data-description');
+            const imageList = e.target.getAttribute('data-images').split(',');
 
-      tooltipHeading.textContent = heading;
-      tooltipDescription.textContent = description;
+            tooltip.querySelector('.tooltip-heading').textContent = heading;
+            tooltip.querySelector('.tooltip-description').textContent = description;
 
-      tooltip.style.left = `${rect.x +20}px`;
-      tooltip.style.top = `${rect.y - 40}px`;
-      tooltip.style.visibility = 'visible';
-      tooltip.style.opacity = 1;
+            const imageContainer = tooltip.querySelector('.tooltip-images');
+            if (imageContainer) {
+                imageContainer.innerHTML = '';
+                imageList.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = heading;
+                    img.style.marginBottom = '8px';
+                    imageContainer.appendChild(img);
+                });
+            }
+
+            // Calculate position relative to the document
+            const rect = e.target.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+            // Position the tooltip to the left
+            tooltip.style.left = `${rect.x - tooltip.offsetWidth + scrollLeft}px`;
+            tooltip.style.top = `${rect.y + rect.height / 2 + scrollTop - tooltip.offsetHeight / 2}px`;
+            tooltip.style.visibility = 'visible';
+            tooltip.style.opacity = 1;
+        });
+
+        ellipse.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => {
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.opacity = 0;
+            }, 100); // Add a small delay
+        });
     });
 
-    ellipse.addEventListener('mouseleave', () => {
-      tooltip.style.visibility = 'hidden';
-      tooltip.style.opacity = 0;
+    tooltip.addEventListener('mouseenter', () => {
+        clearTimeout(hideTimeout);
+        tooltip.style.visibility = 'visible';
+        tooltip.style.opacity = 1;
     });
-  });
+
+    tooltip.addEventListener('mouseleave', () => {
+        tooltip.style.visibility = 'hidden';
+        tooltip.style.opacity = 0;
+    });
 });
-
 </script>
 </html>
