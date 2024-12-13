@@ -113,8 +113,6 @@
                 color: #fff
             }
 
-
-
             .stories{
                 width: 100%;
                 height: min-content;
@@ -232,17 +230,135 @@
                 border-radius: 50px;
             }
 
-            .section-2 .columns-1 {
+            .section-2 .column-1 {
                 width: 50%;
-                padding: 20px;
+                padding: 40px;
+            }
+
+            .section-2 p {
+                height: 100px;
             }
 
             .section-2 .column-2 {
                 width: 50%;
-                padding: 20px;
+                padding: 40px;
             }
 
+            .section-2 a {
+                text-decoration: none;
+                font-size: 16px;
+                background-color: #fff;
+                color: #B89080;
+                padding: 10px 20px;
+                border-radius: 50px;
+                margin-top: 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
+            .section-2 a:hover {
+                background-color: #c29c8d;
+                color: #fff;
+            }
+
+            .section-2 a i{
+                font-size: 20px;
+                color: #B89080;
+            }
+
+            .section-2 a:hover ~i {
+                color: #fff;
+            }
+
+            .section-2 img {
+                height: 200px;
+                width: 100%;
+                border-radius: 50px;
+                object-fit: cover;
+            }
+
+            .minisection {
+                margin-bottom: 20px;
+            }
+
+            .booking {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+                margin-top: 20px;
+                padding: 20px;
+                background-color: #fff;
+                position: sticky;
+                bottom: 0;
+                align-items: center;
+            }
+
+            .booking h1 {
+                color: #B19D9C;
+                margin: 0;
+                flex: 1;
+            }
+
+            .booking form {
+                display: flex;
+                justify-content: flex-end; 
+                padding: 0 20px;
+                flex: 0 0 auto;
+            }
+
+            .booking .custom-input {
+                display: flex;
+                align-items: center;
+                margin-right: 20px;
+
+                
+            }
+
+            .booking input {
+                text-decoration: none;
+                font-size: 16px;
+                background-color: #fff;
+                color: #B19D9C;
+                padding: 10px 20px;
+                border-radius: 50px;
+                margin: 0 10px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border: 1px solid #B19D9C;
+            }
+
+            .booking input:focus {
+                border: 1px solid #B89080;
+                outline: none;
+                color: #B19D9C;
+            }
+
+            .booking label {
+                color: #B19D9C;
+                font-size: 16px;
+                font-family: 'Inter', sans-serif;
+                margin: 0;
+            }
+
+            .booking a i{
+                font-size: 20px;
+                color: #B19D9C;
+            }
+
+            .booking button{
+                border: none;
+                padding: 10px 20px;
+                border-radius: 50px;
+                background-color: #B19D9C;
+                color: #fff;
+            }
+
+            .booking button:hover {
+                background-color: #B89080;
+                color: #fff;
+            }
 
 
         
@@ -353,17 +469,81 @@
 
 
     <div class="section-2">
-        <div class="columns-1">
+        <div class="column-1">
             <h1>Výlety akurát na víkend</h1>
-            <p>Zažite neobjavené krásy nášho regiónu ktoré vyplnia víkendový program</p>
-            <iframe src="https://snazzymaps.com/embed/668211" width="100%" height="600px" style="border:none;border-radius: 50px;"></iframe>        
+            <p>Objavte malebné zákutia, historické pamiatky a prírodné scenérie, ktoré dokonale vyplnia váš víkendový program a zanechajú vo vás trvalé spomienky.</p>
+            <iframe src="https://snazzymaps.com/embed/668211" width="100%" height="480px" style="border:none;border-radius: 50px;"></iframe>
+            <a href="#">
+                aktivity a relax
+                <i class="bi bi-map"></i>
+            </a>      
         </div>
 
         <div class="column-2">
-            <h1>Kam vyrazíte?</h1>
-            <p>Stiahnite si našich sprievodcov okolitiou krajinou</p>
+            <div class="minisection">
+                <h1>Kam vyrazíte?</h1>
+                <p>Stiahnite si našich sprievodcov a objavte krásy okolitej krajiny plnej jedinečných zážitkov a inšpirácií.</p>
+            </div>
+
+
+            <div class="minisection">
+  
+            <img src="{{ asset('images/vylety_park.jpg') }}" alt="">     
+                <a href="#">
+                    sprievodca prírodou
+                    <i class="bi bi-cloud-download"></i>
+                </a> 
+            </div>
+
+            <div class="minisection">
+                <img src="{{ asset('images/vylety_hrad.jpg') }}" alt="">     
+                <a href="#">
+                    sprievodca históriou
+                    <i class="bi bi-cloud-download"></i>
+                </a> 
+            </div>
+            
         </div>
     </div>
+
+    <div class="booking">
+        <h1>Rezervovať online</h1>
+        <form action="/submit-reservation" method="POST">
+                <!-- Príchod -->
+                <div class="col-auto custom-input">
+                <label for="arrival" class="form-label">Príchod</label>
+                <div class="input-group">
+                    <input type="date" class="form-control" id="arrival" name="arrival" required>
+                </div>
+                </div>
+
+                <!-- Odchod -->
+                <div class="col-auto custom-input">
+                <label for="departure" class="form-label">Odchod</label>
+                <div class="input-group">
+                    <input type="date" class="form-control" id="departure" name="departure" placeholder="oochod" required>
+                </div>
+                </div>
+
+                <!-- Počet osôb -->
+                <div class="col-2 custom-input">
+                <label for="guests" class="form-label">Hostia</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="guests" name="guests" min="1" required>
+                </div>
+                </div>
+
+                <!-- Rezervovať -->
+                <div class="col-auto">
+                <button type="submit" class="btn btn-primary w-100">
+                    Rezervovať
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+    
+
 
 
     <!-- Bootstrap JS -->
