@@ -343,36 +343,42 @@
         <h1>Miesto plné zážitkov</h1>
         <div class="story-tokens">
             <div class="story">
-                <img src="{{ asset('images/story_grass.jpg') }}" alt="">
-                <p>príroda</p>
+                <a href="{{ route('stories.show', ['id' => 1]) }}">
+                    <img src="{{ asset('images/story_grass.jpg') }}" alt="">
+                    <p>príroda</p>
+                </a>
             </div>
 
             <div class="story">
-                <img src="{{ asset('images/story_bikes.jpg') }}" alt="">
-                <p>bicykle</p>
+                <a href="{{ route('stories.show', ['id' => 2]) }}">
+                    <img src="{{ asset('images/story_bikes.jpg') }}" alt="">
+                    <p>bicykle</p>
+                </a>
             </div>
 
             <div class="story">
-                <img src="{{ asset('images/story_water.jpg') }}" alt="">
-                <p>pri vode</p>
+                <a href="{{ route('stories.show', ['id' => 3]) }}">
+                    <img src="{{ asset('images/story_water.jpg') }}" alt="">
+                    <p>pri vode</p>
+                </a>
             </div>
 
             <div class="story">
-                <img src="{{ asset('images/story_history.jpg') }}" alt="">
-                <p>história</p>
+                <a href="{{ route('stories.show', ['id' => 4]) }}">
+                    <img src="{{ asset('images/story_history.jpg') }}" alt="">
+                    <p>história</p>
+                </a>
             </div>
 
             <div class="story">
-                <img src="{{ asset('images/story_parkfive.jpg') }}" alt="">
-                <p>parkFIVE</p>
-            </div>
-
-            <div class="story">
-                <img src="{{ asset('images/story_plus.png') }}" alt="">
-                <p>pridať</p>
+                <a href="{{ route('stories.show', ['id' => 5]) }}">
+                    <img src="{{ asset('images/story_parkfive.jpg') }}" alt="">
+                    <p>parkFIVE</p>
+                </a>
             </div>
         </div>
     </div>
+
 
     <div class="section-1">
         <div class="text">

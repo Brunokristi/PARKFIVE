@@ -12,10 +12,10 @@ use App\Http\Controllers\RoomsController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\StoryController;
 
 
 Route::get('/', function () {return view('homepage');});
-Route::get('/stories', function () {return view('stories');});
 Route::get('/faq', function () {return view('faq');});
 Route::get('/wellness', function () {return view('wellness');});
 Route::get('/apartments', [RoomsController::class, 'apartments'])->name('rooms.apartments');
@@ -33,6 +33,9 @@ Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle'
 Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback'])->name('google.callback');
 
 require __DIR__.'/auth.php';
+
+Route::get('/stories/{id}', [StoryController::class, 'show'])->name('stories.show');
+
 
 Route::get('/login', function () {
     return view('auth.custom-login');
