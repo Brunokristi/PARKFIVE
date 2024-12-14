@@ -14,13 +14,14 @@ use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\InvoiceController;
 
 
-Route::get('/', function () {
-    return view('homepage');
-});
+Route::get('/', function () {return view('homepage');});
+Route::get('/stories', function () {return view('stories');});
+Route::get('/faq', function () {return view('faq');});
+Route::get('/wellness', function () {return view('wellness');});
+Route::get('/apartments', [RoomsController::class, 'apartments'])->name('rooms.apartments');
+Route::get('/navbar', function () {return view('components.navbar');});
+Route::get('/footer', function () {return view('components.footer');});
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

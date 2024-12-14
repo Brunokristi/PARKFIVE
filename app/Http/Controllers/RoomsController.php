@@ -41,6 +41,22 @@ class RoomsController extends Controller
         ]);
     }
 
+    public function apartments()
+    {
+        $query = Room::with(['beds', 'features', 'images']);
+
+        $rooms = $query->get();
+
+        $beds = DB::table('beds')->get();
+        $features = DB::table('features')->get();
+
+        return view('apartments', [
+            'beds' => $beds,
+            'features' => $features,
+            'rooms' => $rooms,
+        ]);
+    }
+
     public function store(Request $request)
     {
         Log::info('Request Data:', $request->all());
