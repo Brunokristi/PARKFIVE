@@ -8,6 +8,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Gotu&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Gotu&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <style>
+        h1 {
+            font-family: 'Gotu sans serif';
+            color: #fff;
+        }
+
+        .footer_container a {
+            color: inherit;
+            text-decoration: none;
+        }
+
         .footer-bottom {
             display: flex;
             text-align: center;
@@ -72,12 +82,7 @@
             font-size: 1rem;
         }
 
-        .footer_container a:hover {
-            color: #B89080;
-        }
-
         .footer-link:hover {
-            color: #B89080;
             cursor: pointer;
         }
 
@@ -146,24 +151,21 @@
 
         <div class="footer-grid">
             <div class="footer-column">
-                <a href="https://www.instagram.com/ermiss_hostess_agency/" target="_blank">Instagram</a>
-                <a href="https://www.linkedin.com/company/105180196/admin/dashboard/" target="_blank">Linked In</a>
-                <a href="contact.html">Kontakt</a>
+                <a href="#" target="_blank">Facebook</a>
+                <a href="mailto:apartmentsparkfive@gmail.com">Email</a>
             </div>
             <div class="footer-column">
-                <a>Ermiss, s.r.o.</a>
-                <a>K. Kuzmányho 3, Lučenec</a>
-                <a>IČO: 56 016 255</a>
+                <a href="#">Marlek, s.r.o.</a>
+                <a href="#">Ulica Mieru 1A, Lučenec</a>
             </div>
             <div class="footer-column">
-                <a href="https://drive.google.com/file/d/1d-FQCRgUfi3iisezCAXb2PZkfUMUCUFD/view?usp=drive_link" target="_blank">Ochrana osobných udajov</a>
-                <a href="https://drive.google.com/file/d/1RG0ZMhgmPPABbYI-lVBxJnIjcOoETK_l/view?usp=drive_link" target="_blank">Nastavenia cookies</a>
-                <a href="positions.html">Spolupráca</a>
+                <a href=" {{ asset('documents/ZÁSADY OCHRANY OSOBNÝCH ÚDAJOV.pdf') }}" target="_blank">Ochrana osobných udajov</a>
+                <a href=" {{ asset('documents/ZÁSADY POUŽÍVANIA SÚBOROV COOKIE.pdf') }}" target="_blank">Nastavenia cookies</a>
             </div>
         </div>
 
         <div class="footer-bottom">
-            <p>2024 ermiss s.r.o.</p>
+            <p>2025 stayparkfive.com</p>
         </div>
     </div>
 </body>

@@ -70,6 +70,10 @@
             margin: 0;
         }
 
+        .booking input::placeholder {
+            color: #B19D9C;
+        }
+
         .booking a i{
             font-size: 20px;
             color: #B19D9C;
@@ -112,7 +116,7 @@
                 <div class="col-2 custom-input">
                 <label for="guests" class="form-label">Hostia</label>
                 <div class="input-group">
-                    <input type="number" class="form-control" id="guests" name="guests" min="1" required>
+                    <input type="number" class="form-control" id="guests" name="guests" min="1" placeholder="Počet" required>
                 </div>
                 </div>
 

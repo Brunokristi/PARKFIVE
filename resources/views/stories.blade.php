@@ -81,10 +81,6 @@
             transition: opacity 0.5s, transform 0.5s ease;
         }
 
-        .story.active img {
-            transform: scale(1.05);
-        }
-
         .arrow {
             background: transparent;
             border: none;
@@ -115,9 +111,23 @@
             padding: 15px;
         }
 
+        .close-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            color: #fff;
+        }
+
+        .close-button i {
+            font-size: 40px;
+        }
+
     </style>
 </head>
         <body>
+            <a href="/" class="close-button">
+                <i class="bi bi-x"></i>
+            <a>
             <div class="story-container">
                 <button class="arrow left">
                     <i class="bi bi-chevron-left"></i>
@@ -151,7 +161,6 @@
             <i class="bi bi-chevron-right"></i>
         </button>
     </div>
-
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
