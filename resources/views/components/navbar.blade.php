@@ -116,14 +116,14 @@
                 <a href="tel:+421911454678">Zavolajte nám</a>
                 <a href="mailto:apartmentsparkfive@gmail.com">Napíšte nám</a>
                 <a href="#">Rezervovať </a>
-                <a href="javascript:void(0);" class="icon" onclick="myFunction()"><i class="bi bi-list"></i></a>
+                <a href="javascript:void(0);" class="icon" id="menu_icon"><i class="bi bi-list"></i></a>
             </div>
         
         </div>
 
         <div class="nav-links_mobile" id="mobile_menu">
             <a href="apartments" class="active">Izby a apartmány</a>
-            <a href="">Aktivity a relax</a>
+            <a href="/#trips">Aktivity a relax</a>
             <a href="wellness">Wellness</a>
             <a href="faq">Otázky a odpovede</a>
         </div>
@@ -135,24 +135,26 @@
     </body>
 
     <script>
-        function myFunction() {
-            const mobileMenu = document.getElementById("mobile_menu");
-            const icon = document.getElementById("hamburger");
+        const mobileMenu = document.getElementById("mobile_menu");
+        const menuIcon = document.getElementById("menu_icon");
 
-            if (mobileMenu.classList.contains("show")) {
-                mobileMenu.classList.remove("show");
-                icon.classList.remove("fa-times");
-                icon.classList.add("fa-bars");
-            } else {
-                mobileMenu.classList.add("show");
-                icon.classList.remove("fa-bars");
-                icon.classList.add("fa-times");
-            }
-        }
+        // Show the menu on hover over the menu icon
+        menuIcon.addEventListener("mouseenter", () => {
+            mobileMenu.classList.add("show");
+        });
 
-        function showPopup() {
-            alert('This is a placeholder for a popup! Customize as needed.');
-        }
+        // Hide the menu when the mouse leaves the menu or icon
+        mobileMenu.addEventListener("mouseleave", () => {
+            mobileMenu.classList.remove("show");
+        });
+
+        menuIcon.addEventListener("mouseleave", () => {
+            setTimeout(() => {
+                if (!mobileMenu.matches(":hover")) {
+                    mobileMenu.classList.remove("show");
+                }
+            }, 100); // Add a short delay to allow for smooth transitions
+        });
     </script>
 
 </html>

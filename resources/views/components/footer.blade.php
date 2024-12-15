@@ -8,8 +8,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Gotu&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Gotu&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <style>
-        h1 {
-            font-family: 'Gotu sans serif';
+        .footer_container h1 {
+            font-family: 'Gotu';
             color: #fff;
         }
 
@@ -64,12 +64,6 @@
             }
         }
 
-        .footer_container h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: 30px;
-            font-weight: 300;
-        }
-
         .footer_container a {
             color: #fff;
             text-decoration: none;
@@ -81,6 +75,7 @@
             color: #fff;
             font-size: 1rem;
         }
+
 
         .footer-link:hover {
             cursor: pointer;

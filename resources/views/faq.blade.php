@@ -11,7 +11,7 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            color: #B89080;
+            color: #B19D9C;
             font-weight: 300;
             font-size: 16px;
             display: flex;
@@ -27,7 +27,7 @@
             padding-top: 90px;
         }
 
-        h1 {
+        .main h1 {
             font-size: 30px;
             margin-bottom: 20px;
             color: #B19D9C;
@@ -73,6 +73,7 @@
             margin: 20px;
             display: none;
             border-top: 1px solid #B89080;
+            color: #B19D9C; 
         }
 
         .faq_icon {
@@ -96,21 +97,27 @@
 
         .btn_body {
             background-color: #fff;
-            padding: 3px;
             border-radius: 30px;
             border: none;
             cursor: pointer;
             font-size: 17px;
             padding: 10px 20px;
-            color: #000;
             font-weight: 300;
             font-family: 'Inter', sans-serif;
+            color: #B19D9C;
+            text-decoration: none;
         }
 
         .btn_body:hover {
-            background-color: #F2F0E4;
-            color: #000;
+            transition: all 0.6s;
+            padding: 12px 22px;
         }
+
+        .btn_body i {
+            margin-left: 20px;
+        }
+
+
     </style>
 
 </head>
@@ -120,66 +127,116 @@
         <div class="faq_container">
             <div class="faq">
                 <div class="faq_question">
-                    <div class="text">Ako zarezervovať hostesky a promotérov?</div>
-                    <div class="faq_icon">
-                        <i class="bi bi-chevron-up"></i>
-                    </div>
-                </div>
-                <div class="faq_answer_container" style="display: block;">
-                    <div class="faq_answer">Oboznámte nás s Vašim podujatím/akciou prostredníctvom emailu, telefonátu alebo vyplnením formuláru na našej stránke
-                    Kontakt. Budeme Vás obratom kontaktovať s ponukou. Pre urýchlenie procesu prosím zadajte dôležité údaje ako čas, miesto
-                    konania, priebeh akcie/eventu/...,počet požadovaných hostesiek/promotérov, Vaše kontaktné údaje a prípadne ďalšie
-                    dôležité fakty. Vybať si môžete z nášho širokého portfólia hostesiek/promotérov, ktoré Vám ušijeme na mieru.
-                    </div>
-                </div>
-            </div>
-
-            <div class="faq">
-                <div class="faq_question">
-                    <div class="text">Zabezpečuje Ermiss uniformy/kostýmy pre hostestky a promotérov?</div>
+                    <div class="text">Aký je čas príchodu a odchodu (check-in a check-out)?</div>
                     <div class="faq_icon">
                         <i class="bi bi-chevron-down"></i>
                     </div>
                 </div>
                 <div class="faq_answer_container">
-                    <div class="faq_answer">ÁNO, naša agentúra Vám rada pômože s výberom vhodného kostýmu/uniformiem podľa Vašich požiadaviek a charakteru
-                    podujatia. Oblečenie je možné prenajať alebo zakúpiť. Obráťte sa na nás s Vašou predstavou ešte dnes.</div>
+                    <div class="faq_answer">Check-in je možný od 15:00 a check-out je potrebné vykonať do 11:00. Ak potrebujete individuálny čas príchodu alebo odchodu, kontaktujte nás a pokúsime sa vám vyhovieť.</div>
                 </div>
             </div>
 
             <div class="faq">
                 <div class="faq_question">
-                    <div class="text">V akom časovom predstihu je potrebné si zarezervovať službu?</div>
+                    <div class="text">Môžem prísť so zvieratami?</div>
                     <div class="faq_icon">
                         <i class="bi bi-chevron-down"></i>
                     </div>
                 </div>
                 <div class="faq_answer_container">
-                    <div class="faq_answer">Aj keď by sme Vám najradšej všetko zorganizovali za jeden deň, niekedy to vyžaduje viac časovej dotácie aby bolo všetko
-                    podľa Vášho plánu. Preto nás prosím kontaktuje aspoň v predstihu 7 dní pred konaním akcie. Pri akciách, ktoré si
-                    vyžadujú väčší počet personálu, alebo máte špecifické preferencie ohľadom výberu hostesiek - kontaktujte nás minimálne
-                    14 dní pred. Stále platí pravidlo, čím skôr tým lepšie.</div>
+                    <div class="faq_answer">Žiaľ, domáci miláčikovia majú pobyt zakázaný.</div>
                 </div>
             </div>
 
             <div class="faq">
                 <div class="faq_question">
-                    <div class="text">Aké sú podmienky zrušenia rezervácie personálu pred konaním akcie?</div>
+                    <div class="text">Má ubytovanie parkovacie miesto?</div>
                     <div class="faq_icon">
                         <i class="bi bi-chevron-down"></i>
                     </div>
                 </div>
                 <div class="faq_answer_container">
-                    <div class="faq_answer">Stáva sa to málokrát ale veríme, že sa môže naskytnúť výnimočná situácia a my sme ochotní Vám výjsť v ústrety. Náš
-                    personál je vždy plne dedikovaný Vášmu eventu a je naň predom rezervovaný, prosíme Vás o oznámenie akýchkoľvek zmien
-                    minimálne o 7 dní pred dohodnutým termínom akcie.</div>
+                    <div class="faq_answer">Áno, pre našich hostí je k dispozícii bezplatné parkovacie miesto priamo pri ubytovaní.</div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="faq_question">
+                    <div class="text">Je v cene zahrnuté Wi-Fi?</div>
+                    <div class="faq_icon">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Áno, vysokorýchlostné Wi-Fi pripojenie je zahrnuté v cene ubytovania.</div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="faq_question">
+                    <div class="text">Aké sú možnosti zrušenia rezervácie?</div>
+                    <div class="faq_icon">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Rezerváciu môžete zrušiť bez poplatku do 7 dní pred príchodom. Pri neskoršom zrušení sa účtuje poplatok vo výške 50 % z ceny ubytovania.</div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="faq_question">
+                    <div class="text">Poskytujete uteráky a posteľnú bielizeň?</div>
+                    <div class="faq_icon">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Áno, všetci hostia majú k dispozícii čisté uteráky a posteľnú bielizeň.</div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="faq_question">
+                    <div class="text">Môžem si priniesť vlastné jedlo?</div>
+                    <div class="faq_icon">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Samozrejme! Ubytovanie má plne vybavenú kuchyňu, kde si môžete pripraviť vlastné jedlá.</div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="faq_question">
+                    <div class="text">Máte nejaké pravidlá pre nočný kľud?</div>
+                    <div class="faq_icon">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">Áno, prosíme hostí, aby rešpektovali nočný kľud medzi 22:00 a 6:00, aby sme zabezpečili pohodlie všetkých našich hostí a susedov.</div>
+                </div>
+            </div>
+
+            <div class="faq">
+                <div class="faq_question">
+                    <div class="text">Aké atrakcie sú v okolí?</div>
+                    <div class="faq_icon">
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="faq_answer_container">
+                    <div class="faq_answer">V blízkosti sa nachádza množstvo atrakcií, vrátane historického centra, turistických chodníkov a miestnych reštaurácií. V ubytovaní nájdete brožúru s odporúčaniami.</div>
                 </div>
             </div>
 
             <div class="links">
                 <div class="text">Máte viac otázok?</div>
                 <div class="buttons">
-                    <button onclick="showPopup()" class="btn_body"> Ozvite sa nám<i class="bi bi-chevron-right"></i></button>
+                    <a href="mailto:apartmentsparkfive@gmail.com" class="btn_body"> Ozvite sa nám<i class="bi bi-chevron-right"></i></a>
                 </div>
             </div>
 

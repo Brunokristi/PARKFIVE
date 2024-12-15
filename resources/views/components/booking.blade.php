@@ -28,6 +28,7 @@
             margin: 0;
             flex: 1;
             font-size: 25px;
+            font-family: 'Gotu'
         }
 
         .booking form {

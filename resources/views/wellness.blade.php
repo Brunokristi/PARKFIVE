@@ -22,7 +22,7 @@
             padding: 20px;
         }
 
-        h1 {
+        .main h1 {
             font-size: 30px;
             margin-bottom: 20px;
             color: #B19D9C;
@@ -33,7 +33,7 @@
 
         .column {
             width: 50vw;
-            height: 100vh;
+            height: 85vh;
         }
 
         .column.first {
@@ -47,14 +47,13 @@
         .column.second {
             display: flex;
             flex-direction: row;
-            overflow-y: auto;
-            padding-bottom: 150px;
+            overflow-y: scroll;
         }
 
         .minicolumn {
             width: 50%;
             height: 100%;
-            padding-bottom: 150px;
+            padding-top: 90px;
         }
 
         .minicolumn:last-child {
@@ -73,17 +72,16 @@
             border-radius: 50px;
         }
 
-        .img-container a {
+        .img-container p {
             position: absolute;
             bottom: 30px; 
             left: 50%;
             transform: translateX(-50%);
             background-color: #fff;
-            color: #000;
+            color: #B19D9C;
             font-size: 20px;
             font-weight: 300;
             border-radius: 50px;
-            text-decoration: none;
             width: 70%;
             text-align: center;
             padding: 10px 0;
@@ -102,17 +100,17 @@
             <div class="minicolumn">
                 <div class="img-container">
                     <img src="{{ asset('images/wellness_pool.jpg') }}" alt="">
-                    <a>Bazén s protiprúdom</a>
+                    <p>Bazén s protiprúdom</p>
                 </div>
 
                 <div class="img-container">
                     <img src="{{ asset('images/story_history.jpg') }}" alt="">
-                    <a>Bazén s protiprúdom</a>
+                    <p>Vírivka</p>
                 </div>
 
                 <div class="img-container">
                     <img src="{{ asset('images/story_grass.jpg') }}" alt="">
-                    <a>Bazén s protiprúdom</a>
+                    <p>Ochladzovací bazén</p>
                 </div>
             </div>
 
@@ -120,17 +118,17 @@
             <div class="minicolumn">
                 <div class="img-container">
                     <img src="{{ asset('images/story_grass.jpg') }}" alt="">
-                    <a>Bazén s protiprúdom</a>
+                    <p>Fínska sauna</p>
                 </div>
 
                 <div class="img-container">
                     <img src="{{ asset('images/story_grass.jpg') }}" alt="">
-                    <a>Bazén s protiprúdom</a>
+                    <p>Vonkajšia sprcha</p>
                 </div>
 
                 <div class="img-container">
                     <img src="{{ asset('images/story_grass.jpg') }}" alt="">
-                    <a>Bazén s protiprúdom</a>
+                    <p>Lehátka</p>
                 </div>
             </div>
 

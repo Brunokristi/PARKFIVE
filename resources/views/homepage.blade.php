@@ -153,7 +153,7 @@
                 margin-bottom: 10px;
             }
 
-            .stories .story img:hover{
+            .stories .story:hover{
                 transform: scale(1.03);
             }
 
@@ -162,8 +162,11 @@
             }
 
             .stories .story a{
-                color: #D9D9D9;  
                 text-decoration: none;
+            }
+
+            .stories .story p{
+                color: #D9D9D9;  
             }
 
             .section-1 {
@@ -288,18 +291,9 @@
                 align-items: center;
             }
 
-            .section-2 a:hover {
-                background-color: #c29c8d;
-                color: #fff;
-            }
-
             .section-2 a i{
                 font-size: 20px;
                 color: #B89080;
-            }
-
-            .section-2 a:hover ~i {
-                color: #fff;
             }
 
             .section-2 img {
