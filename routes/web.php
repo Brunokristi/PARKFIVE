@@ -13,14 +13,21 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StoryController;
+use App\Http\Controllers\BookingController;
+use App\Http\Controllers\OutlookController;
+use App\Http\Controllers\CalendarController;
+
+
+
 
 
 Route::get('/', function () {return view('homepage');});
 Route::get('/faq', function () {return view('faq');});
 Route::get('/wellness', function () {return view('wellness');});
 Route::get('/apartments', [RoomsController::class, 'apartments'])->name('rooms.apartments');
-Route::get('/navbar', function () {return view('components.navbar');});
-Route::get('/footer', function () {return view('components.footer');});
+
+
+
 
 
 Route::middleware('auth')->group(function () {
@@ -69,3 +76,8 @@ Route::post('/generate-qrcode', [QRCodeController::class, 'generateQRCode']);
 
 Route::get('/payments', [InvoiceController::class, 'showForm'])->name('admin.payments');
 Route::post('/invoice', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
+
+
+Route::get('/calendar-events', [CalendarController::class, 'showEvents']);
+Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');

@@ -32,4 +32,10 @@ class Room extends Model
     {
         return $this->hasMany(RoomImage::class);
     }
+
+    public function bookings()
+    {
+        return $this->belongsToMany(Booking::class, 'booking_room')
+                    ->withTimestamps();
+    }
 }

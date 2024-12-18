@@ -434,7 +434,7 @@
 
                 <div class="minisection">
                     <img src="{{ asset('images/trips_park.png') }}" alt="">     
-                    <a href="#">
+                    <a href="{{ asset('documents/Lučenec – priroda.pdf') }}" target="blank">
                         sprievodca prírodou
                         <i class="bi bi-cloud-download"></i>
                     </a> 
@@ -442,7 +442,7 @@
 
                 <div class="minisection">
                     <img src="{{ asset('images/trips_castle.png') }}" alt="">     
-                    <a href="#">
+                    <a href="{{ asset('documents/Lučenec-historia.pdf') }}" target="blank">
                         sprievodca históriou
                         <i class="bi bi-cloud-download"></i>
                     </a> 
