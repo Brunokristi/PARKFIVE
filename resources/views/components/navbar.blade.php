@@ -108,14 +108,14 @@
     <body>
         <div class="topnav">
             <a href="/" class="logo">
-                <img src="images/logo/parkfive_green_grey_logo.svg" alt="Parkfive logo, reprezentuje spojenie s prirodou" class="logo">
+                <img src="{{ asset('images/logo/parkfive_green_grey_logo.svg') }}" alt="Parkfive logo" class="logo">
                 <h1>ParkFIVE</h1>
             </a>
 
             <div class="nav-links" id="desktop_menu">
                 <a href="tel:+421911454678">Zavolajte nám</a>
                 <a href="mailto:apartmentsparkfive@gmail.com">Napíšte nám</a>
-                <a href="#">Rezervovať </a>
+                <a href="/bookings">Rezervovať </a>
                 <a href="javascript:void(0);" class="icon" id="menu_icon"><i class="bi bi-list"></i></a>
             </div>
         

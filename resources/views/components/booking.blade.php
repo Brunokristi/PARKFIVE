@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Parkfive - ubytovanie v Lučenci</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Gotu&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
@@ -96,7 +97,8 @@
 <body>
     <div class="booking">
         <h1>Rezervovať online</h1>
-        <form action="/submit-reservation" method="POST">
+            <form action="{{ route('bookings.getRooms') }}" method="POST">
+                    @csrf
                 <!-- Príchod -->
                 <div class="col-auto custom-input">
                 <label for="arrival" class="form-label">Príchod</label>

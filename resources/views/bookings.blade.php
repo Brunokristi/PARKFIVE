@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Parkfive - ubytovanie v Lučenci</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Gotu&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
@@ -109,12 +110,20 @@
 
         .reviews {
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
+            flex-wrap: nowrap;
+            gap: 30px;
             margin: 50px auto;
-            max-width: 1200px;
+            margin-bottom: 70px;
+            overflow-x: auto;
+            width: 100%;
+            padding: 20px;
+            scroll-behavior: smooth;
+            background-color: #B89080;
+            border-radius: 50px;
+        }
+
+        .reviews::-webkit-scrollbar {
+            display: none;
         }
 
         .review-box {
@@ -124,10 +133,11 @@
             border-radius: 50px;
             padding: 20px;
             text-align: center;
-            flex: 1;
-            min-width: 200px;
-            max-width: 250px;
+            width: 250px;
+            height: 250px;
+            flex: 0 0 auto;
         }
+
 
         .review-box.rating h1 {
             font-size: 3rem;
@@ -144,15 +154,16 @@
         .bar {
             width: 100%;
             height: 5px;
-            background-color: #B19D9C;
+            background-color: #fff;
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 10px;
+            border: 1px solid #B19D9C;
         }
 
         .bar div {
             height: 100%;
-            background-color: #;
+            background-color: #B19D9C;
         }
 
         .review-box.comment p {
@@ -167,6 +178,7 @@
             justify-content: center;
             margin-top: 10px;
             gap: 10px;
+            color: #B89080;
         }
 
         .flag {
@@ -174,12 +186,162 @@
             height: 15px;
             border-radius: 2px;
         }
+
+        
+
+        /* rooms */
+
+        .rooms {
+            margin: 20px auto;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .rooms h1, h2 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            color: #B19D9C;
+            font-family: 'Gotu', sans-serif;
+            font-weight: 100;
+        }
+
+        .rooms h2 {
+            font-size: 24px;
+            color: #fff;
+        }   
+
+        .rooms hr {
+            margin: 50px 0;
+            color: #B89080;
+        }
+
+        .room-card {
+            display: flex;
+            justify-content: space-between;
+            background-color: #fff; 
+            border: 1px solid #B19D9C;
+            border-radius: 50px;
+            padding: 20px;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .room-features {
+            background-color: #B19D9C;
+            color: #fff;
+            border-radius: 50px;
+            padding: 20px;
+            width: 30%;
+            text-align: center;
+            height: 500px;
+            overflow-y: auto;
+        }
+
+        .room-features hr {
+            margin: 10px 0;
+            color: #fff;
+        }
+
+        .rooms .btn {
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background-color: #fff;
+            color: #fff;
+            background-color: #B19D9C;  
+            width: 300px;
+        }
+
+        .rooms .btn:hover {
+            background-color: #B89080;
+        }
+
+        .btn-primary:active, 
+        .btn-primary:focus, 
+        .btn-primary:active:focus {
+            background-color: #B89080 !important;
+        }
+
+        .bed-item, .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .room-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            padding-bottom: 0;
+        }
+
+        .room-details h2 {
+            color: #B19D9C; 
+            margin-bottom: 15px;
+        }
+
+        .room-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 30px 0;
+            padding: 5px 20px;
+            border-radius: 50px;
+            border: 1px solid #B19D9C;
+            width: fit-content;
+        }
+
+        .room-price .price {
+            font-size: 24px;
+            color: #B19D9C;
+        }
+
+        .room-images {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+            overflow-x: auto;
+        }
+
+        .room-images img {
+            width: 300px;
+            height: 200px;
+            border-radius: 50px;
+            object-fit: cover;
+        }
+
+        .dates {
+            margin-top: 20px;
+            display: flex;
+            gap: 30px;
+        }
+
+        .dates p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #B19D9C;
+        }
+
+        .room-features::-webkit-scrollbar {
+            display: none;
+        }
+
+        .group {
+            border: solid 1px #fff;
+            border-radius: 50px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
     </style>
 <body>
     <div class="main">
         <div class="booking">
             <h1>Rezervovať online</h1>
-            <form action="/submit-reservation" method="POST">
+            <form action="{{ route('bookings.getRooms') }}" method="POST">
+                @csrf
                     <!-- Príchod -->
                     <div class="col-auto custom-input">
                     <label for="arrival" class="form-label">Príchod</label>
@@ -214,6 +376,81 @@
             </form>
         </div>
 
+        <div class="rooms">
+            @if (!isset($rooms))
+                {{-- Do nothing when $rooms is not set --}}
+            @elseif ($rooms->isEmpty())
+                <h1 style="text-align: center;">Pre zadané dátumy nie sú voľné izby</h1>
+            @else
+                <hr>
+                <h1 style="text-align: center;">Voľné izby</h1>
+                @foreach ($rooms as $room)
+
+                <div class="room-card">
+                    <div class="room-features">
+                        <h2>1 - {{ $room-> guests}} osôb</h2>
+
+                        <div class="group">
+                            <h2>Lôžka</h2>
+                            @foreach ($room->beds as $bed)
+                                <hr>
+                                <p>{{ $bed->name }}: {{ $bed->count }}</p>
+                            @endforeach
+                        </div>
+
+                        <div class="group">
+                            <h2>Služby</h2>
+                            @foreach ($room->features as $facility)
+                                <hr>
+                                <p>{{ $facility->name }}</p>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    @php
+                        $arrivalDate = \Carbon\Carbon::createFromFormat('Y-m-d', $arrival);
+                        $departureDate = \Carbon\Carbon::createFromFormat('Y-m-d', $departure);
+                        $nights = abs($departureDate->diffInDays($arrivalDate));
+
+                        $pricePerNight = $room->price_per_night;
+                        $totalCost = $nights * $pricePerNight;
+                    @endphp
+
+                    <!-- Room Details Column -->
+                    <div class="room-details">
+                        <h1>{{ $room->name }}</h1>
+                        <h2 class="room-price">{{ $totalCost }}€ / {{ $nights }} nocí</h2>
+                        <form action="{{ route('bookings.topay') }}" method="POST">
+                            @csrf
+                            <input type="hidden" name="room_name" value="{{ $room->name }}">    
+                            <input type="hidden" name="room_id" value="{{ $room->id }}">
+                            <input type="hidden" name="arrival" value="{{ $arrival }}">
+                            <input type="hidden" name="departure" value="{{ $departure }}">
+                            <input type="hidden" name="guests" value="{{ $guests }}">
+                            <input type="hidden" name="total_cost" value="{{ $totalCost }}">
+                            <button type="submit" class="btn btn-primary">Rezervovať a zaplatiť <i class="bi bi-chevron-right"></i></button>
+                        </form>
+
+                        <div class="dates">
+                            <p>Počet osôb: {{ $guests }}</p>
+                            <p>Príchod: {{ $arrival }}</p>
+                            <p>Odchod: {{ $departure }}</p>
+                        </div>
+
+                        <div class="room-images">
+                            @if ($room->images && $room->images->count() > 0)
+                                @foreach ($room->images->where('type', 'image') as $image)
+                                    <img src="{{ asset('storage/' . $image->image_path) }}" alt="Room Layout" class="thumbnail">
+                                @endforeach
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+                <hr>
+            @endif
+        </div>
+
         <section class="reviews">
             <div class="review-box rating">
                 <p>hodnotenie</p>
@@ -241,7 +478,6 @@
                     „Všetko bolo krásne čisté a nové, keďže sme boli rodina s dvomi malými deťmi, tak sme si tam aj varili. V kuchyni nechýbalo žiadne kuchynské potreby.“
                 </p>
                 <div class="user">
-                    <img src="images/sk_flag.png" alt="SK" class="flag">
                     <span>Rudolf</span>
                 </div>
             </div>
@@ -251,43 +487,73 @@
                     „Báječná lokalita vedle největšího parku ve městě, kde jsou dětská hřiště, krásné procházky a je to nedaleko centra. Byt je skvěle vybaven a pro …“
                 </p>
                 <div class="user">
-                    <img src="images/cz_flag.png" alt="CZ" class="flag">
+                    <span>D</span>
+                </div>
+            </div>
+
+            <div class="review-box comment">
+                <p>
+                    „Báječná lokalita vedle největšího parku ve městě, kde jsou dětská hřiště, krásné procházky a je to nedaleko centra. Byt je skvěle vybaven a pro …“
+                </p>
+                <div class="user">
+                    <span>D</span>
+                </div>
+            </div>
+
+            <div class="review-box comment">
+                <p>
+                    „Báječná lokalita vedle největšího parku ve městě, kde jsou dětská hřiště, krásné procházky a je to nedaleko centra. Byt je skvěle vybaven a pro …“
+                </p>
+                <div class="user">
+                    <span>D</span>
+                </div>
+            </div>
+
+            <div class="review-box comment">
+                <p>
+                    „Báječná lokalita vedle největšího parku ve městě, kde jsou dětská hřiště, krásné procházky a je to nedaleko centra. Byt je skvěle vybaven a pro …“
+                </p>
+                <div class="user">
+                    <span>D</span>
+                </div>
+            </div>
+
+            <div class="review-box comment">
+                <p>
+                    „Báječná lokalita vedle největšího parku ve městě, kde jsou dětská hřiště, krásné procházky a je to nedaleko centra. Byt je skvěle vybaven a pro …“
+                </p>
+                <div class="user">
+                    <span>D</span>
+                </div>
+            </div>
+
+
+            <div class="review-box comment">
+                <p>
+                    „Báječná lokalita vedle největšího parku ve městě, kde jsou dětská hřiště, krásné procházky a je to nedaleko centra. Byt je skvěle vybaven a pro …“
+                </p>
+                <div class="user">
                     <span>D</span>
                 </div>
             </div>
         </section>
-
     </div>
     
     @include('components.navbar')
     @include('components.footer')
 
-
-
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            fetch('/fetch-reserved-dates')
-                .then(response => response.json())
-                .then(reservedDates => {
+        document.addEventListener('DOMContentLoaded', function () {
 
-                    console.log(reservedDates);
-                    const arrivalInput = document.getElementById('arrival');
-                    const departureInput = document.getElementById('departure');
+        const reviewsContainer = document.querySelector(".reviews");
 
-                    const disableDates = (input) => {
-                        input.addEventListener('input', function () {
-                            if (reservedDates.includes(this.value)) {
-                                alert('This date is already reserved!');
-                                this.value = '';
-                            }
-                        });
-                    };
-
-                    disableDates(arrivalInput);
-                    disableDates(departureInput);
-                })
-                .catch(error => console.error('Error fetching reserved dates:', error));
+        reviewsContainer.addEventListener("wheel", (event) => {
+            if (event.deltaY !== 0) { // Check if the wheel scrolls vertically
+                event.preventDefault(); // Prevent default vertical scrolling
+                reviewsContainer.scrollLeft += event.deltaY; // Scroll horizontally
+            }
         });
+    });
     </script>
 
 </body>

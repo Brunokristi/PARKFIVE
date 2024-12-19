@@ -14,10 +14,7 @@ use App\Http\Controllers\QRCodeController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\StoryController;
 use App\Http\Controllers\BookingController;
-use App\Http\Controllers\OutlookController;
-use App\Http\Controllers\CalendarController;
-
-
+use App\Http\Controllers\PaymentController;
 
 
 
@@ -25,9 +22,6 @@ Route::get('/', function () {return view('homepage');});
 Route::get('/faq', function () {return view('faq');});
 Route::get('/wellness', function () {return view('wellness');});
 Route::get('/apartments', [RoomsController::class, 'apartments'])->name('rooms.apartments');
-
-
-
 
 
 Route::middleware('auth')->group(function () {
@@ -44,16 +38,9 @@ require __DIR__.'/auth.php';
 Route::get('/stories/{id}', [StoryController::class, 'show'])->name('stories.show');
 
 
-Route::get('/login', function () {
-    return view('auth.custom-login');
-})->name('login');
-
+Route::get('/login', function () {return view('auth.custom-login');})->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
-
-Route::get('/register', function () {
-    return view('auth.register');
-})->name('register');
-
+Route::get('/register', function () {return view('auth.register');})->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
 
 Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms.index');
@@ -78,6 +65,16 @@ Route::get('/payments', [InvoiceController::class, 'showForm'])->name('admin.pay
 Route::post('/invoice', [InvoiceController::class, 'generateInvoice'])->name('generate.invoice');
 
 
-Route::get('/calendar-events', [CalendarController::class, 'showEvents']);
 Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+Route::post('/bookings/get-rooms', [BookingController::class, 'getRooms'])->name('bookings.getRooms');
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
+Route::post('/bookings/topay', [BookingController::class, 'toPay'])->name('bookings.topay');
+
+Route::get('/bookings/success', function () {
+    return 'Payment successful! Your booking has been confirmed.';
+})->name('bookings.success');
+
+Route::get('/bookings/cancel', function () {
+    return 'Payment canceled. Please try again.';
+})->name('bookings.cancel');
+
