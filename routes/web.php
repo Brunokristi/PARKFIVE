@@ -70,6 +70,8 @@ Route::post('/bookings/get-rooms', [BookingController::class, 'getRooms'])->name
 Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
 Route::post('/bookings/topay', [BookingController::class, 'toPay'])->name('bookings.topay');
 
+Route::get('/booking-component', function () {return view('components.booking');});
+
 Route::get('/bookings/success', function () {
     return 'Payment successful! Your booking has been confirmed.';
 })->name('bookings.success');

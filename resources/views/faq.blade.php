@@ -117,7 +117,36 @@
             margin-left: 20px;
         }
 
+        @media screen and (max-width: 768px) {
+            .main h1 {
+                font-size: 20px;
+            }
 
+            .main p {
+                font-size: 14px;
+            }
+
+            .faq_question {
+                font-size: 16px;
+            }
+
+            .faq_answer {
+                font-size: 14px;
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .btn_body {
+                font-size: 14px;
+                display: flex;
+                justify-content: center;
+                align-items: center;    
+            }
+        }
     </style>
 
 </head>
@@ -245,7 +274,7 @@
     </div>
 
     @include('components.navbar')
-    @include('components.booking')
+    <div id="booking-container"></div>
     @include('components.footer')
 
     <!-- Bootstrap JS -->
@@ -257,29 +286,59 @@
 
     <script>
         $(document).ready(function () {
+            // FAQ Toggle Logic
+            $('.faq_question').click(function () {
+                const $parentFaq = $(this).closest('.faq');
+                const $faqIcon = $(this).find('.bi');
 
-        $('.faq_question').click(function () {
+                if ($parentFaq.hasClass('open')) {
+                    // Close the current FAQ
+                    $parentFaq.find('.faq_answer_container').slideUp();
+                    $parentFaq.removeClass('open');
+                    $faqIcon.removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                } else {
+                    // Close all other FAQs
+                    $('.faq_answer_container').slideUp();
+                    $('.faq').removeClass('open');
+                    $('.faq .bi').removeClass('bi-chevron-up').addClass('bi-chevron-down');
 
-            if ($(this).parent().is('.open')) {
-                $(this).closest('.faq').find('.faq_answer_container').slideUp();
-                $(this).closest('.faq').removeClass('open');
-                $(this).find('.bi').removeClass('bi-chevron-up').addClass('bi-chevron-down');
+                    // Open the selected FAQ
+                    $parentFaq.find('.faq_answer_container').slideDown();
+                    $parentFaq.addClass('open');
+                    $faqIcon.removeClass('bi-chevron-down').addClass('bi-chevron-up');
+                }
+            });
 
-            } else {
-                $('.faq_answer_container').slideUp();
-                $('.faq').removeClass('open');
-                $(this).closest('.faq').find('.faq_answer_container').slideDown();
-                $(this).closest('.faq').addClass('open');
-                $('.bi').removeClass('bi-chevron-up').addClass('bi-chevron-down');
-                $(this).find('.bi').removeClass('bi-chevron-down').addClass('bi-chevron-up');
-            }
-        });
-
-        $(document).ready(function () {
+            // Load Navbar and Footer
             $("#navbar").load("html/navbar.html");
             $("#footer").load("html/footer.html");
+
+            // Load Booking Component
+            function loadBookingComponent() {
+                const container = document.getElementById('booking-container');
+                
+                if (window.innerWidth > 768) {
+                    fetch('/booking-component')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            container.innerHTML = html;
+                        })
+                        .catch(error => console.error('Error loading booking component:', error));
+                } else {
+                    container.innerHTML = '';
+                }
+            }
+
+            // Attach Booking Component Loaders
+            loadBookingComponent();
+            window.addEventListener('resize', loadBookingComponent);
         });
-    });
     </script>
+
 </body>
 </html>

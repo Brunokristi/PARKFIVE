@@ -305,11 +305,23 @@
                 object-fit: cover;
             }
 
+            .section-2 iframe {
+                height: 480px;
+            }
+
             .minisection {
                 margin-bottom: 20px;
             }
 
             @media screen and (max-width: 768px) {
+                .main h1 {
+                    font-size: 20px;
+                }
+
+                .main p {
+                    font-size: 14px;
+                }
+
                 .navbar-panel {
                     width: 100%;
                     padding: 20px;  
@@ -350,6 +362,18 @@
                 .section-2 .column-2 {
                     width: 100%;
                     padding: 20px;
+                }
+
+                .section-2 iframe {
+                    height: 300px;
+                }
+
+                .section-2 p {
+                    height: max-content;
+                }
+
+                .minisection {
+                    margin-bottom: 50px;
                 }
             }
     </style>
@@ -464,7 +488,7 @@
             <div class="column-1">
                 <h1>Výlety akurát na víkend</h1>
                 <p>Objavte malebné zákutia, historické pamiatky a prírodné scenérie, ktoré dokonale vyplnia váš víkendový program a zanechajú vo vás trvalé spomienky.</p>
-                <iframe src="https://snazzymaps.com/embed/668211" width="100%" height="480px" style="border:none;border-radius: 50px;"></iframe>
+                <iframe src="https://snazzymaps.com/embed/668211" width="100%" style="border:none;border-radius: 50px;"></iframe>
                 <a href="#">
                     aktivity a relax
                     <i class="bi bi-map"></i>
@@ -565,20 +589,18 @@
         tooltip.style.opacity = 0;
     });
 
-    tool
-
     function loadBookingComponent() {
         const container = document.getElementById('booking-container');
         
-        if (window.innerWidth > 768) { // Adjust the width condition as needed
-            fetch('/booking-component') // Create a route to serve the booking content
+        if (window.innerWidth > 768) {
+            fetch('/booking-component')
                 .then(response => response.text())
                 .then(html => {
                     container.innerHTML = html;
                 })
                 .catch(error => console.error('Error loading booking component:', error));
         } else {
-            container.innerHTML = ''; // Clear the container if the screen is too small
+            container.innerHTML = '';
         }
     }
 
