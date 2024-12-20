@@ -47,6 +47,24 @@ class RoomsController extends Controller
 
         $rooms = $query->get();
 
+        // Add bed quantities for each room
+        $rooms = $rooms->map(function ($room) {
+            $roomBeds = $room->beds->groupBy('id')->map(function ($group) {
+                return $group->count(); // Count occurrences of each bed type
+            });
+
+            // Create a grouped list of beds with their quantities
+            $room->bed_details = $room->beds->unique('id')->map(function ($bed) use ($roomBeds) {
+                return [
+                    'id' => $bed->id,
+                    'name' => $bed->name,
+                    'quantity' => $roomBeds[$bed->id] ?? 0, // Default to 0 if bed type is not present
+                ];
+            });
+
+            return $room;
+        });
+
         $beds = DB::table('beds')->get();
         $features = DB::table('features')->get();
 
@@ -56,6 +74,8 @@ class RoomsController extends Controller
             'rooms' => $rooms,
         ]);
     }
+
+
 
     public function store(Request $request)
     {
@@ -133,11 +153,15 @@ class RoomsController extends Controller
     {
         $room = Room::with(['beds', 'features', 'images'])->findOrFail($id);
 
-        // Attach `selected` attribute to beds and features
         $beds = Bed::all()->map(function ($bed) use ($room) {
-            $bed->selected = $room->beds->contains($bed->id);
+            $bedCount = $room->beds->where('id', $bed->id)->count();
+
+            $bed->selected = $bedCount > 0;
+            $bed->quantity = $bedCount;
+
             return $bed;
         });
+
 
         $features = Feature::all()->map(function ($feature) use ($room) {
             $feature->selected = $room->features->contains($feature->id);
@@ -174,8 +198,9 @@ class RoomsController extends Controller
             'max_guests' => 'required|integer|min:1',
             'images.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
             'layouts.*' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-            'beds' => 'nullable|array',
-            'beds.*' => 'integer|exists:beds,id',
+            'bed_quantities' => 'array',
+            'bed_quantities.*' => 'array',
+            'bed_quantities.*.*' => 'integer|min:0',
             'features' => 'nullable|array',
             'features.*' => 'integer|exists:features,id',
         ]);
@@ -207,7 +232,18 @@ class RoomsController extends Controller
             }
         }
 
-        $room->beds()->sync($request['beds'] ?? []);
+        DB::table('bed_room')->where('room_id', $id)->delete();
+        foreach ($validatedData['bed_quantities'] as $index => $quantities) {
+            $totalQuantity = array_sum($quantities); // Calculate total quantity for this bed type
+
+            for ($i = 0; $i < $totalQuantity; $i++) {
+                DB::table('bed_room')->insert([
+                    'room_id' => $id,
+                    'bed_id' => $index,
+                ]);
+            }
+        }
+
         $room->features()->sync($request['features'] ?? []);
 
         return redirect()->back()->with('success', 'Room updated successfully!');

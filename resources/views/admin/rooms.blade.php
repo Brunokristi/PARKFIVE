@@ -174,17 +174,15 @@
 
                         <hr>
 
-                        <div class="row">
-                            <div class="col mb-3">
-                                <label class="form-label">Lôžka</label>
-                                <div id="editBeds">
-                                </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Lôžka</label>
+                            <div id="editBeds">
                             </div>
+                        </div>
 
-                            <div class="col mb-3">
-                                <label class="form-label">Iné služby</label>
-                                <div id="editFeatures">
-                                </div>
+                        <div class="col mb-3">
+                            <label class="form-label">Iné služby</label>
+                            <div id="editFeatures">
                             </div>
                         </div>
 

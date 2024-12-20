@@ -14,6 +14,9 @@ use Google\Client;
 use Google\Service\Calendar;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\EventCreated;
+use App\Models\User;
 
 
 class BookingController extends Controller
@@ -82,7 +85,23 @@ class BookingController extends Controller
 
         $rooms = $query->get();
 
-        // Fetch related beds and features
+        $rooms = $rooms->map(function ($room) {
+            $roomBeds = $room->beds->groupBy('id')->map(function ($group) {
+                return $group->count(); // Count occurrences of each bed type
+            });
+
+            // Create a grouped list of beds with their quantities
+            $room->bed_details = $room->beds->unique('id')->map(function ($bed) use ($roomBeds) {
+                return [
+                    'id' => $bed->id,
+                    'name' => $bed->name,
+                    'quantity' => $roomBeds[$bed->id] ?? 0,
+                ];
+            });
+
+            return $room;
+        });
+
         $beds = DB::table('beds')->get();
         $features = DB::table('features')->get();
 
@@ -130,6 +149,13 @@ class BookingController extends Controller
     {
         // 1. Validate the form input
         $validated = $request->validate([
+            'name' => 'required|string',
+            'surname' => 'required|string',
+            'email' => 'required|email',
+            'phone' => 'required|string',
+            'address' => 'required|string',
+            'city' => 'required|string',
+            'zip' => 'required|string',
             'room_id' => 'required|integer',
             'arrival' => 'required|date',
             'departure' => 'required|date',
@@ -137,8 +163,30 @@ class BookingController extends Controller
             'total_cost' => 'required|numeric',
         ]);
 
+        // save the user data
+        $user = new User();
+        $user->name = $validated['name'] . ' ' . $validated['surname']; 
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'];
+        $user->street = $validated['address'];
+        $user->city = $validated['city'];
+        $user->zip_code = $validated['zip'];
+        $user->save();
+
+        // save the booking data
+        $booking = new Booking();
+        $booking->user_id = $user->id;
+        $booking->check_in_date = $validated['arrival'];
+        $booking->check_out_date = $validated['departure'];
+        $booking->total_price = $validated['total_cost'];
+        $booking->save();
+
+        // assign the room to the booking
+        $booking->rooms()->attach($validated['room_id']);
+
         // 2. Create a Google Calendar event
         $this->createGoogleCalendarEvent($validated);
+        Mail::to($validated['email'])->send(new EventCreated($validated));
 
         // 3. Create a Stripe Checkout Session
         $stripeSession = $this->createStripeSession($validated['total_cost']);

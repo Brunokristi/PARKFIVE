@@ -62,6 +62,7 @@
                 width: 30%;
                 display: flex;
                 flex-direction: column;
+                min-width: 300px;
             }
 
             .navbar-panel h1 {

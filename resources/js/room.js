@@ -177,11 +177,44 @@ document.addEventListener('DOMContentLoaded', function () {
                     const bedsContainer = document.getElementById('editBeds');
                     bedsContainer.innerHTML = '';
                     data.beds.forEach(bed => {
-                        bedsContainer.innerHTML += `
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="beds[]" value="${bed.id}" id="bed${bed.id}" ${bed.selected ? 'checked' : ''}>
-                            <label class="form-check-label" for="bed${bed.id}">${bed.name}</label>
-                        </div>`;
+                        const bedRow = document.createElement('div');
+                        bedRow.classList.add('d-flex', 'bed-row');
+
+                        bedsContainer.innerHTML = `
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Typ lôžka</th>
+                                        <th>Počet</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="bedsTableBody">
+                                </tbody>
+                            </table>
+                        `;
+
+                        const bedsTableBody = document.getElementById('bedsTableBody');
+
+                        // Populate the table rows
+                        data.beds.forEach(bed => {
+                            const bedRow = document.createElement('tr');
+                            bedRow.innerHTML = `
+                                <td>${bed.name}</td>
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        class="form-control form-control-sm bed-quantity" 
+                                        name="bed_quantities[${bed.id}][]" 
+                                        min="0" 
+                                        value="${bed.quantity || 0}" 
+                                        id="bed${bed.id}" 
+                                        style="width: 100px;"
+                                    >
+                                </td>
+                            `;
+
+                            bedsTableBody.appendChild(bedRow);
+                        });
                     });
 
                     // Populate features

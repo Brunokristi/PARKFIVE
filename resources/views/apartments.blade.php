@@ -152,9 +152,9 @@
 
                         <div class="group">
                             <h2>Lôžka</h2>
-                            @foreach ($room->beds as $bed)
+                            @foreach ($room->bed_details as $bed)
                                 <hr>
-                                <p>{{ $bed->name }}: {{ $bed->count }}</p>
+                                <p>{{ $bed['name'] }}: {{ $bed['quantity'] }}</p>
                             @endforeach
                         </div>
 

@@ -73,7 +73,13 @@
             color: #fff;
         }
 
-        .nav-links_mobile {
+
+
+        /* -------------------------- */
+
+
+
+        .nav-links_desktop {
             display: none;
             background-color: #B19D9C;
             justify-content: space-around;
@@ -87,19 +93,73 @@
             transition: all 0.6s;
         }
 
-        .nav-links_mobile.show {
+        .nav-links_desktop.show {
             display: flex;
         }
 
-        .nav-links_mobile a {
+        .nav-links_desktop a {
             color: #fff;
             padding: 10px 0;
             text-decoration: none;
             font-size: 14px;
         }
 
-        .nav-links_mobile a:hover {
+        .nav-links_desktop a:hover {
             transform: scale(1.1);
+        }
+
+
+        /* -------------------------- */
+
+
+
+        .nav-links_mobile {
+            display: none;
+            flex-direction: column;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            background-color: #FFF;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            align-items: center;
+        }
+
+        .nav-links_mobile a {
+            color: #B19D9C;
+            padding: 10px 0;
+            text-decoration: none;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .nav-links_mobile a:nth-child(-n+3) {
+            padding: 5px 20px;
+            border: 1px solid #B19D9C;
+            border-radius: 50px;
+            width: 250px;
+            margin-bottom: 10px;
+        }
+
+        .nav-links_mobile.show {
+            display: flex;
+        }
+
+        #mobile_menu {
+            display: none;
+        }
+
+
+        @media screen and (max-width: 768px) {
+            #desktop_menu {
+                display: none;
+            }
+
+            #mobile_menu {
+                display: block;
+            }
         }
 
     </style>
@@ -118,10 +178,24 @@
                 <a href="/bookings">Rezervovať </a>
                 <a href="javascript:void(0);" class="icon" id="menu_icon"><i class="bi bi-list"></i></a>
             </div>
+
+            <div class="nav-links" id="mobile_menu">
+                <a href="javascript:void(0);" class="icon" id="menu_icon"><i class="bi bi-list"></i></a>
+            </div>
         
         </div>
 
-        <div class="nav-links_mobile" id="mobile_menu">
+        <div class="nav-links_desktop" id="desktop_second_menu">
+            <a href="apartments" class="active">Izby a apartmány</a>
+            <a href="/#trips">Aktivity a relax</a>
+            <a href="wellness">Wellness</a>
+            <a href="faq">Otázky a odpovede</a>
+        </div>
+
+        <div class="nav-links_mobile" id="mobile_second_menu">
+            <a href="tel:+421911454678">Zavolajte nám</a>
+            <a href="mailto:apartmentsparkfive@gmail.com">Napíšte nám</a>
+            <a href="/bookings">Rezervovať </a>
             <a href="apartments" class="active">Izby a apartmány</a>
             <a href="/#trips">Aktivity a relax</a>
             <a href="wellness">Wellness</a>
@@ -135,25 +209,37 @@
     </body>
 
     <script>
-        const mobileMenu = document.getElementById("mobile_menu");
+        const desktopMenu = document.getElementById("desktop_second_menu");
+        const mobileMenu = document.getElementById("mobile_second_menu");
         const menuIcon = document.getElementById("menu_icon");
+        const mobileMenuIcon = document.getElementById("mobile_menu");
+
 
         // Show the menu on hover over the menu icon
         menuIcon.addEventListener("mouseenter", () => {
-            mobileMenu.classList.add("show");
+            desktopMenu.classList.add("show");
         });
 
         // Hide the menu when the mouse leaves the menu or icon
         mobileMenu.addEventListener("mouseleave", () => {
-            mobileMenu.classList.remove("show");
+            desktopMenu.classList.remove("show");
         });
 
         menuIcon.addEventListener("mouseleave", () => {
             setTimeout(() => {
-                if (!mobileMenu.matches(":hover")) {
-                    mobileMenu.classList.remove("show");
+                if (!desktopMenu.matches(":hover")) {
+                    desktopMenu.classList.remove("show");
                 }
-            }, 100); // Add a short delay to allow for smooth transitions
+            }, 100);
+        });
+
+        desktopMenu.addEventListener("mouseleave", () => {
+            desktopMenu.classList.remove("show");
+        });
+
+        mobileMenuIcon.addEventListener("click", () => {
+            console.log("clicked");
+            mobileMenu.classList.toggle("show");
         });
     </script>
 

@@ -30,6 +30,6 @@ class EventCreated extends Mailable
     public function build()
     {
         return $this->subject('Booking Confirmation')
-                    ->view('emails.event_created'); // Create a Blade view for the email
+                    ->view('emails.event_created');
     }
 }

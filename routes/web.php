@@ -43,6 +43,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/register', function () {return view('auth.register');})->name('register');
 Route::post('/register', [RegisterController::class, 'store']);
 
+Route::get('/dashboard' , function () {return view('dashboard');})->name('dashboard');
 Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms.index');
 Route::post('/rooms/store', [RoomsController::class, 'store'])->name('rooms.store');
 Route::get('/rooms/{id}/edit', [RoomsController::class, 'edit'])->name('rooms.edit');
@@ -54,7 +55,6 @@ Route::delete('/images/{id}', [ImageController::class, 'destroy'])->name('images
 Route::get('/customers', [UserController::class, 'index'])->name('users.index');
 Route::get('/customers/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-
 
 
 Route::get('/generate-qrcode', [QRCodeController::class, 'showForm']);
