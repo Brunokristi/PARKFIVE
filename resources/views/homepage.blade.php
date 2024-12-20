@@ -23,6 +23,7 @@
             }
 
             .main {
+                width: 100%;
                 padding: 20px;
                 padding-top: 90px;
             }
@@ -307,6 +308,50 @@
             .minisection {
                 margin-bottom: 20px;
             }
+
+            @media screen and (max-width: 768px) {
+                .navbar-panel {
+                    width: 100%;
+                    padding: 20px;  
+                }
+
+                .stories .story img{
+                    height: 70px;
+                    width: 70px;
+                }
+
+                .section-1 {
+                    flex-direction: column;
+                }
+
+                .section-1 .text {
+                    width: 100%;
+                }
+
+                .section-1 .text .fist-section {
+                    width: 100%;
+                    margin-bottom: 50px;
+                }
+
+                .section-1 .layout {
+                    display: none;
+                }
+
+                .section-2 {
+                    flex-direction: column;
+                }
+
+                .section-2 .column-1 {
+                    width: 100%;
+                    padding: 20px;
+                    margin-bottom: 50px;
+                }
+
+                .section-2 .column-2 {
+                    width: 100%;
+                    padding: 20px;
+                }
+            }
     </style>
 </head>
 <body>
@@ -453,7 +498,7 @@
         </div>
     </div>
     @include('components.navbar')
-    @include('components.booking')
+    <div id="booking-container"></div>
     @include('components.footer')
 
     <!-- Bootstrap JS -->
@@ -519,6 +564,26 @@
         tooltip.style.visibility = 'hidden';
         tooltip.style.opacity = 0;
     });
+
+    tool
+
+    function loadBookingComponent() {
+        const container = document.getElementById('booking-container');
+        
+        if (window.innerWidth > 768) { // Adjust the width condition as needed
+            fetch('/booking-component') // Create a route to serve the booking content
+                .then(response => response.text())
+                .then(html => {
+                    container.innerHTML = html;
+                })
+                .catch(error => console.error('Error loading booking component:', error));
+        } else {
+            container.innerHTML = ''; // Clear the container if the screen is too small
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', loadBookingComponent);
+    window.addEventListener('resize', loadBookingComponent);
 });
 </script>
 </html>
