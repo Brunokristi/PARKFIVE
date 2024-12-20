@@ -11,17 +11,21 @@
         body {
             margin: 0;
             font-family: 'Inter', sans-serif;
-            color: #B89080;
+            color: #fff;
             font-weight: 300;
-            font-size: 16px;
+            font-size: 10px;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #fff;
         }
 
         .main {
+            width: 100%;
             padding: 20px;
-            padding-top: 80px;
+            padding-top: 90px;
         }
 
-        h1, h2 {
+        .main h1, h2 {
             font-size: 30px;
             margin-bottom: 20px;
             color: #B19D9C;
@@ -29,12 +33,12 @@
             font-weight: 100;
         }
 
-        h2 {
+        .main h2 {
             font-size: 24px;
             color: #fff;
         } 
 
-        .container {
+        .room {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -42,7 +46,7 @@
             margin-bottom: 20px;
         }
 
-        .section{
+        .section {
             display: flex;
             justify-content: space-between;
         }
@@ -56,8 +60,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border: solid 1px #B89080;
             color: #fff;
+        }
+
+        .column:last-child {
+            border: solid 1px #B89080;
         }
         
         .column p {
@@ -109,25 +116,13 @@
         }
 
         .column:first-child::-webkit-scrollbar {
-            width: 8px; 
+            width: 0;
+            height: 0;
         }
 
-        .column:first-child::-webkit-scrollbar-track {
-            background: #F5F5F5; /* Background color of the scrollbar track */
-            border-radius: 10px; /* Optional: Round corners */
-        }
-
-        .column:first-child::-webkit-scrollbar-thumb {
-            background: #FFF; /* Scrollbar thumb color */
-            border-radius: 10px; /* Optional: Round corners */
-        }
-
-        .column:first-child::-webkit-scrollbar-thumb:hover {
-            background: #FFF; /* Scrollbar thumb color on hover */
-        }
-
-        .column:nth-child(2) {
-            border: none;
+        .column:first-child {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .group {
@@ -137,6 +132,40 @@
             margin-top: 20px;
         }
 
+        @media screen and (max-width: 768px) {
+            .main h1, h2 {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .main p {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .column p {
+                font-size: 14px;
+            }
+
+            .section {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .column {
+                width: 100%;
+                height: 200px;
+                margin-bottom: 20px;
+            }
+
+            .room {
+                margin-top: 0px;
+                margin-bottom: 20px;
+            }
+        }
 
     </style>
 </head>
@@ -144,7 +173,7 @@
 
     <div class="main">
         @foreach ($rooms as $room)
-            <div class="container">
+            <div class="room">
                 <h1>{{ $room->name }}</h1>
                 <div class="section">
                     <div class="column">
@@ -190,7 +219,7 @@
 
     </div>
     @include('components.navbar')
-    @include('components.booking')
+    <div id="booking-container"></div>
     @include('components.footer')
 
 
@@ -246,6 +275,24 @@
                 updateImage(newIndex);
             });
         });
+
+        function loadBookingComponent() {
+            const container = document.getElementById('booking-container');
+            
+            if (window.innerWidth > 768) {
+                fetch('/booking-component')
+                    .then(response => response.text())
+                    .then(html => {
+                        container.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error loading booking component:', error));
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadBookingComponent);
+        window.addEventListener('resize', loadBookingComponent);
     });
     </script>
 
