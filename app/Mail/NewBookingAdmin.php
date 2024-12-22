@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class EventCreated extends Mailable
+class NewBookingAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -15,7 +15,7 @@ class EventCreated extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param array $details
+     * @return void
      */
     public function __construct($details)
     {
@@ -29,7 +29,7 @@ class EventCreated extends Mailable
      */
     public function build()
     {
-        return $this->subject('Potvrdenie Rezervácie | stayparkfive.com')
-                    ->view('emails.event_created');
+        return $this->subject('Nová Rezervácia | stayparkfive.com')
+                    ->view('emails.new_booking_admin');
     }
 }

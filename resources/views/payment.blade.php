@@ -176,6 +176,50 @@
             color: #B19D9C;
         }
 
+        @media screen and (max-width: 960px) {
+            .info h1 {
+                font-size: 24px;
+            }
+            
+            .info h2 {
+                font-size: 20px;
+            }
+
+            .info p {
+                font-size: 14px;
+            }
+
+            .info-card {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .room-details {
+                width: 100%;
+                height: auto;
+            }
+
+            .contact-info {
+                width: 100%;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .contact-info h1 {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .info .btn {
+                width: 100%;
+            }
+
+            
+        }
+
+
 
     </style>
 <body>

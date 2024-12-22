@@ -87,6 +87,51 @@
             padding: 10px 0;
         }
 
+        @media screen and (max-width: 768px) {
+            .main h1, h2 {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .main p {
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            .main {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .column {
+                width: 100%;
+            }
+
+            .column.first {
+                padding-top: 60px;
+                height: 30vh;
+            }
+
+            .minicolumn {
+                padding-top: 0;
+            }
+
+            .img-container {
+                padding: 5px;
+            }
+
+            .img-container p {
+                bottom: 5px;
+            }
+
+            .img-container img {
+                height: 100%;
+            }
+        }
+
 
     </style>
 </head>
@@ -136,7 +181,7 @@
     </div>
 
     @include('components.navbar')
-    @include('components.booking')
+    <div id="booking-container"></div>
     
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -155,6 +200,24 @@
 
             event.preventDefault();
         });
+
+        function loadBookingComponent() {
+            const container = document.getElementById('booking-container');
+            
+            if (window.innerWidth > 768) {
+                fetch('/booking-component')
+                    .then(response => response.text())
+                    .then(html => {
+                        container.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error loading booking component:', error));
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', loadBookingComponent);
+        window.addEventListener('resize', loadBookingComponent);
     });
 </script>
 </body>

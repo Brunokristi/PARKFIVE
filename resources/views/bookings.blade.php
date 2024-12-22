@@ -30,12 +30,12 @@
         .booking {
             display: flex;
             align-items: center;
-            justify-content: space-between; 
-            flex-wrap: wrap;
+            justify-content: space-between;
             gap: 20px;
             background-color: #B89080;
             padding: 20px;
             border-radius: 50px;
+            flex-wrap: wrap;
         }
 
         .booking h1 {
@@ -49,14 +49,15 @@
         .booking form {
             display: flex;
             justify-content: flex-end; 
-            padding: 0 20px;
-            flex: 0 0 auto;
+            flex: 1; 
+            max-width: 100%;
         }
 
         .booking .custom-input {
             display: flex;
             align-items: center;
             margin-right: 20px;
+            min-width: 200px;
         }
 
         .booking input {
@@ -334,6 +335,98 @@
             padding: 20px;
             margin-top: 20px;
         }
+
+        @media screen and (max-width: 960px) {
+            .main h1, h2 {
+                font-size: 20px;
+            }
+
+            .main p {
+                font-size: 14px;
+            }
+
+            .booking {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .booking form {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                justify-content: center;
+                padding: 0;
+                margin: 0;  
+            }
+
+            .booking button{
+                margin-top: 20px;
+                width: 100%;
+            }
+
+            .booking .custom-input {
+                margin-right: 0;
+                display: flex; 
+                justify-content: space-between; 
+            }
+
+            .booking .custom-input label{
+                min-width: 60px;
+            }
+
+            .booking .custom-input input {
+                width: 100%;
+            }
+
+            .room-card {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .room-features {
+                width: 100%;
+                height: 300px;
+                overflow-y: auto;
+            }
+
+            .room-details {
+                padding: 0;
+            }
+
+            .room-details h1 {
+                font-size: 20px;
+                text-align: center;
+            }
+
+            .room-details h2 {
+                font-size: 16px;
+            }
+
+            .room-price {
+                width: 100%;
+                justify-content: center;
+                margin: 20px 0;
+            }
+
+            .room-price .price {
+                font-size: 20px;
+            }
+
+            .room-details .dates {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 30px;
+                text-align: center;
+            }   
+
+
+            .room-images img {
+                width: 100%;
+                height: 300px;
+            }
+        }
+
+
 
     </style>
 <body>

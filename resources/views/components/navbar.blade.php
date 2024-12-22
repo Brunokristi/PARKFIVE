@@ -172,35 +172,35 @@
                 <h1>ParkFIVE</h1>
             </a>
 
-            <div class="nav-links" id="desktop_menu">
+           <div class="nav-links" id="desktop_menu">
                 <a href="tel:+421911454678">Zavolajte nám</a>
                 <a href="mailto:apartmentsparkfive@gmail.com">Napíšte nám</a>
-                <a href="/bookings">Rezervovať </a>
+                <a href="{{ route('bookings.index') }}">Rezervovať </a>
                 <a href="javascript:void(0);" class="icon" id="menu_icon"><i class="bi bi-list"></i></a>
             </div>
 
             <div class="nav-links" id="mobile_menu">
                 <a href="javascript:void(0);" class="icon" id="menu_icon"><i class="bi bi-list"></i></a>
             </div>
-        
+
+            <div class="nav-links_desktop" id="desktop_second_menu">
+                <a href="{{ url('/apartments') }}" class="active">Izby a apartmány</a>
+                <a href="{{ url('/#trips') }}">Aktivity a relax</a>
+                <a href="{{ url('/wellness') }}">Wellness</a>
+                <a href="{{ url('/faq') }}">Otázky a odpovede</a>
+            </div>
+
+            <div class="nav-links_mobile" id="mobile_second_menu">
+                <a href="tel:+421911454678">Zavolajte nám</a>
+                <a href="mailto:apartmentsparkfive@gmail.com">Napíšte nám</a>
+                <a href="{{ route('bookings.index') }}">Rezervovať </a>
+                <a href="{{ url('/apartments') }}" class="active">Izby a apartmány</a>
+                <a href="{{ url('/#trips') }}">Aktivity a relax</a>
+                <a href="{{ url('/wellness') }}">Wellness</a>
+                <a href="{{ url('/faq') }}">Otázky a odpovede</a>
+            </div>
         </div>
 
-        <div class="nav-links_desktop" id="desktop_second_menu">
-            <a href="apartments" class="active">Izby a apartmány</a>
-            <a href="/#trips">Aktivity a relax</a>
-            <a href="wellness">Wellness</a>
-            <a href="faq">Otázky a odpovede</a>
-        </div>
-
-        <div class="nav-links_mobile" id="mobile_second_menu">
-            <a href="tel:+421911454678">Zavolajte nám</a>
-            <a href="mailto:apartmentsparkfive@gmail.com">Napíšte nám</a>
-            <a href="/bookings">Rezervovať </a>
-            <a href="apartments" class="active">Izby a apartmány</a>
-            <a href="/#trips">Aktivity a relax</a>
-            <a href="wellness">Wellness</a>
-            <a href="faq">Otázky a odpovede</a>
-        </div>
 
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -238,7 +238,6 @@
         });
 
         mobileMenuIcon.addEventListener("click", () => {
-            console.log("clicked");
             mobileMenu.classList.toggle("show");
         });
     </script>

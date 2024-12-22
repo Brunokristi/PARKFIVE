@@ -17,6 +17,7 @@ use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EventCreated;
 use App\Models\User;
+use App\Mail\NewBookingAdmin;
 
 
 class BookingController extends Controller
@@ -187,6 +188,7 @@ class BookingController extends Controller
         // 2. Create a Google Calendar event
         $this->createGoogleCalendarEvent($validated);
         Mail::to($validated['email'])->send(new EventCreated($validated));
+        Mail::to('apartmentsparkfive@gmail.com')->send(new NewBookingAdmin($validated));
 
         // 3. Create a Stripe Checkout Session
         $stripeSession = $this->createStripeSession($validated['total_cost']);
