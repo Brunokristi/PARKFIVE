@@ -9,17 +9,17 @@ const props = defineProps({
     },
 });
 
-const itemsColor = computed(() => props.variant === 'light' ? 'darkgreen' : 'lightgreen');
+const colorClass = computed(() => props.variant === 'light' ? 'text-darkcolor' : 'text-lightcolor');
 </script>
 
 <template>
     <div class="sticky top-0 z-50 flex justify-between items-center p-4">
-        <a href="/">
-            <Logo :color="itemsColor" :width="20" :height="20" />
+        <a href="/" :class="colorClass">
+            <Logo :width="20" :height="20" />
         </a>
 
-        <a>
-            <i class="bi bi-list" :style="{ color: itemsColor }"></i>
+        <a :class="colorClass">
+            <i class="bi bi-list"></i>
         </a>
     </div>
 </template>

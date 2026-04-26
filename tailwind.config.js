@@ -14,9 +14,9 @@ export default {
     theme: {
         extend: {
             colors: {
-                darkgreen: '#2E4F3C',
+                darkcolor: '#2E4F3C',
                 white: '#ffffff',
-                lightgreen: '#8DB9A0',
+                lightcolor: '#8DB9A0',
             },
             fontFamily: {
                 sans: [

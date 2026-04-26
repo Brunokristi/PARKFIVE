@@ -1,89 +1,59 @@
 <script setup>
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-const { t, locale } = useI18n();
-
 import { useGlobalActions } from '../composables/useGlobalActions';
-const { openContacts, openRecentProjects, openWorkflow, openPrivacyPolicy, openInstagram, openMessenger } = useGlobalActions();
+import Logo from './Logo.vue';
 
-const logoSrc = '/assets/logo_white.svg'
-const date = new Date().getFullYear()
+const { t } = useI18n();
+
+const {
+    openContacts,
+    openRecentProjects,
+    openWorkflow,
+    openPrivacyPolicy,
+    openInstagram,
+    openMessenger,
+} = useGlobalActions();
+
+const props = defineProps({
+    variant: {
+        type: String,
+        default: 'dark',
+    },
+});
+
+const isLight = computed(() => props.variant === 'light');
+
+const colorClass = computed(() =>
+    isLight.value ? 'text-darkcolor' : 'text-lightcolor'
+);
+
+const linkClass = computed(() => [
+    'py-2 px-4 w-full transition-colors',
+    isLight.value
+        ? 'hover:bg-darkcolor hover:text-lightcolor'
+        : 'hover:bg-lightcolor hover:text-darkcolor',
+]);
 </script>
 
 <template>
-  <footer
-    class="w-full w-max-[500px] sm:px-16 md:px-30 py-16 md:py-24 flex flex-col gap-12 items-center justify-center bg-gradient-to-b from-transparent from-0% via-accent via-70% to-black to-100% mt-20"
-    data-theme="dark"
-  >
-    <div class="w-full flex flex-col md:flex-row items-center sm:gap-20 gap-10 justify-between" >
-      
-      <div>
-        <div class="flex items-center shrink-0">
-          <a href="/" class="flex flex-col gap-2 items-center text-light">
-              <h1 class="h1">studio</h1>
-              <img :src="logoSrc" alt="Studio Kristian Logo" class="h-10 w-auto" />
-              <h1 class="h1">kristian</h1>
-          </a>
-        </div>
-      </div>
-
-
-      <div class="flex flex-col gap-10">
-
-        <div class="grid md:grid-cols-3 grid-cols-1 text-left md:gap-8 gap-4 item-center md:text-left">
-
-          <div class="flex flex-col gap-4 items-start md:items-end">
-            <button
-              @click="openPrivacyPolicy"
-              class="text-light hover:text-accent transition-colors duration-300"
-            >
-              <p class="p underline uppercase">{{ t('footer.privacy') }}</p>
-            </button>
-          </div>
-
-          <div class="flex flex-col gap-4 items-end">
-            <button
-              @click="openInstagram"
-              class="text-light hover:text-accent transition-colors duration-300"
-            >
-              <p class="p underline uppercase">{{ t('footer.instagram') }}</p>
-            </button>
-
-            <button
-              @click="openMessenger"
-              class="text-light hover:text-accent transition-colors duration-300"
-            >
-              <p class="p underline uppercase">{{ t('footer.facebook') }}</p>
-            </button>
-          </div>
-
-          <div class="flex flex-col gap-4 items-start md:items-end">
-            <button
-              @click="openContacts"
-              class="text-light hover:text-accent transition-colors duration-300"
-            >
-              <p class="p underline uppercase">{{ t('footer.contact') }}</p>
-            </button>
-
-            <button
-              @click="openRecentProjects"
-              class="text-light hover:text-accent transition-colors duration-300"
-            >
-              <p class="p underline uppercase">{{ t('footer.portfolio') }}</p>
-            </button>
-
-            <button
-              @click="openWorkflow"
-              class="text-light hover:text-accent transition-colors duration-300"
-            >
-              <p class="p underline uppercase">{{ t('footer.workflow') }}</p>
-            </button>
-          </div>
-        </div>
-
-        <p class="p text-light uppercase w-full text-center md:text-end"> © {{ date }} {{ t('footer.copyright') }}</p>
-      </div>
+  <footer class="flex items-center w-full px-4" :class="colorClass">
+    <div class="w-[30%] flex justify-center items-center">
+      <a href="/" :class="colorClass">
+        <Logo :width="100" :height="100" />
+      </a>
     </div>
 
-
+    <div
+      class="w-[70%] flex flex-col items-start border-l text-left divide-y text-sm"
+      :class="colorClass"
+    >
+      <a href="#" :class="linkClass" @click.prevent="openContacts">{{ t('footer.contact') }}</a>
+      <a href="#" :class="linkClass" @click.prevent="openRecentProjects">{{ t('footer.portfolio') }}</a>
+      <a href="#" :class="linkClass" @click.prevent="openWorkflow">{{ t('footer.workflow') }}</a>
+      <a href="#" :class="linkClass" @click.prevent="openPrivacyPolicy">{{ t('footer.privacy') }}</a>
+      <a href="#" :class="linkClass" @click.prevent="openInstagram">{{ t('footer.instagram') }}</a>
+      <a href="#" :class="linkClass" @click.prevent="openMessenger">{{ t('footer.facebook') }}</a>
+    </div>
   </footer>
 </template>
