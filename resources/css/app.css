@@ -1,0 +1,26 @@
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+
+    /* Headings */
+    .h1 {
+        @apply text-sm font-bold leading-tight tracking-tight font-mono;
+    }
+
+    .h2 {
+        @apply text-3xl font-bold leading-snug tracking-tight font-mono uppercase text-center;
+    }
+
+    .h3 {
+        @apply text-sm font-bold leading-snug tracking-tight font-mono uppercase;
+    }
+
+    .p {
+        @apply text-sm font-light leading-snug tracking-tight font-sans;
+    }
+}
