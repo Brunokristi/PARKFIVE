@@ -38,14 +38,14 @@ const linkClass = computed(() => [
 
 <template>
   <footer class="flex items-center w-full px-4" :class="colorClass">
-    <div class="w-[30%] flex justify-center items-center">
+    <div class="w-[20%] flex justify-center items-center">
       <a href="/" :class="colorClass">
         <Logo :width="100" :height="100" />
       </a>
     </div>
 
     <div
-      class="w-[70%] flex flex-col items-start border-l text-left divide-y text-sm"
+      class="w-[80%] flex flex-col items-start border-l text-left divide-y text-sm"
       :class="colorClass"
     >
       <a href="#" :class="linkClass" @click.prevent="openContacts">{{ t('footer.contact') }}</a>

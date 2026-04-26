@@ -7,11 +7,11 @@
 
     /* Headings */
     .h1 {
-        @apply text-sm font-bold leading-tight tracking-tight font-mono;
+        @apply text-lg leading-snug tracking-tight font-mono text-center;
     }
 
     .h2 {
-        @apply text-3xl font-bold leading-snug tracking-tight font-mono uppercase text-center;
+        @apply text-base leading-snug tracking-tight font-mono text-center;
     }
 
     .h3 {

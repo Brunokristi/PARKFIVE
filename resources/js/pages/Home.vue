@@ -7,8 +7,12 @@ const { t, locale } = useI18n();
 import Button from '../components/Button.vue';
 import GridLayout from '../components/GridLayout.vue';
 import BusinessCard from '../components/BusinessCard.vue';
+import Text from '../components/Text.vue';
+import Table from '../components/Table.vue';
+
 
 import { useGlobalActions } from '../composables/useGlobalActions';
+import Slideshow from '../components/Slideshow.vue';
 const { openContacts, openRecentProjects, openWorkflow, openVcard } = useGlobalActions();
 
 const cardFront = '/assets/card_front.svg';
@@ -16,14 +20,56 @@ const cardBack = '/assets/card_back.svg';
 const bgUrl = '/assets/bg.svg'
 const bgUrl2 = '/assets/bg2.svg'
 
-type ApiProject = {
-  name: string;
-  url: string;
-  summary: string | null;
-  hex_color: string | null;
-  logo_path: string | null;
-  cover_image: string | null;
-};
+const sections = [
+    {
+        id: 'section-1',
+        heading: 'spálňa 1',
+        rows: [
+            {
+                id: 'row-1',
+                label: 'Fiľakovský hrad',
+                actions: [
+                    {
+                        id: 'count',
+                        text: '2',
+                    },
+                ],
+            },
+            {
+                id: 'row-2',
+                label: 'Fiľakovský hrad',
+                actions: [
+                    {
+                        id: 'count',
+                        text: '1',
+                    },
+                ],
+            },
+            {
+                id: 'row-3',
+                label: 'Fiľakovský hrad',
+                actions: [
+                    {
+                        id: 'check',
+                        icon: 'bi bi-check-lg',
+                    },
+                ],
+            },
+        ],
+    },
+]
+
+function handleRowAction({
+  section,
+  row,
+  action,
+}: {
+  section: { id: string; heading: string };
+  row: { id: string; label: string };
+  action: { id: string; text?: string; icon?: string };
+}) {
+    console.log(section, row, action)
+}
 
 const cards = ref<Array<{
   heading: string;
@@ -33,64 +79,26 @@ const cards = ref<Array<{
   link: string;
 }>>([]);
 
-async function loadRecentProjects() {
-  try {
-    const response = await fetch(`/api/projects?locale=${encodeURIComponent(locale.value)}`);
-    if (!response.ok) {
-      throw new Error('Failed to load recent projects');
-    }
-
-    const projects: ApiProject[] = await response.json();
-    cards.value = projects.slice(0, 4).map((project) => ({
-      heading: project.name,
-      text: project.summary || 'Web solutions that perform, convert and scale.',
-      image: project.logo_path || project.cover_image || '',
-      bgColor: project.hex_color || '',
-      link: `/portfolio/${project.url}`,
-    }));
-  } catch (error) {
-    console.error(error);
-    cards.value = [];
-  }
-}
-
-onMounted(() => {
-  loadRecentProjects();
-});
-
-watch(
-  () => locale.value,
-  () => {
-    loadRecentProjects();
-  }
-);
-
 </script>
 
 <template>
-    <main class="py-8 flex flex-col gap-[100px]">
-      <section class="relative overflow-hidden flex justify-center h-[500px]" data-theme="dark">
-        <img
-          :src="bgUrl"
-          alt="Wave background"
-          class="block max-w-none h-auto"
-        />
-
-        <div class="absolute inset-0 z-10 flex flex-col items-center justify-center text-center gap-4 p-4">
-          <h2 class="h2 text-light">{{ t('home.title') }}</h2>
-          <p class="p uppercase text-light">{{ t('home.description') }}</p>
-          <Button
-            :text="t('home.callToAction')"
-            variant="light"
-            @click="openContacts"
-            class="mt-12"
-          />
-        </div>
-      </section>
-
+    <main class="flex flex-col gap-[100px]">
       <section class="gap-4 flex flex-col p-4" data-theme="light">
-        <h2 class="h2 text-accent">{{ t('home.subtitle1') }}</h2>
-        <p class="p uppercase text-center">{{ t('home.description1') }}</p>
+        <h2 class="h1 text-lightcolor">{{ t('home.subtitle1') }}</h2>
+        <Text
+          :heading="t('home.heading')"
+          :description="t('home.description')"
+        />
+        <Slideshow :images="[
+          { src: '/assets/image.jpg', alt: 'Project 1' },
+          { src: '/assets/image2.jpg', alt: 'Project 2' },
+        ]" />
+
+        <Table
+          :sections="sections"
+          variant="dark"
+          @row-action="handleRowAction"
+        />
       </section>
 
       <section class="flex flex-col gap-4" data-theme="light">

@@ -14,20 +14,74 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    variant: {
+        type: String,
+        default: 'dark',
+    },
 })
 
 const currentIndex = ref(0)
-const displayIndex = ref(0)
 const slideDirection = ref('next')
 const isLightboxOpen = ref(false)
-let timer = null
 
 const currentImage = computed(() => props.images[currentIndex.value] || null)
-const displayImage = computed(() => props.images[displayIndex.value] || null)
 
 const transitionName = computed(() =>
     slideDirection.value === 'prev' ? 'slide-right' : 'slide-left'
 )
+
+const isLight = computed(() => props.variant === 'light');
+
+const colorClass = computed(() =>
+    isLight.value ? 'text-darkcolor' : 'text-lightcolor'
+);
+
+const gradientClass = computed(() =>
+    isLight.value
+        ? 'from-lightcolor to-transparent'
+        : 'from-darkcolor to-transparent'
+);
+
+const dotClass = computed(() =>
+    isLight.value
+        ? 'bg-darkcolor'
+        : 'bg-lightcolor'
+);
+
+const indicatorBgClass = computed(() =>
+    isLight.value
+        ? 'bg-lightcolor'
+        : 'bg-darkcolor'
+);
+
+const swipeStartX = ref(0)
+const swipeStartY = ref(0)
+
+function handleTouchStart(event) {
+    if (!props.images.length) return
+
+    const touch = event.changedTouches[0]
+    swipeStartX.value = touch.clientX
+    swipeStartY.value = touch.clientY
+}
+
+function handleTouchEnd(event) {
+    if (!props.images.length) return
+
+    const touch = event.changedTouches[0]
+    const deltaX = touch.clientX - swipeStartX.value
+    const deltaY = touch.clientY - swipeStartY.value
+    const horizontalThreshold = 40
+
+    if (Math.abs(deltaX) < horizontalThreshold) return
+    if (Math.abs(deltaX) <= Math.abs(deltaY)) return
+
+    if (deltaX < 0) {
+        next()
+    } else {
+        prev()
+    }
+}
 
 function next() {
     if (!props.images.length) return
@@ -42,28 +96,12 @@ function prev() {
         (currentIndex.value - 1 + props.images.length) % props.images.length
 }
 
-function openLightbox(index = currentIndex.value) {
-    currentIndex.value = index
-    displayIndex.value = index
-    isLightboxOpen.value = true
-    document.body.style.overflow = 'hidden'
-}
-
-function closeLightbox() {
-    isLightboxOpen.value = false
-    document.body.style.overflow = ''
-}
-
 function handleKeydown(event) {
     if (!isLightboxOpen.value) return
 
     if (event.key === 'Escape') closeLightbox()
     if (event.key === 'ArrowRight') next()
     if (event.key === 'ArrowLeft') prev()
-}
-
-function syncDisplayImage() {
-    displayIndex.value = currentIndex.value
 }
 
 onMounted(() => {
@@ -77,176 +115,82 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <div class="flex justify-center flex-col items-center gap-2">
-        <div class="flex items-center gap-3">
+    <div class="flex justify-center flex-col items-center gap-2  pb-2">
+        <div class="relative h-[400px] w-full overflow-hidden border" :class="colorClass">
+            <div
+                class="relative h-full w-full touch-pan-y"
+                @touchstart.passive="handleTouchStart"
+                @touchend.passive="handleTouchEnd"
+            >
+                <transition :name="transitionName">
+                <div
+                    v-if="currentImage"
+                    :key="currentIndex"
+                    class="absolute inset-0 z-[2]"
+                >
+                    <img
+                    :src="currentImage.src"
+                    :alt="currentImage.alt || ''"
+                    class="h-full w-full object-cover"
+                    />
+                </div>
+                </transition>
+
+                <div
+                v-if="images.length > 1"
+                class="pointer-events-none absolute inset-x-0 bottom-0 z-[5]"
+                >
+                <div
+                    class="absolute inset-x-0 bottom-8 h-32 bg-gradient-to-t -mb-0.5"
+                    :class="gradientClass"
+                ></div>
+
+                <div
+                    class="absolute inset-x-0 bottom-0 flex h-8 items-center justify-center"
+                    :class="indicatorBgClass"
+                >
+                    <div class="flex gap-2">
+                    <span
+                        v-for="(_, index) in images"
+                        :key="index"
+                        class="h-1.5 w-1.5 rounded-full transition-opacity"
+                        :class="[dotClass, index === currentIndex ? 'opacity-100' : 'opacity-40']"
+                    />
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center gap-6 w-full">
             <button
                 v-if="showArrows && images.length > 1"
-                class="z-10 cursor-pointer text-dark"
+                class="z-10 cursor-pointer" :class="[colorClass]"
                 @click="prev"
                 aria-label="Previous slide"
             >
                 <i class="bi bi-arrow-left"></i>
             </button>
 
-            <div class="relative h-[350px] w-[250px] overflow-hidden">
-                <div class="relative h-full w-full">
-                    <!-- bottom image -->
-                    <img
-                        v-if="displayImage"
-                        :src="displayImage.src"
-                        :alt="displayImage.alt || ''"
-                        class="absolute inset-0 h-full w-full object-cover"
-                    />
-
-                    <!-- top animated image -->
-                    <transition :name="transitionName" @after-enter="syncDisplayImage">
-                        <div
-                            v-if="currentImage && currentIndex !== displayIndex"
-                            :key="currentIndex"
-                            class="absolute inset-0 z-[2]"
-                        >
-                            <img
-                                :src="currentImage.src"
-                                :alt="currentImage.alt || ''"
-                                class="h-full w-full object-cover"
-                            />
-                        </div>
-                    </transition>
-
-                    <!-- initial / synced state -->
-                    <div
-                        v-if="currentImage && currentIndex === displayIndex"
-                        class="absolute inset-0 z-[2]"
-                    >
-                        <img
-                            :src="currentImage.src"
-                            :alt="currentImage.alt || ''"
-                            class="h-full w-full object-cover"
-                        />
-                    </div>
-                </div>
-            </div>
-
             <button
                 v-if="showArrows && images.length > 1"
-                class="z-10 cursor-pointer text-dark"
+                class="z-10 cursor-pointer" :class="[colorClass]"
                 @click="next"
                 aria-label="Next slide"
             >
                 <i class="bi bi-arrow-right"></i>
             </button>
+
         </div>
-        <button
-                class="cursor-pointer text-dark"
-                aria-label="Open image fullscreen"
-                @click="openLightbox()"
-            >
-                <i class="bi bi-arrows-angle-expand adaptive-text"></i>
-            </button>
     </div>
-    
-
-    <teleport to="body">
-        <transition name="fade">
-            <div
-                v-if="isLightboxOpen"
-                class="fixed inset-0 z-[999] flex items-center justify-center bg-dark p-6"
-            >
-                <div class="flex h-full w-full items-center justify-center">
-                    <div class="relative w-full max-w-[95vw] md:max-w-[25vw]">
-                        <div class="relative w-full overflow-hidden">
-                            <!-- bottom image -->
-                            <img
-                                v-if="displayImage"
-                                :src="displayImage.src"
-                                :alt="displayImage.alt || ''"
-                                class="block h-auto w-full object-contain"
-                            />
-
-                            <!-- top animated image -->
-                            <transition :name="transitionName" @after-enter="syncDisplayImage">
-                                <img
-                                    v-if="currentImage && currentIndex !== displayIndex"
-                                    :key="`lightbox-${currentIndex}`"
-                                    :src="currentImage.src"
-                                    :alt="currentImage.alt || ''"
-                                    class="absolute inset-0 h-auto w-full object-contain"
-                                />
-                            </transition>
-
-                            <!-- synced state -->
-                            <img
-                                v-if="currentImage && currentIndex === displayIndex"
-                                :src="currentImage.src"
-                                :alt="currentImage.alt || ''"
-                                class="absolute inset-0 h-auto w-full object-contain"
-                            />
-                        </div>
-
-                        <div class="mt-2 flex w-full items-center justify-between">
-                            <button
-                                v-if="images.length > 1"
-                                class="flex h-12 w-12 cursor-pointer items-center justify-start"
-                                aria-label="Previous image"
-                                @click="prev"
-                            >
-                                <i class="bi bi-arrow-left text-accent"></i>
-                            </button>
-
-                            <div class="flex items-center justify-center h-full">
-                                <p class="p text-center uppercase text-light">
-                                    {{ currentImage?.caption || currentImage?.alt || '' }}
-                                </p>
-                            </div>
-
-                            <button
-                                v-if="images.length > 1"
-                                class="flex h-12 w-12 cursor-pointer items-center justify-end"
-                                aria-label="Next image"
-                                @click="next"
-                            >
-                                <i class="bi bi-arrow-right text-accent"></i>
-                            </button>
-                        </div>
-
-                        <button
-                            class="cursor-pointer text-accent flex justify-end w-full"
-                            aria-label="Close lightbox"
-                            @click="closeLightbox"
-                        >
-                            <i class="bi bi-arrows-angle-contract"></i>
-                        </button>
-
-                        
-                    </div>
-                </div>
-
-                
-            </div>
-        </transition>
-    </teleport>
 </template>
 
 <style scoped>
-.fade-enter-active,
-.fade-leave-active {
-    transition: opacity 0.25s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-    opacity: 0;
-}
-
 .slide-left-enter-active,
-.slide-right-enter-active {
-    transition: transform 0.35s ease;
-    z-index: 2;
-}
-
 .slide-left-leave-active,
+.slide-right-enter-active,
 .slide-right-leave-active {
-    z-index: 1;
+    transition: transform 450ms ease;
 }
 
 .slide-left-enter-from {
@@ -257,11 +201,27 @@ onUnmounted(() => {
     transform: translateX(0);
 }
 
+.slide-left-leave-from {
+    transform: translateX(0);
+}
+
+.slide-left-leave-to {
+    transform: translateX(-100%);
+}
+
 .slide-right-enter-from {
     transform: translateX(-100%);
 }
 
 .slide-right-enter-to {
     transform: translateX(0);
+}
+
+.slide-right-leave-from {
+    transform: translateX(0);
+}
+
+.slide-right-leave-to {
+    transform: translateX(100%);
 }
 </style>

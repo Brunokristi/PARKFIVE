@@ -24,7 +24,7 @@ export default {
                     ...defaultTheme.fontFamily.sans
                 ],
                 mono: [
-                    'Space Mono',
+                    'Gotu',
                     ...defaultTheme.fontFamily.mono
                 ],
             },

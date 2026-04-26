@@ -19,6 +19,7 @@ export default {
 
         contact: 'Get in touch',
         vcard: 'Save contact',
+        heading: 'about'
     },
 
     navigation: {
