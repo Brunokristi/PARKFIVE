@@ -1,74 +1,60 @@
-import { useRouter } from 'vue-router';
+const CONTACT_PHONE_E164 = '421911454678';
+const CONTACT_EMAIL = 'hello@studiokristian.com';
+
+const INSTAGRAM_URL = 'https://www.instagram.com/studiokristian/';
+const MESSENGER_URL = 'https://m.me/studiokristian';
+
+function navigate(path: string): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    window.location.href = path;
+}
+
+function openExternal(url: string): void {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    window.open(url, '_blank', 'noopener,noreferrer');
+}
 
 export function useGlobalActions() {
-    const router = useRouter();
+    const openContacts = () => navigate('/contact');
+    const openRecentProjects = () => navigate('/portfolio');
+    const openWorkflow = () => navigate('/workflow');
+    const openPrivacyPolicy = () => navigate('/privacy-policy');
 
-    const openContacts = () => {
-        router.push({ name: 'contact' });
+    const openInstagram = () => openExternal(INSTAGRAM_URL);
+    const openMessenger = () => openExternal(MESSENGER_URL);
+
+    const openEmail = () => {
+        navigate(`mailto:${CONTACT_EMAIL}`);
     };
 
-    const openRecentProjects = () => {
-        router.push({ name: 'portfolio' });
+    const openMessage = () => {
+        navigate(`sms:+${CONTACT_PHONE_E164}`);
     };
 
-    const openWorkflow = () => {
-        router.push({ name: 'workflow' });
-    };
-
-    const openPrivacyPolicy = () => {
-        router.push({ name: 'privacy-policy' });
+    const openWhatsApp = () => {
+        openExternal(`https://wa.me/${CONTACT_PHONE_E164}`);
     };
 
     const openVcard = () => {
-        const link = document.createElement('a');
-        link.href = '/vcard.vcf';
-        link.download = 'contact.vcf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        navigate('/vcard.vcf');
     };
-
-    const openEmail = () => {
-        window.location.href = 'mailto:hello@studiokristian.com';
-    }
-
-    const openPhone = () => {
-        window.location.href = 'tel:+421911454678';
-    }
-
-    const openWhatsApp = () => {
-        const phoneNumber = '+421911454678';
-        const message = encodeURIComponent('Hello, I would like to get in touch with you.');
-        const url = `https://wa.me/${phoneNumber}?text=${message}`;
-        window.open(url, '_blank');
-    }
-
-    const openMessage = () => {
-        const phoneNumber = '+421911454678';
-        const message = encodeURIComponent('Hello, I would like to get in touch with you.');
-        const url = `sms:${phoneNumber}?body=${message}`;
-        window.open(url, '_blank');
-    }
-
-    const openInstagram = () => {
-        window.open('https://www.instagram.com/studiokristian/', '_blank');
-    }
-
-    const openMessenger = () => {
-        window.open('https://www.facebook.com/profile.php?id=61574392799883', '_blank');
-    }
 
     return {
         openContacts,
         openRecentProjects,
         openWorkflow,
         openPrivacyPolicy,
-        openVcard,
-        openEmail,
-        openPhone,
-        openWhatsApp,
-        openMessage,
         openInstagram,
         openMessenger,
+        openEmail,
+        openMessage,
+        openWhatsApp,
+        openVcard,
     };
 }

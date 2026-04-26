@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import Logo from './Logo.vue';
 
 const props = defineProps({
     variant: {
@@ -8,19 +9,19 @@ const props = defineProps({
     },
 });
 
-const studioColor = computed(() => props.variant === 'light' ? 'text-accent' : 'text-accent');
-const kristianColor = computed(() => props.variant === 'light' ? 'text-dark' : 'text-accent');
-const logoSrc = '/assets/logo.svg';
+const itemsColor = computed(() => props.variant === 'light' ? 'darkgreen' : 'lightgreen');
 </script>
 
 <template>
-    <a class="fixed top-0 inset-x-0 w-full px-6 h-14 flex items-center justify-between z-[10000]" href="/">
-        <h1 :class="['h1', studioColor, 'w-50']">studio</h1>
+    <div class="sticky top-0 z-50 flex justify-between items-center p-4">
+        <a href="/">
+            <Logo :color="itemsColor" :width="20" :height="20" />
+        </a>
 
-        <img :src="logoSrc" alt="Studio Kristian Logo" class="h-4 w-auto" />
-
-        <h1 :class="['h1', kristianColor, 'w-50', 'text-end']">kristian</h1>
-    </a>
+        <a>
+            <i class="bi bi-list" :style="{ color: itemsColor }"></i>
+        </a>
+    </div>
 </template>
 
 

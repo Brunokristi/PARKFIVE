@@ -1,8 +1,10 @@
-export type CookieType = 'necessary' | 'analytics' | 'marketing';
-export type CookiePreferences = Record<CookieType, boolean>;
+export type CookiePreferences = {
+    necessary: boolean;
+    analytics: boolean;
+    marketing: boolean;
+};
 
-const COOKIE_PREFERENCES_KEY = 'studio-cookie-preferences';
-const COOKIE_CONSENT_STATUS_KEY = 'studio-cookie-consent-status';
+const STORAGE_KEY = 'studio-kristian-cookie-preferences';
 
 const DEFAULT_PREFERENCES: CookiePreferences = {
     necessary: true,
@@ -10,39 +12,50 @@ const DEFAULT_PREFERENCES: CookiePreferences = {
     marketing: false,
 };
 
+function isBrowser(): boolean {
+    return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
+}
+
 export function getCookiePreferences(): CookiePreferences | null {
-    try {
-        const value = localStorage.getItem(COOKIE_PREFERENCES_KEY);
-        if (value) {
-            return JSON.parse(value);
-        }
-    } catch (e) {
-        console.error('Failed to parse cookie preferences', e);
+    if (!isBrowser()) {
+        return null;
     }
-    return null;
+
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+        return null;
+    }
+
+    try {
+        const parsed = JSON.parse(raw) as Partial<CookiePreferences>;
+        return {
+            necessary: true,
+            analytics: Boolean(parsed.analytics),
+            marketing: Boolean(parsed.marketing),
+        };
+    } catch {
+        return null;
+    }
 }
 
-export function setCookiePreferences(preferences: Partial<CookiePreferences>) {
-    const currentPrefs = getCookiePreferences() || DEFAULT_PREFERENCES;
-    const newPrefs = { ...currentPrefs, ...preferences };
-    localStorage.setItem(COOKIE_PREFERENCES_KEY, JSON.stringify(newPrefs));
-    localStorage.setItem(COOKIE_CONSENT_STATUS_KEY, 'set');
-}
+export function setCookiePreferences(preferences: CookiePreferences): void {
+    if (!isBrowser()) {
+        return;
+    }
 
-export function getCookieConsentStatus() {
-    return localStorage.getItem(COOKIE_CONSENT_STATUS_KEY);
+    const safePreferences: CookiePreferences = {
+        necessary: true,
+        analytics: Boolean(preferences.analytics),
+        marketing: Boolean(preferences.marketing),
+    };
+
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(safePreferences));
 }
 
 export function hasCookieConsentBeenSet(): boolean {
-    return getCookieConsentStatus() !== null;
+    return getCookiePreferences() !== null;
 }
 
-export function isCookieTypeAllowed(cookieType: CookieType): boolean {
-    const prefs = getCookiePreferences();
-    if (!prefs) return false;
-    return prefs[cookieType] === true;
-}
-
-export function hasAcceptedAnalytics(): boolean {
-    return isCookieTypeAllowed('analytics');
+export function getEffectiveCookiePreferences(): CookiePreferences {
+    return getCookiePreferences() ?? DEFAULT_PREFERENCES;
 }

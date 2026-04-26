@@ -2,12 +2,10 @@
 import { computed, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter } from 'vue-router';
-import { disableAnalytics, enableAnalytics, trackPageViewIfConsented } from '../composables/useAnalytics';
-import { hasCookieConsentBeenSet, setCookiePreferences } from '../composables/useCookieConsent';
 
 const { t } = useI18n();
 const router = useRouter();
-const consentSet = ref(hasCookieConsentBeenSet());
+const consentSet = ref(false);
 
 const isVisible = computed(() => !consentSet.value);
 

@@ -1,35 +1,52 @@
-import { toValue, watchEffect } from 'vue';
+import { onBeforeUnmount, watchEffect, type MaybeRefOrGetter, toValue } from 'vue';
 
-type MaybeGetter<T> = T | (() => T);
-
-type SeoMetaOptions = {
-    title: MaybeGetter<string>;
-    description: MaybeGetter<string>;
+type SeoMetaInput = {
+    title?: MaybeRefOrGetter<string>;
+    description?: MaybeRefOrGetter<string>;
 };
 
-function upsertMetaDescription(content: string) {
-    let meta = document.querySelector('meta[name="description"]');
-
-    if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute('name', 'description');
-        document.head.appendChild(meta);
+function ensureMetaTag(name: string): HTMLMetaElement | null {
+    if (typeof document === 'undefined') {
+        return null;
     }
 
-    meta.setAttribute('content', content);
+    let element = document.head.querySelector(`meta[name=\"${name}\"]`) as HTMLMetaElement | null;
+
+    if (!element) {
+        element = document.createElement('meta');
+        element.setAttribute('name', name);
+        document.head.appendChild(element);
+    }
+
+    return element;
 }
 
-export function useSeoMeta(options: SeoMetaOptions) {
+export function useSeoMeta(meta: SeoMetaInput): void {
+    if (typeof document === 'undefined') {
+        return;
+    }
+
+    const initialTitle = document.title;
+    const descriptionElement = ensureMetaTag('description');
+    const initialDescription = descriptionElement?.getAttribute('content') ?? '';
+
     watchEffect(() => {
-        const nextTitle = toValue(options.title).trim();
-        const nextDescription = toValue(options.description).trim();
+        const nextTitle = meta.title ? toValue(meta.title) : '';
+        const nextDescription = meta.description ? toValue(meta.description) : '';
 
         if (nextTitle) {
             document.title = nextTitle;
         }
 
-        if (nextDescription) {
-            upsertMetaDescription(nextDescription);
+        if (descriptionElement && nextDescription) {
+            descriptionElement.setAttribute('content', nextDescription);
+        }
+    });
+
+    onBeforeUnmount(() => {
+        document.title = initialTitle;
+        if (descriptionElement) {
+            descriptionElement.setAttribute('content', initialDescription);
         }
     });
 }

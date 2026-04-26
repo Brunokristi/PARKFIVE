@@ -1,119 +1,88 @@
-import { hasAcceptedAnalytics } from './useCookieConsent';
+import { getEffectiveCookiePreferences } from './useCookieConsent';
 
 declare global {
     interface Window {
-        dataLayer: unknown[];
+        dataLayer?: unknown[];
         gtag?: (...args: unknown[]) => void;
-        __studioGaInitialized?: boolean;
         __GA_MEASUREMENT_ID?: string;
     }
 }
 
-const GA_MEASUREMENT_ID = window.__GA_MEASUREMENT_ID ?? '';
-
-function hasMeasurementId() {
-    return typeof GA_MEASUREMENT_ID === 'string' && GA_MEASUREMENT_ID.trim().length > 0;
+function isBrowser(): boolean {
+    return typeof window !== 'undefined';
 }
 
-function ensureGtagBase() {
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = window.gtag || function gtag(...args: unknown[]) {
-        window.dataLayer.push(args);
-    };
+function getMeasurementId(): string {
+    if (!isBrowser()) {
+        return '';
+    }
+
+    return window.__GA_MEASUREMENT_ID ?? '';
 }
 
-function hasGoogleTagScript() {
-    if (!hasMeasurementId()) {
+function canUseAnalytics(): boolean {
+    if (!isBrowser()) {
         return false;
     }
 
-    return Array.from(document.scripts).some((script) => script.src.includes(`gtag/js?id=${GA_MEASUREMENT_ID}`));
+    const preferences = getEffectiveCookiePreferences();
+    return preferences.analytics === true;
 }
 
-function loadGoogleTagScript() {
-    if (!hasMeasurementId() || hasGoogleTagScript()) {
+function safeGtag(...args: unknown[]): void {
+    if (!isBrowser() || typeof window.gtag !== 'function') {
         return;
     }
 
-    const script = document.createElement('script');
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script);
+    window.gtag(...args);
 }
 
-function setConsent(analyticsGranted: boolean) {
-    ensureGtagBase();
-
-    window.gtag?.('consent', 'update', {
+export function enableAnalytics(): void {
+    safeGtag('consent', 'update', {
         ad_storage: 'denied',
-        analytics_storage: analyticsGranted ? 'granted' : 'denied',
+        analytics_storage: 'granted',
         functionality_storage: 'granted',
         personalization_storage: 'denied',
         security_storage: 'granted',
     });
 }
 
-export function enableAnalytics() {
-    if (!hasMeasurementId()) {
-        return false;
-    }
-
-    ensureGtagBase();
-    loadGoogleTagScript();
-    setConsent(true);
-
-    if (!window.__studioGaInitialized) {
-        window.gtag?.('js', new Date());
-        window.gtag?.('config', GA_MEASUREMENT_ID, {
-            anonymize_ip: true,
-            send_page_view: false,
-        });
-
-        window.__studioGaInitialized = true;
-    }
-
-    return true;
+export function disableAnalytics(): void {
+    safeGtag('consent', 'update', {
+        ad_storage: 'denied',
+        analytics_storage: 'denied',
+        functionality_storage: 'granted',
+        personalization_storage: 'denied',
+        security_storage: 'granted',
+    });
 }
 
-export function disableAnalytics() {
-    if (!hasMeasurementId()) {
+export function initializeAnalyticsIfConsented(): void {
+    if (!isBrowser()) {
         return;
     }
 
-    ensureGtagBase();
-    loadGoogleTagScript();
-    setConsent(false);
-}
-
-export function initializeAnalyticsIfConsented() {
-    if (!hasMeasurementId()) {
-        return;
-    }
-
-    ensureGtagBase();
-    loadGoogleTagScript();
-
-    if (hasAcceptedAnalytics()) {
+    if (canUseAnalytics()) {
         enableAnalytics();
     } else {
         disableAnalytics();
     }
 }
 
-export function trackPageViewIfConsented(path?: string) {
-    if (!hasAcceptedAnalytics()) {
+export function trackPageViewIfConsented(path?: string): void {
+    if (!isBrowser() || !canUseAnalytics()) {
         return;
     }
 
-    if (!enableAnalytics() || !window.gtag) {
+    const measurementId = getMeasurementId();
+    if (!measurementId) {
         return;
     }
 
-    const pagePath = path || `${window.location.pathname}${window.location.search}`;
+    const pagePath = path || window.location.pathname;
 
-    window.gtag('event', 'page_view', {
+    safeGtag('event', 'page_view', {
         page_path: pagePath,
         page_location: window.location.href,
-        page_title: document.title,
     });
 }
