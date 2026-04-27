@@ -1,10 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../pages/Home.vue';
-import Nav from '../pages/Navigation.vue';
-import Portfolio from '../pages/Portfolio.vue';
-import Project from '../pages/Project.vue';
-import Workflow from '../pages/Workflow.vue';
-import Pricing from '../pages/Pricing.vue';
+import Property from '../pages/Property.vue';
 import Contact from '../pages/Contact.vue';
 import PrivacyPolicy from '../pages/PrivacyPolicy.vue';
 import Room from '../pages/Room.vue';
@@ -29,39 +25,11 @@ const routes = [
         },
     },
     {
-        path: '/portfolio',
-        name: 'portfolio',
-        component: Portfolio,
+        path: '/property',
+        name: 'property',
+        component: Property,
         meta: {
-            theme: 'light',
-            footer: true,
-        },
-    },
-    {
-        path: '/portfolio/:url',
-        name: 'project',
-        component: Project,
-        meta: {
-            theme: 'light',
-            footer: true,
-            useLoader: true,
-        },
-    },
-    {
-        path: '/workflow',
-        name: 'workflow',
-        component: Workflow,
-        meta: {
-            theme: 'light',
-            footer: true,
-        },
-    },
-    {
-        path: '/pricing',
-        name: 'pricing',
-        component: Pricing,
-        meta: {
-            theme: 'light',
+            theme: 'dark',
             footer: true,
         },
     },

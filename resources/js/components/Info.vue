@@ -2,93 +2,81 @@
 import { ref, computed } from 'vue'
 
 const props = defineProps({
-  heading: {
-    type: String,
-    default: '',
-  },
-  text: {
-    type: String,
-    default: '',
-  },
-  color: {
-    type: String,
-    default: 'dark',
-  },
+    heading: String,
+    text: String,
+    variant: {
+        type: String,
+        default: 'dark',
+    },
+    opened: {
+        type: Boolean,
+        default: false,
+    },
 })
 
-const isOpen = ref(false)
+const isOpen = ref(props.opened)
 
-function toggleOpen() {
-  isOpen.value = !isOpen.value
-}
+const isLight = computed(() => props.variant === 'light')
 
 const iconClass = computed(() =>
-  isOpen.value ? 'rotate-180' : 'rotate-0'
+    isOpen.value ? 'rotate-180' : 'rotate-0'
 )
 
-const headingColorClass = computed(() => {
-  if (props.color === 'light') return 'text-light'
-  if (props.color === 'accent') return 'text-accent'
-  return 'text-dark'
-})
+function toggleOpen() {
+    isOpen.value = !isOpen.value
+}
+
+const colorClass = computed(() =>
+    isLight.value
+        ? 'text-darkcolor border-darkcolor'
+        : 'text-lightcolor border-lightcolor'
+)
 </script>
 
 <template>
-  <div
-    class="w-full border-t last:border-b transition-colors duration-300"
-    :class="[
-      isOpen
-        ? 'bg-accent text-light border-light'
-        : 'bg-transparent border-accent hover:bg-accent hover:text-light hover:border-light',
-      !isOpen ? headingColorClass : ''
-    ]"
-  >
-    <button
-      class="w-full flex items-center justify-between gap-6 py-3 px-4 text-left cursor-pointer"
-      @click="toggleOpen"
-      :aria-expanded="isOpen"
-    >
-      <h3 class="h3">
-        {{ heading }}
-      </h3>
+  <div class="w-full" :class="colorClass">
 
-      <span
-        class="shrink-0 transition-transform duration-300"
-        :class="iconClass"
-      >
-        <i class="bi bi-arrow-down"></i>
-      </span>
-    </button>
+    <div class="grid grid-cols-[20%_80%]">
 
-    <transition name="accordion">
-      <div v-show="isOpen" class="accordion-content pb-6 pr-12 pl-4">
-        <p class="p">
-          {{ text }}
-        </p>
+      <div class="flex items-center justify-center border-r " :class="colorClass">
+        <button
+          class="flex items-center justify-center w-full h-full py-2 cursor-pointer"
+          @click="toggleOpen"
+        >
+          <i
+            class="bi bi-chevron-down transition-transform duration-300"
+            :class="iconClass"
+          ></i>
+        </button>
       </div>
-    </transition>
+
+      <div class="flex flex-col">
+
+        <button
+          class="w-full text-left px-4 py-2 flex items-center cursor-pointer"
+          :class="colorClass"
+          @click="toggleOpen"
+        >
+          <h2 class="h2">
+            {{ heading }}
+          </h2>
+        </button>
+
+        <!-- ANSWER -->
+        <transition name="accordion">
+          <div
+            v-show="isOpen"
+            class="px-4 py-2 border-t"
+            :class="colorClass"
+          >
+            <p class="p text-left">
+              {{ text }}
+            </p>
+          </div>
+        </transition>
+
+      </div>
+    </div>
+
   </div>
 </template>
-
-<style scoped>
-.accordion-content {
-  overflow: hidden;
-}
-
-.accordion-enter-active,
-.accordion-leave-active {
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-}
-
-.accordion-enter-from,
-.accordion-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-
-.accordion-enter-to,
-.accordion-leave-from {
-  opacity: 1;
-  max-height: 300px;
-}
-</style>

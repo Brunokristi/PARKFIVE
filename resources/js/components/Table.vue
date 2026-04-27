@@ -79,7 +79,7 @@ function handleRowClick(section, row) {
 
                 <div
                     v-if="row.actions && row.actions.length"
-                    class="flex items-center justify-center w-16 shrink-0"
+                    class="flex items-center justify-end w-16 shrink-0"
                 >
                     <div class="flex items-center gap-2">
                     <div

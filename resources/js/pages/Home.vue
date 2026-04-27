@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { ref } from 'vue';
 
 import { useI18n } from 'vue-i18n';
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
-import Button from '../components/Button.vue';
-import GridLayout from '../components/GridLayout.vue';
-import Tag from '../components/Tag.vue';
 import Text from '../components/Text.vue';
 import Table from '../components/Table.vue';
+import Info from '../components/Info.vue';
+import FormField from '../components/FormField.vue';
 
 
 import { useGlobalActions } from '../composables/useGlobalActions';
 import Slideshow from '../components/Slideshow.vue';
-const { openContacts, openRecentProjects, openWorkflow, openVcard } = useGlobalActions();
+const { openRecentProjects } = useGlobalActions();
 
-const cardFront = '/assets/card_front.svg';
-const cardBack = '/assets/card_back.svg';
-const bgUrl = '/assets/bg.svg'
-const bgUrl2 = '/assets/bg2.svg'
+const title = ref('');
+const review = ref('');
+const photos = ref<File[]>([]);
 
 interface RowAction {
   id: string;
@@ -43,14 +41,6 @@ interface RowActionPayload {
   section: Pick<TableSection, 'id' | 'heading'>;
   row: Pick<TableRow, 'id' | 'label'>;
   action: RowAction;
-}
-
-interface GridCard {
-  heading: string;
-  text: string;
-  image: string;
-  bgColor: string;
-  link: string;
 }
 
 const sections: TableSection[] = [
@@ -146,14 +136,46 @@ function handleRowAction({
     console.log(section, row, action)
 }
 
-const cards = ref<GridCard[]>([]);
-
 </script>
 
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
     <section class="flex flex-col gap-4 p-4">
       <h1 class="h1 text-lightcolor">{{ t('home.subtitle1') }}</h1>
+
+      <Info 
+        :heading="t('home.info1.heading')"
+        :text="t('home.info1.text')"
+        color="light"
+      />
+
+      <FormField
+        v-model="title"
+        label="Nadpis"
+        info="Krátky názov vašej recenzie."
+        :max-length="50"
+        error="Toto pole je povinné."
+        variant="dark"
+      />
+
+      <FormField
+        v-model="review"
+        type="textarea"
+        label="Recenzia"
+        info="Napíšte svoju skúsenosť."
+        :max-length="500"
+        variant="dark"
+      />
+
+      <FormField
+        v-model="photos"
+        type="file"
+        label="Pridajte fotografie"
+        info="Nahrajte fotografie priestoru."
+        multiple
+        file-accept="image/*"
+        variant="dark"
+      />
 
       <Slideshow
         :images="[
