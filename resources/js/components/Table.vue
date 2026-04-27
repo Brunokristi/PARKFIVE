@@ -79,18 +79,21 @@ function handleRowClick(section, row) {
 
                 <div
                     v-if="row.actions && row.actions.length"
-                    class="flex items-center justify-end w-16 shrink-0"
-                >
-                    <div class="flex items-center gap-2">
-                    <div
+                    class="flex items-center justify-center w-20 shrink-0"
+                    >
+                    <div class="flex items-center gap-3">
+                        <button
                         v-for="(action, actionIndex) in row.actions"
                         :key="action.id || actionIndex"
-                    >
+                        type="button"
+                        class="cursor-pointer transition-opacity hover:opacity-70"
+                        @click.stop="action.onClick?.()"
+                        >
                         <i v-if="action.icon" :class="action.icon"></i>
                         <span v-else>{{ action.text }}</span>
+                        </button>
                     </div>
                     </div>
-                </div>
                 </div>
             </div>
             </div>
