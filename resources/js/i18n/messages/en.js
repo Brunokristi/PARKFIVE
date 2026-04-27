@@ -224,4 +224,33 @@ export default {
         callToAction: 'Recent Projects',
     },
 
+    room: {
+        subtitle: 'Less design. More impact.',
+        heading: 'about',
+        description: 'Clean websites and smart systems built to help your business grow.',
+        slideshow: {
+            project1Alt: 'Room project photo 1',
+            project2Alt: 'Room project photo 2',
+        },
+        table: {
+            section1: {
+                heading: 'Bedroom 1',
+                row1: 'Filakovo Castle',
+                row2: 'Filakovo Castle',
+                row3: 'Filakovo Castle',
+            },
+            section2: {
+                heading: 'Bedroom 2',
+                row1: 'Filakovo Castle',
+                row2: 'Filakovo Castle',
+                row3: 'Filakovo Castle',
+            },
+        },
+    },
+
+    slideshow: {
+        previousSlide: 'Previous slide',
+        nextSlide: 'Next slide',
+    },
+
 }

@@ -6,7 +6,7 @@ const { t, locale } = useI18n();
 
 import Button from '../components/Button.vue';
 import GridLayout from '../components/GridLayout.vue';
-import BusinessCard from '../components/BusinessCard.vue';
+import Tag from '../components/Tag.vue';
 import Text from '../components/Text.vue';
 import Table from '../components/Table.vue';
 
@@ -153,7 +153,6 @@ const cards = ref<GridCard[]>([]);
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
     <section class="flex flex-col gap-4 p-4">
-      <Button 
       <h1 class="h1 text-lightcolor">{{ t('home.subtitle1') }}</h1>
 
       <Slideshow
@@ -161,6 +160,11 @@ const cards = ref<GridCard[]>([]);
           { src: '/assets/image.jpg', alt: 'Project 1' },
           { src: '/assets/image2.jpg', alt: 'Project 2' },
         ]"
+        heading="Fiľakovský hrad"
+        :tags="['branding', 'web', 'identity']"
+        description="Short project description goes here."
+        button-text="view project"
+        @button-click="openRecentProjects"
       />
     </section>
 

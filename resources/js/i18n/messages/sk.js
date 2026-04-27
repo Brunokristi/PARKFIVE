@@ -166,6 +166,35 @@ export default {
             },
             {
                 heading: '2. Definovanie rozsahu projektu',
+
+                room: {
+                    subtitle: 'Menej dizajnu. Vacsi efekt.',
+                    heading: 'o mne',
+                    description: 'Ciste weby a inteligentne systemy navrhnute pre rast vaseho biznisu.',
+                    slideshow: {
+                        project1Alt: 'Fotka projektu izby 1',
+                        project2Alt: 'Fotka projektu izby 2',
+                    },
+                    table: {
+                        section1: {
+                            heading: 'Spalna 1',
+                            row1: 'Filakovsky hrad',
+                            row2: 'Filakovsky hrad',
+                            row3: 'Filakovsky hrad',
+                        },
+                        section2: {
+                            heading: 'Spalna 2',
+                            row1: 'Filakovsky hrad',
+                            row2: 'Filakovsky hrad',
+                            row3: 'Filakovsky hrad',
+                        },
+                    },
+                },
+
+                slideshow: {
+                    previousSlide: 'Predchadzajuci slide',
+                    nextSlide: 'Dalsi slide',
+                },
                 text: 'Stanovím štruktúru, funkcie, časový plán a smerovanie projektu, aby bolo všetko jasné od začiatku.',
             },
             {
