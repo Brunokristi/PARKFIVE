@@ -4,6 +4,7 @@ import Property from '../pages/Property.vue';
 import Contact from '../pages/Contact.vue';
 import PrivacyPolicy from '../pages/PrivacyPolicy.vue';
 import Room from '../pages/Room.vue';
+import Planner from '../pages/Planner.vue';
 
 const routes = [
     {
@@ -51,6 +52,16 @@ const routes = [
             footer: true,
         },
     },
+    {
+        path: '/planner',
+        name: 'planner',
+        component: Planner,
+        meta: {
+            theme: 'light',
+            footer: true,
+        },
+    },
+
 ];
 
 const router = createRouter({
