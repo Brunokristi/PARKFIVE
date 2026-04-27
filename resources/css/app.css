@@ -7,11 +7,11 @@
 
     /* Headings */
     .h1 {
-        @apply text-lg leading-snug tracking-tight font-mono text-center;
+        @apply text-sm leading-snug tracking-tight font-mono border-r pr-4 py-2 text-end;
     }
 
     .h2 {
-        @apply text-base leading-snug tracking-tight font-mono text-center;
+        @apply text-sm leading-snug tracking-tight font-mono text-center;
     }
 
     .h3 {

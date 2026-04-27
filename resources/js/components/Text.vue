@@ -7,10 +7,6 @@ import Logo from './Logo.vue';
 const { t } = useI18n();
 
 const props = defineProps({
-    heading: {
-        type: String,
-        default: '',
-    },
     description: {
         type: String,
         default: '',
@@ -33,17 +29,17 @@ const linkClass = computed(() => [
 
 <template>
   <div class="flex items-center w-full" :class="colorClass">
-    <div class="w-[20%] flex justify-center items-center">
-        <div class="transform -rotate-90 origin-center whitespace-nowrap">
-            <h2 class="h2" :class="colorClass">{{ props.heading }}</h2>
+        <div class="w-[20%] flex justify-center items-center">        
+            <div class="transform -rotate-90 md:rotate-0 origin-center whitespace-nowrap">
+                <h2 class="h2 md:text-right md:pr-4" :class="colorClass">{{ props.heading }}</h2>
+            </div>
         </div>
-    </div>
 
     <div
       class="w-[80%] flex flex-col items-start border-l text-left divide-y text-sm"
       :class="colorClass"
     >
-      <p :class="colorClass" class="text-sm pl-4">{{ props.description }}</p>
+      <p :class="colorClass" class="p pl-4 py-2">{{ props.description }}</p>
     </div>
   </div>
 </template>

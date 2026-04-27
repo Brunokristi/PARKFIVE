@@ -7,6 +7,7 @@ import Workflow from '../pages/Workflow.vue';
 import Pricing from '../pages/Pricing.vue';
 import Contact from '../pages/Contact.vue';
 import PrivacyPolicy from '../pages/PrivacyPolicy.vue';
+import Room from '../pages/Room.vue';
 
 const routes = [
     {
@@ -19,12 +20,12 @@ const routes = [
         },
     },
     {
-        path: '/nav',
-        name: 'nav',
-        component: Nav,
+        path: '/room',
+        name: 'room',
+        component: Room,
         meta: {
             theme: 'dark',
-            footer: false,
+            footer: true,
         },
     },
     {

@@ -16,7 +16,7 @@ const footer = computed(() => route.meta.footer ?? true);
         :class="theme === 'light' ? 'bg-lightcolor' : 'bg-darkcolor'"
     >
         <Navbar :variant="theme" />
-        <main class="flex-1">
+        <main class="flex-1 pb-[100px]">
             <RouterView />
         </main>
         <Footer v-if="footer" :variant="theme" />

@@ -1,24 +1,14 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-
 import { useI18n } from 'vue-i18n';
-const { t, locale } = useI18n();
-
-import Button from '../components/Button.vue';
-import GridLayout from '../components/GridLayout.vue';
-import BusinessCard from '../components/BusinessCard.vue';
 import Text from '../components/Text.vue';
 import Table from '../components/Table.vue';
-
-
 import { useGlobalActions } from '../composables/useGlobalActions';
 import Slideshow from '../components/Slideshow.vue';
-const { openContacts, openRecentProjects, openWorkflow, openVcard } = useGlobalActions();
 
-const cardFront = '/assets/card_front.svg';
-const cardBack = '/assets/card_back.svg';
-const bgUrl = '/assets/bg.svg'
-const bgUrl2 = '/assets/bg2.svg'
+
+const { t, locale } = useI18n();
+const { openContacts, openRecentProjects, openWorkflow, openVcard } = useGlobalActions();
 
 interface RowAction {
   id: string;
@@ -146,14 +136,11 @@ function handleRowAction({
     console.log(section, row, action)
 }
 
-const cards = ref<GridCard[]>([]);
-
 </script>
 
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
     <section class="flex flex-col gap-4 p-4">
-      <Button 
       <h1 class="h1 text-lightcolor">{{ t('home.subtitle1') }}</h1>
 
       <Slideshow

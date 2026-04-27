@@ -116,7 +116,7 @@ onUnmounted(() => {
 
 <template>
     <div class="flex justify-center flex-col items-center gap-2  pb-2">
-        <div class="relative h-[400px] w-full overflow-hidden border" :class="colorClass">
+        <div class="relative h-[450px] md:h-[550px] w-full overflow-hidden border" :class="colorClass">
             <div
                 class="relative h-full w-full touch-pan-y"
                 @touchstart.passive="handleTouchStart"
