@@ -6,6 +6,7 @@ import PrivacyPolicy from '../pages/PrivacyPolicy.vue';
 import Room from '../pages/Room.vue';
 import Planner from '../pages/Planner.vue';
 import Policies from '../pages/Policies.vue';
+import Services from '../pages/Services.vue';
 
 const routes = [
     {
@@ -66,6 +67,15 @@ const routes = [
         path: '/policies',
         name: 'policies',
         component: Policies,
+        meta: {
+            theme: 'light',
+            footer: true,
+        },
+    },
+    {
+        path: '/services',
+        name: 'services',
+        component: Services,
         meta: {
             theme: 'light',
             footer: true,

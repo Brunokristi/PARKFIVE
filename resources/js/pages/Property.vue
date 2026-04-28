@@ -178,7 +178,7 @@ const roomTypeSections = computed<TableSection[]>(() => [
                 },
                 {
                     id: 'open',
-                    icon: 'bi bi-arrow-right',
+                    icon: 'bi bi-chevron-right',
                     onClick: () => openRoomType(room),
                 },
             ],

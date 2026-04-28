@@ -70,7 +70,7 @@ function closeMenu() {
       @click.self="closeMenu"
     >
       <!-- CLOSE BUTTON -->
-      <div class="flex justify-end p-8">
+      <div class="flex justify-end px-8 py-4">
         <button @click="closeMenu" class="text-lightcolor">
           <i class="bi bi-x-lg cursor-pointer"></i>
         </button>
