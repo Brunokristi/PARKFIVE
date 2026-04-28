@@ -22,6 +22,16 @@ const colorClass = computed(() =>
         : 'text-lightcolor border-lightcolor'
 )
 
+const hoverClass = computed(() =>
+    isLight.value
+        ? 'hover:bg-darkcolor hover:text-lightcolor'
+        : 'hover:bg-lightcolor hover:text-darkcolor'
+)
+
+function isInteractiveRow(row) {
+    return Boolean(row.onClick || (row.actions && row.actions.length))
+}
+
 function handleRowClick(section, row) {
     if (!row.onClick) return
 
@@ -67,9 +77,9 @@ function handleRowClick(section, row) {
                 class="flex items-center border-b px-4 py-2 p last:border-b-0"
                 :class="[
                     colorClass,
-                    row.onClick ? 'cursor-pointer transition-opacity hover:bg-lightcolor hover:text-darkcolor' : ''
+                    isInteractiveRow(row) ? `cursor-pointer transition-colors ${hoverClass}` : ''
                 ]"
-                role="button"
+                :role="row.onClick ? 'button' : undefined"
                 :tabindex="row.onClick ? 0 : undefined"
                 @click="handleRowClick(section, row)"
                 @keydown.enter="handleRowClick(section, row)"

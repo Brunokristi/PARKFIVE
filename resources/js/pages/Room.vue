@@ -1,148 +1,199 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
-import Text from '../components/Text.vue';
-import Table from '../components/Table.vue';
-import Slideshow from '../components/Slideshow.vue';
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-const route = useRoute();
-const { t } = useI18n();
+import Slideshow from '../components/Slideshow.vue'
+import Table from '../components/Table.vue'
+import Text from '../components/Text.vue'
+
+const route = useRoute()
+const { locale } = useI18n()
+
+type Variant = 'light' | 'dark'
+type LocalizedText = Record<string, string>
 
 interface RowAction {
-  id: string;
-  text?: string;
-  icon?: string;
+    id: string
+    text?: string
+    icon?: string
 }
 
 interface TableRow {
-  id: string;
-  label: string;
-  actions: RowAction[];
-  onClick?: (row: TableRow) => void;
+    id: string
+    label: string
+    actions: RowAction[]
 }
 
 interface TableSection {
-  id: string;
-  heading: string;
-  rows: TableRow[];
+    id: string
+    heading: string
+    rows: TableRow[]
 }
 
-interface RowActionPayload {
-  section: Pick<TableSection, 'id' | 'heading'>;
-  row: Pick<TableRow, 'id' | 'label'>;
+interface DbRoomTypeContent {
+    title: LocalizedText
+    description: LocalizedText
+    images: Array<{
+        src: string
+        alt: LocalizedText
+    }>
+    sections: Array<{
+        id: string
+        heading: LocalizedText
+        rows: Array<{
+            id: string
+            label: LocalizedText
+            count?: number
+            checked?: boolean
+        }>
+    }>
 }
 
-type Variant = 'light' | 'dark';
+const content = ref<DbRoomTypeContent | null>(null)
 
 const variant = computed<Variant>(() =>
-  route.meta.theme === 'light' ? 'light' : 'dark'
-);
+    route.meta.theme === 'light' ? 'light' : 'dark'
+)
 
-const titleClass = computed(() =>
-  variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
-);
+const pageClass = computed(() =>
+    variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
+)
 
-const sections = computed<TableSection[]>(() => [
-  {
-    id: 'section-1',
-    heading: t('room.table.section1.heading'),
-    rows: [
-      {
-        id: 'row-1',
-        label: t('room.table.section1.row1'),
-        actions: [
-          {
-            id: 'count',
-            text: '2',
-          },
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-        onClick: (row: TableRow) => console.log('clicked', row),
-      },
-      {
-        id: 'row-2',
-        label: t('room.table.section1.row2'),
-        actions: [
-          {
-            id: 'count',
-            text: '1',
-          },
-        ],
-      },
-      {
-        id: 'row-3',
-        label: t('room.table.section1.row3'),
-        actions: [
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'section-2',
-    heading: t('room.table.section2.heading'),
-    rows: [
-      {
-        id: 'row-1',
-        label: t('room.table.section2.row1'),
-        actions: [
-          {
-            id: 'count',
-            text: '2',
-          },
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-        onClick: (row: TableRow) => console.log('clicked', row),
-      },
-      {
-        id: 'row-2',
-        label: t('room.table.section2.row2'),
-        actions: [
-          {
-            id: 'count',
-            text: '1',
-          },
-        ],
-      },
-      {
-        id: 'row-3',
-        label: t('room.table.section2.row3'),
-        actions: [
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-      },
-    ],
-  },
-]);
+function localize(value?: LocalizedText) {
+    if (!value) return ''
 
-const slideshowImages = computed(() => [
-  { src: '/assets/image.jpg', alt: t('room.slideshow.project1Alt') },
-  { src: '/assets/image2.jpg', alt: t('room.slideshow.project2Alt') },
-]);
-
-function handleRowAction({ section, row }: RowActionPayload) {
-  console.log(section, row);
+    return value[locale.value] || value.sk || Object.values(value)[0] || ''
 }
 
+function loadMockContent() {
+    content.value = {
+        title: {
+            sk: 'Štandardná izba',
+            en: 'Standard room',
+        },
+        description: {
+            sk: 'Komfortná izba vhodná na krátkodobý aj dlhší pobyt.',
+            en: 'A comfortable room suitable for short and longer stays.',
+        },
+        images: [
+            {
+                src: '/assets/image.jpg',
+                alt: {
+                    sk: 'Štandardná izba',
+                    en: 'Standard room',
+                },
+            },
+            {
+                src: '/assets/image2.jpg',
+                alt: {
+                    sk: 'Detail izby',
+                    en: 'Room detail',
+                },
+            },
+        ],
+        sections: [
+            {
+                id: 'equipment',
+                heading: {
+                    sk: 'vybavenie',
+                    en: 'equipment',
+                },
+                rows: [
+                    {
+                        id: 'beds',
+                        label: {
+                            sk: 'Postele',
+                            en: 'Beds',
+                        },
+                        count: 2,
+                    },
+                    {
+                        id: 'wifi',
+                        label: {
+                            sk: 'Wi-Fi',
+                            en: 'Wi-Fi',
+                        },
+                        checked: true,
+                    },
+                    {
+                        id: 'bathroom',
+                        label: {
+                            sk: 'Kúpeľňa',
+                            en: 'Bathroom',
+                        },
+                        checked: true,
+                    },
+                ],
+            },
+            {
+                id: 'services',
+                heading: {
+                    sk: 'služby',
+                    en: 'services',
+                },
+                rows: [
+                    {
+                        id: 'breakfast',
+                        label: {
+                            sk: 'Raňajky',
+                            en: 'Breakfast',
+                        },
+                        checked: true,
+                    },
+                    {
+                        id: 'parking',
+                        label: {
+                            sk: 'Parkovanie',
+                            en: 'Parking',
+                        },
+                        checked: true,
+                    },
+                ],
+            },
+        ],
+    }
+}
+
+watch(locale, loadMockContent, { immediate: true })
+
+const slideshowImages = computed(() =>
+    content.value?.images.map((image) => ({
+        src: image.src,
+        alt: localize(image.alt),
+    })) || []
+)
+
+const tableSections = computed<TableSection[]>(() =>
+    content.value?.sections.map((section) => ({
+        id: section.id,
+        heading: localize(section.heading),
+        rows: section.rows.map((row) => ({
+            id: row.id,
+            label: localize(row.label),
+            actions: [
+                ...(row.count
+                    ? [{ id: 'count', text: String(row.count) }]
+                    : []),
+                ...(row.checked
+                    ? [{ id: 'check', icon: 'bi bi-check-lg' }]
+                    : []),
+            ],
+        })),
+    })) || []
+)
 </script>
 
 <template>
-  <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
+  <main
+    v-if="content"
+    class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start"
+    :class="pageClass"
+  >
     <section class="flex flex-col gap-4 p-8">
-      <h1 class="h1" :class="titleClass">{{ t('room.subtitle') }}</h1>
+      <h1 class="h1">
+        {{ localize(content.title) }}
+      </h1>
 
       <Slideshow
         :images="slideshowImages"
@@ -152,14 +203,13 @@ function handleRowAction({ section, row }: RowActionPayload) {
 
     <section class="flex flex-col gap-10 p-8 lg:col-span-2">
       <Text
-        :description="t('room.description')"
+        :description="localize(content.description)"
         :variant="variant"
       />
 
       <Table
-        :sections="sections"
+        :sections="tableSections"
         :variant="variant"
-        @row-action="handleRowAction"
       />
     </section>
   </main>

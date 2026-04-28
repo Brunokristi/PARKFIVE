@@ -1,205 +1,267 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-import { useI18n } from 'vue-i18n';
-const { t } = useI18n();
+import Info from '../components/Info.vue'
+import Slideshow from '../components/Slideshow.vue'
+import Table from '../components/Table.vue'
+import Text from '../components/Text.vue'
 
-import Text from '../components/Text.vue';
-import Table from '../components/Table.vue';
-import Info from '../components/Info.vue';
-import FormField from '../components/FormField.vue';
+const route = useRoute()
+const router = useRouter()
+const { t, locale } = useI18n()
 
+type Variant = 'light' | 'dark'
 
-import { useGlobalActions } from '../composables/useGlobalActions';
-import Slideshow from '../components/Slideshow.vue';
-const { openRecentProjects } = useGlobalActions();
+interface LocalizedText {
+    sk: string
+    en: string
+}
 
-const title = ref('');
-const review = ref('');
-const photos = ref<File[]>([]);
+interface DbRoomType {
+    id: string
+    slug: string
+    title: LocalizedText
+    features: LocalizedText[]
+}
+
+interface DbHomeContent {
+    heading: LocalizedText
+    description: LocalizedText
+    images: Array<{ src: string; alt: LocalizedText }>
+    roomTypes: DbRoomType[]
+    infos: Array<{
+        id: string
+        heading: LocalizedText
+        text: LocalizedText
+        opened?: boolean
+    }>
+}
 
 interface RowAction {
-  id: string;
-  text?: string;
-  icon?: string;
+    id: string
+    text?: string
+    icon?: string
+    onClick?: () => void
 }
 
 interface TableRow {
-  id: string;
-  label: string;
-  actions: RowAction[];
-  onClick?: (row: TableRow) => void;
+    id: string
+    label: string
+    actions: RowAction[]
+    onClick?: () => void
 }
 
 interface TableSection {
-  id: string;
-  heading: string;
-  rows: TableRow[];
+    id: string
+    heading: string
+    rows: TableRow[]
 }
 
-interface RowActionPayload {
-  section: Pick<TableSection, 'id' | 'heading'>;
-  row: Pick<TableRow, 'id' | 'label'>;
-  action: RowAction;
+const variant = computed<Variant>(() =>
+    route.meta.theme === 'light' ? 'light' : 'dark'
+)
+
+const pageClass = computed(() =>
+    variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
+)
+
+const content = ref<DbHomeContent | null>(null)
+
+function localize(value?: LocalizedText) {
+    if (!value) return ''
+
+    return value[locale.value as keyof LocalizedText] || value.sk || ''
 }
 
-const sections: TableSection[] = [
-    {
-        id: 'section-1',
-        heading: 'spálňa 1',
-        rows: [
+function loadMockContent() {
+    content.value = {
+        heading: {
+            sk: 'parkFIVE',
+            en: 'parkFIVE',
+        },
+        description: {
+            sk: 'Vyberte si izbu, služby alebo si naplánujte výlet v okolí.',
+            en: 'Choose a room, services, or plan a trip nearby.',
+        },
+        images: [
             {
-                id: 'row-1',
-                label: 'Fiľakovský hrad',
-                actions: [
-                    {
-                        id: 'count',
-                        text: '2',
-                    },
-                    {
-                      id: 'check',
-                      icon: 'bi bi-check-lg',
-                    }
-                ],
-                onClick: (row: TableRow) => console.log('clicked', row),
+                src: '/assets/image.jpg',
+                alt: {
+                    sk: 'Hotelová izba',
+                    en: 'Hotel room',
+                },
             },
             {
-                id: 'row-2',
-                label: 'Fiľakovský hrad',
-                actions: [
-                    {
-                        id: 'count',
-                        text: '1',
-                    },
+                src: '/assets/image2.jpg',
+                alt: {
+                    sk: 'Okolie hotela',
+                    en: 'Hotel surroundings',
+                },
+            },
+        ],
+        roomTypes: [
+            {
+                id: 'standard',
+                slug: 'standard',
+                title: {
+                    sk: 'Štandard',
+                    en: 'Standard',
+                },
+                features: [
+                    { sk: 'Wi-Fi', en: 'Wi-Fi' },
+                    { sk: 'TV', en: 'TV' },
+                    { sk: 'Kúpeľňa', en: 'Bathroom' },
                 ],
             },
             {
-                id: 'row-3',
-                label: 'Fiľakovský hrad',
-                actions: [
-                    {
-                        id: 'check',
-                        icon: 'bi bi-check-lg',
-                    },
+                id: 'premium',
+                slug: 'premium',
+                title: {
+                    sk: 'Premium',
+                    en: 'Premium',
+                },
+                features: [
+                    { sk: 'Wi-Fi', en: 'Wi-Fi' },
+                    { sk: 'Balkón', en: 'Balcony' },
+                    { sk: 'Výhľad', en: 'View' },
                 ],
             },
         ],
-    },
-    {
-        id: 'section-1',
-        heading: 'spálňa 1',
-        rows: [
+        infos: [
             {
-                id: 'row-1',
-                label: 'Fiľakovský hrad',
-                actions: [
-                    {
-                        id: 'count',
-                        text: '2',
-                    },
-                    {
-                      id: 'check',
-                      icon: 'bi bi-check-lg',
-                    }
-                ],
-                onClick: (row: TableRow) => console.log('clicked', row),
+                id: 'parking',
+                heading: {
+                    sk: 'Parkovanie',
+                    en: 'Parking',
+                },
+                text: {
+                    sk: 'Parkovanie je dostupné priamo pri objekte.',
+                    en: 'Parking is available directly at the property.',
+                },
+                opened: true,
             },
             {
-                id: 'row-2',
-                label: 'Fiľakovský hrad',
-                actions: [
-                    {
-                        id: 'count',
-                        text: '1',
-                    },
-                ],
-            },
-            {
-                id: 'row-3',
-                label: 'Fiľakovský hrad',
-                actions: [
-                    {
-                        id: 'check',
-                        icon: 'bi bi-check-lg',
-                    },
-                ],
+                id: 'breakfast',
+                heading: {
+                    sk: 'Raňajky',
+                    en: 'Breakfast',
+                },
+                text: {
+                    sk: 'Raňajky sú dostupné každý deň od 7:00.',
+                    en: 'Breakfast is available daily from 7:00.',
+                },
             },
         ],
-    },
-]
-
-function handleRowAction({
-  section,
-  row,
-  action,
-}: RowActionPayload) {
-    console.log(section, row, action)
+    }
 }
 
+watch(
+    locale,
+    () => {
+        loadMockContent()
+    },
+    { immediate: true }
+)
+
+const slideshowImages = computed(() =>
+    content.value?.images.map((image) => ({
+        src: image.src,
+        alt: localize(image.alt),
+    })) || []
+)
+
+const roomTypeSections = computed<TableSection[]>(() => [
+    {
+        id: 'room-types',
+        heading: t('home.roomTypes'),
+        rows:
+            content.value?.roomTypes.map((room) => ({
+                id: room.id,
+                label: localize(room.title),
+                actions: [
+                    {
+                        id: 'open',
+                        icon: 'bi bi-chevron-right',
+                        onClick: () => openRoomType(room.slug),
+                    },
+                ],
+                onClick: () => openRoomType(room.slug),
+            })) || [],
+    },
+])
+
+const hotelSections = computed<TableSection[]>(() => [
+    {
+        id: 'hotel-menu',
+        heading: t('home.menu'),
+        rows: [
+            createMenuRow('hotel', t('nav.hotel'), '/property'),
+            createMenuRow('services', t('nav.services'), '/services'),
+            createMenuRow('policies', t('nav.policies'), '/policies'),
+            createMenuRow('contact', t('nav.contact'), '/contact'),
+        ],
+    },
+])
+
+function createMenuRow(id: string, label: string, path: string): TableRow {
+    return {
+        id,
+        label,
+        actions: [
+            {
+                id: 'open',
+                icon: 'bi bi-chevron-right',
+                onClick: () => router.push(path),
+            },
+        ],
+        onClick: () => router.push(path),
+    }
+}
+
+function openRoomType(slug: string) {
+    router.push(`/rooms/${slug}`)
+}
 </script>
 
 <template>
-  <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
-    <section class="flex flex-col gap-4 p-8">
-      <h1 class="h1 text-lightcolor">{{ t('home.subtitle1') }}</h1>
-
-      <Info 
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
-        color="light"
-      />
-
-      <FormField
-        v-model="title"
-        label="Nadpis"
-        info="Krátky názov vašej recenzie."
-        :max-length="50"
-        error="Toto pole je povinné."
-        variant="dark"
-      />
-
-      <FormField
-        v-model="review"
-        type="textarea"
-        label="Recenzia"
-        info="Napíšte svoju skúsenosť."
-        :max-length="500"
-        variant="dark"
-      />
-
-      <FormField
-        v-model="photos"
-        type="file"
-        label="Pridajte fotografie"
-        info="Nahrajte fotografie priestoru."
-        multiple
-        file-accept="image/*"
-        variant="dark"
-      />
-
+  <main
+    v-if="content"
+    class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start"
+    :class="pageClass"
+  >
+    <section class="flex flex-col gap-4 p-8 lg:col-span-2">
       <Slideshow
-        :images="[
-          { src: '/assets/image.jpg', alt: 'Project 1' },
-          { src: '/assets/image2.jpg', alt: 'Project 2' },
-        ]"
-        heading="Fiľakovský hrad"
-        :tags="['branding', 'web', 'identity']"
-        description="Short project description goes here."
-        button-text="view project"
-        @button-click="openRecentProjects"
+        :images="slideshowImages"
+        :variant="variant"
       />
     </section>
 
-    <section class="flex flex-col gap-10 p-8 lg:col-span-2">
+    <section class="flex flex-col gap-10 p-8">
       <Text
-        :heading="t('home.heading')"
-        :description="t('home.description')"
+        :heading="localize(content.heading)"
+        :description="localize(content.description)"
+        :variant="variant"
       />
 
       <Table
-        :sections="sections"
-        variant="dark"
-        @row-action="handleRowAction"
+        :sections="roomTypeSections"
+        :variant="variant"
+      />
+
+      <Info
+        v-for="info in content.infos"
+        :key="info.id"
+        :heading="localize(info.heading)"
+        :text="localize(info.text)"
+        :variant="variant"
+        :opened="info.opened"
+      />
+
+      <Table
+        :sections="hotelSections"
+        :variant="variant"
       />
     </section>
   </main>

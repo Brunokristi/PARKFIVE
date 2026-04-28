@@ -125,10 +125,10 @@ onUnmounted(() => {
         >
           <!-- MAP -->
           <div class="h-[42%] w-full border-b" :class="colorClass">
-            <div class="absolute top-0 right-0 z-20 flex h-9">
+            <div class="absolute top-0 right-0 z-20 flex h-8">
             <button
                 type="button"
-                class="h-9 overflow-hidden border-b border-l transition-[width,opacity] duration-500 ease-in-out"
+                class="h-8 overflow-hidden border-b border-l transition-[width,opacity] duration-500 ease-in-out"
                 :class="[
                 isLight
                     ? 'bg-darkcolor text-lightcolor border-darkcolor'
@@ -144,7 +144,7 @@ onUnmounted(() => {
 
             <button
                 type="button"
-                class="flex h-9 w-9 items-center justify-center border-b border-l cursor-pointer"
+                class="flex h-8 w-8 items-center justify-center border-b border-l cursor-pointer"
                 :class="isLight
                 ? 'bg-darkcolor text-lightcolor border-darkcolor'
                 : 'bg-lightcolor text-darkcolor border-lightcolor'"
@@ -227,11 +227,11 @@ onUnmounted(() => {
       class="flex justify-center gap-6"
     >
       <button type="button" class="cursor-pointer" :class="colorClass" @click="prev">
-        <i class="bi bi-arrow-left"></i>
+        <i class="bi bi-chevron-left"></i>
       </button>
 
       <button type="button" class="cursor-pointer" :class="colorClass" @click="next">
-        <i class="bi bi-arrow-right"></i>
+        <i class="bi bi-chevron-right"></i>
       </button>
     </div>
   </div>

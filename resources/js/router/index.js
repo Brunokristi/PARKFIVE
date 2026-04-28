@@ -14,7 +14,7 @@ const routes = [
         name: 'home',
         component: Home,
         meta: {
-            theme: 'dark',
+            theme: 'light',
             footer: true,
         },
     },

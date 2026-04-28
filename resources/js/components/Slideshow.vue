@@ -1,12 +1,17 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
-import Tag from './Tag.vue'
+
 import Button from './Button.vue'
+import Tag from './Tag.vue'
 
 const { t } = useI18n()
 
 const props = defineProps({
+    slides: {
+        type: Array,
+        default: () => [],
+    },
     images: {
         type: Array,
         default: () => [],
@@ -35,6 +40,10 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+    enableGallery: {
+        type: Boolean,
+        default: true,
+    },
     variant: {
         type: String,
         default: 'dark',
@@ -51,10 +60,45 @@ const tagsScroller = ref(null)
 const canScrollTagsLeft = ref(false)
 const canScrollTagsRight = ref(false)
 
-const currentImage = computed(() => props.images[currentIndex.value] || null)
+const swipeStartX = ref(0)
+const swipeStartY = ref(0)
+
+let autoplayTimer = null
+
+const isLight = computed(() => props.variant === 'light')
+const hasSlides = computed(() => props.slides.length > 0)
+
+const slideItems = computed(() => {
+    if (hasSlides.value) return props.slides
+
+    return props.images.map((image) => ({
+        image,
+        title: '',
+        description: '',
+        tags: [],
+        buttonText: '',
+    }))
+})
+
+const currentSlide = computed(() => slideItems.value[currentIndex.value] || null)
+const currentImage = computed(() => currentSlide.value?.image || props.images[currentIndex.value] || null)
+const currentTags = computed(() => currentSlide.value?.tags || props.tags || [])
+const currentTitle = computed(() => currentSlide.value?.title || props.heading || '')
+const currentDescription = computed(() => currentSlide.value?.description || props.description || '')
+const currentButtonText = computed(() => currentSlide.value?.buttonText || props.buttonText || '')
+
+const canOpenGallery = computed(() =>
+    props.enableGallery && !!currentImage.value
+)
 
 const transitionName = computed(() =>
     slideDirection.value === 'prev' ? 'slide-right' : 'slide-left'
+)
+
+const colorClass = computed(() =>
+    isLight.value
+        ? 'text-darkcolor border-darkcolor'
+        : 'text-lightcolor border-lightcolor'
 )
 
 const invertedClass = computed(() =>
@@ -63,14 +107,10 @@ const invertedClass = computed(() =>
         : 'bg-lightcolor text-darkcolor border-lightcolor'
 )
 
-const isLight = computed(() => props.variant === 'light')
-
-const colorClass = computed(() =>
-    isLight.value ? 'text-darkcolor border-darkcolor' : 'text-lightcolor border-lightcolor'
-)
-
 const gradientClass = computed(() =>
-    isLight.value ? 'from-lightcolor to-transparent' : 'from-darkcolor to-transparent'
+    isLight.value
+        ? 'from-lightcolor to-transparent'
+        : 'from-darkcolor to-transparent'
 )
 
 const dotClass = computed(() =>
@@ -78,11 +118,18 @@ const dotClass = computed(() =>
 )
 
 const indicatorBgClass = computed(() =>
-    isLight.value ? 'bg-lightcolor' : 'bg-darkcolor'
+    isLight.value
+        ? 'bg-lightcolor text-darkcolor'
+        : 'bg-darkcolor text-lightcolor'
 )
 
-const swipeStartX = ref(0)
-const swipeStartY = ref(0)
+function getImageSrc(slide) {
+    return slide?.image?.src || slide?.image || slide?.src || ''
+}
+
+function getImageAlt(slide) {
+    return slide?.image?.alt || slide?.alt || ''
+}
 
 function updateTagsScrollState() {
     const el = tagsScroller.value
@@ -92,18 +139,64 @@ function updateTagsScrollState() {
     canScrollTagsRight.value = el.scrollLeft + el.clientWidth < el.scrollWidth - 1
 }
 
-function scrollTags(direction) {
-    const el = tagsScroller.value
-    if (!el) return
+function startAutoplay() {
+    stopAutoplay()
 
-    el.scrollBy({
-        left: direction === 'left' ? -120 : 120,
-        behavior: 'smooth',
-    })
+    if (slideItems.value.length <= 1 || props.interval <= 0 || isLightboxOpen.value) return
+
+    autoplayTimer = window.setInterval(next, props.interval)
+}
+
+function stopAutoplay() {
+    if (!autoplayTimer) return
+
+    clearInterval(autoplayTimer)
+    autoplayTimer = null
+}
+
+function next() {
+    if (!slideItems.value.length) return
+
+    slideDirection.value = 'next'
+    currentIndex.value = (currentIndex.value + 1) % slideItems.value.length
+}
+
+function prev() {
+    if (!slideItems.value.length) return
+
+    slideDirection.value = 'prev'
+    currentIndex.value =
+        (currentIndex.value - 1 + slideItems.value.length) % slideItems.value.length
+}
+
+function nextManual() {
+    next()
+    startAutoplay()
+}
+
+function prevManual() {
+    prev()
+    startAutoplay()
+}
+
+function openLightbox() {
+    if (!canOpenGallery.value) return
+
+    stopAutoplay()
+    isLightboxOpen.value = true
+    document.body.style.overflow = 'hidden'
+}
+
+function closeLightbox() {
+    isLightboxOpen.value = false
+    document.body.style.overflow = ''
+    startAutoplay()
 }
 
 function handleTouchStart(event) {
-    if (!props.images.length) return
+    if (!slideItems.value.length) return
+
+    stopAutoplay()
 
     const touch = event.changedTouches[0]
     swipeStartX.value = touch.clientX
@@ -111,41 +204,20 @@ function handleTouchStart(event) {
 }
 
 function handleTouchEnd(event) {
-    if (!props.images.length) return
+    if (!slideItems.value.length) return
 
     const touch = event.changedTouches[0]
     const deltaX = touch.clientX - swipeStartX.value
     const deltaY = touch.clientY - swipeStartY.value
     const horizontalThreshold = 40
 
-    if (Math.abs(deltaX) < horizontalThreshold) return
-    if (Math.abs(deltaX) <= Math.abs(deltaY)) return
-
-    if (deltaX < 0) {
-        next()
-    } else {
-        prev()
+    if (Math.abs(deltaX) >= horizontalThreshold && Math.abs(deltaX) > Math.abs(deltaY)) {
+        deltaX < 0 ? next() : prev()
     }
-}
 
-function next() {
-    if (!props.images.length) return
-
-    slideDirection.value = 'next'
-    currentIndex.value = (currentIndex.value + 1) % props.images.length
-}
-
-function prev() {
-    if (!props.images.length) return
-
-    slideDirection.value = 'prev'
-    currentIndex.value =
-        (currentIndex.value - 1 + props.images.length) % props.images.length
-}
-
-function closeLightbox() {
-    isLightboxOpen.value = false
-    document.body.style.overflow = ''
+    if (!isLightboxOpen.value) {
+        startAutoplay()
+    }
 }
 
 function handleKeydown(event) {
@@ -157,7 +229,7 @@ function handleKeydown(event) {
 }
 
 function handleButtonClick() {
-    emit('button-click')
+    emit('button-click', currentSlide.value)
 }
 
 onMounted(() => {
@@ -165,9 +237,12 @@ onMounted(() => {
     window.addEventListener('resize', updateTagsScrollState)
 
     nextTick(updateTagsScrollState)
+    startAutoplay()
 })
 
 onUnmounted(() => {
+    stopAutoplay()
+
     window.removeEventListener('keydown', handleKeydown)
     window.removeEventListener('resize', updateTagsScrollState)
     document.body.style.overflow = ''
@@ -175,13 +250,31 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 pb-2" :class="colorClass">
-    <div class="relative h-[450px] md:h-[550px] w-full overflow-hidden border" :class="colorClass">
+  <div class="flex flex-col gap-2 pb-2" :class="colorClass">
+    <div
+      class="relative h-[450px] w-full overflow-hidden border md:h-[550px]"
+      :class="colorClass"
+    >
       <div
         class="relative h-full w-full touch-pan-y"
         @touchstart.passive="handleTouchStart"
         @touchend.passive="handleTouchEnd"
       >
+        <div v-if="canOpenGallery" class="absolute right-0 top-0 z-[20]">
+          <button
+            class="flex h-8 w-8 cursor-pointer items-center justify-center border-b border-l"
+            :class="
+              isLight
+                ? 'bg-lightcolor text-darkcolor border-darkcolor'
+                : 'bg-darkcolor text-lightcolor border-lightcolor'
+            "
+            :aria-label="t('slideshow.openGallery')"
+            @click.stop="openLightbox"
+          >
+            <i class="bi bi-arrows-angle-expand"></i>
+          </button>
+        </div>
+
         <transition :name="transitionName">
           <div
             v-if="currentImage"
@@ -189,34 +282,35 @@ onUnmounted(() => {
             class="absolute inset-0 z-[2]"
           >
             <img
-              :src="currentImage.src"
-              :alt="currentImage.alt || ''"
+              :src="getImageSrc(currentSlide)"
+              :alt="getImageAlt(currentSlide)"
               class="h-full w-full object-cover"
+              :class="canOpenGallery ? 'cursor-pointer' : ''"
+              @click="openLightbox"
             />
           </div>
         </transition>
 
         <div
-          v-if="images.length > 1"
+          v-if="slideItems.length > 1"
           class="absolute inset-x-0 bottom-0 z-[5] flex flex-col justify-end"
         >
           <div
-            class="bg-gradient-to-t px-4 pb-3 pt-16 flex items-center gap-2 min-w-0"
+            class="flex min-w-0 items-center gap-2 bg-gradient-to-t px-4 pb-3 pt-16"
             :class="gradientClass"
           >
             <h2
-              v-if="heading"
-              class="h2 shrink-0 whitespace-nowrap border px-2 h-7 inline-flex items-center"
+              v-if="currentTitle"
+              class="h2 inline-flex h-7 shrink-0 items-center whitespace-nowrap border px-2"
               :class="invertedClass"
             >
-              {{ heading }}
+              {{ currentTitle }}
             </h2>
 
-            <div v-if="tags.length" class="relative min-w-0 flex-1">
-
+            <div v-if="currentTags.length" class="relative min-w-0 flex-1">
               <div
                 ref="tagsScroller"
-                class="flex h-7 gap-2 overflow-x-auto scrollbar-hide"
+                class="scrollbar-hide flex h-7 gap-2 overflow-x-auto"
                 :class="[
                   canScrollTagsLeft ? 'pl-8' : '',
                   canScrollTagsRight ? 'pr-8' : ''
@@ -224,9 +318,9 @@ onUnmounted(() => {
                 @scroll="updateTagsScrollState"
               >
                 <Tag
-                  v-for="tag in tags"
+                  v-for="tag in currentTags"
                   :key="tag"
-                  class="shrink-0 h-7 inline-flex items-center"
+                  class="inline-flex h-7 shrink-0 items-center"
                   :text="tag"
                   :variant="variant"
                 />
@@ -235,23 +329,23 @@ onUnmounted(() => {
           </div>
 
           <div
-            class="flex flex-col gap-4 px-4 py-2"
+            class="flex flex-col gap-4 px-4 py-4"
             :class="indicatorBgClass"
           >
-            <p v-if="description" class="p text-center">
-              {{ description }}
+            <p v-if="currentDescription" class="p text-center">
+              {{ currentDescription }}
             </p>
 
             <Button
-              v-if="buttonText"
-              :text="buttonText"
+              v-if="currentButtonText"
+              :text="currentButtonText"
               :variant="variant"
               @click="handleButtonClick"
             />
 
             <div class="flex justify-center gap-2">
               <span
-                v-for="(_, index) in images"
+                v-for="(_, index) in slideItems"
                 :key="index"
                 class="h-1.5 w-1.5 rounded-full transition-opacity"
                 :class="[dotClass, index === currentIndex ? 'opacity-100' : 'opacity-40']"
@@ -262,27 +356,112 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="flex justify-center gap-6 w-full">
-      <button
-        v-if="showArrows && images.length > 1"
-        class="z-10 cursor-pointer"
-        :class="colorClass"
-        @click="prev"
-        :aria-label="t('slideshow.previousSlide')"
-      >
-        <i class="bi bi-arrow-left"></i>
-      </button>
+    <div class="flex w-full items-center">
+      <div class="flex-1"></div>
 
-      <button
-        v-if="showArrows && images.length > 1"
-        class="z-10 cursor-pointer"
-        :class="colorClass"
-        @click="next"
-        :aria-label="t('slideshow.nextSlide')"
-      >
-        <i class="bi bi-arrow-right"></i>
-      </button>
+      <div class="flex items-center justify-center gap-6">
+        <button
+          v-if="showArrows && slideItems.length > 1"
+          class="z-10 cursor-pointer"
+          :class="colorClass"
+          :aria-label="t('slideshow.previousSlide')"
+          @click="prevManual"
+        >
+          <i class="bi bi-chevron-left"></i>
+        </button>
+
+        <button
+          v-if="showArrows && slideItems.length > 1"
+          class="z-10 cursor-pointer"
+          :class="colorClass"
+          :aria-label="t('slideshow.nextSlide')"
+          @click="nextManual"
+        >
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <div class="flex-1"></div>
     </div>
+
+    <Teleport v-if="enableGallery" to="body">
+      <transition name="fade">
+        <div
+          v-if="isLightboxOpen"
+          class="fixed inset-0 z-[999] flex flex-col"
+          :class="indicatorBgClass"
+        >
+          <div class="absolute right-0 top-0 z-10">
+            <button
+              class="flex h-8 w-8 cursor-pointer items-center justify-center border-b border-l"
+              :class="
+                isLight
+                  ? 'bg-darkcolor text-lightcolor border-darkcolor'
+                  : 'bg-lightcolor text-darkcolor border-lightcolor'
+              "
+              @click="closeLightbox"
+            >
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+
+          <div
+            class="relative flex flex-1 items-center justify-center overflow-hidden p-4"
+            @touchstart.passive="handleTouchStart"
+            @touchend.passive="handleTouchEnd"
+          >
+            <img
+              v-if="currentImage"
+              :src="getImageSrc(currentSlide)"
+              :alt="getImageAlt(currentSlide)"
+              class="max-h-full max-w-full object-contain"
+            />
+
+            <button
+              v-if="slideItems.length > 1"
+              type="button"
+              class="absolute left-4 cursor-pointer"
+              :class="colorClass"
+              :aria-label="t('slideshow.previousSlide')"
+              @click="prev"
+            >
+              <i class="bi bi-chevron-left"></i>
+            </button>
+
+            <button
+              v-if="slideItems.length > 1"
+              type="button"
+              class="absolute right-4 cursor-pointer"
+              :class="colorClass"
+              :aria-label="t('slideshow.nextSlide')"
+              @click="next"
+            >
+              <i class="bi bi-chevron-right"></i>
+            </button>
+          </div>
+
+          <div
+            class="flex gap-2 overflow-x-auto border-t p-4"
+            :class="colorClass"
+          >
+            <button
+              v-for="(slide, index) in slideItems"
+              :key="index"
+              type="button"
+              class="h-16 w-24 shrink-0 cursor-pointer overflow-hidden border transition-opacity"
+              :class="[colorClass, index === currentIndex ? 'opacity-100' : 'opacity-40']"
+              @click="currentIndex = index"
+            >
+              <img
+                :src="getImageSrc(slide)"
+                :alt="getImageAlt(slide)"
+                class="h-full w-full object-cover"
+              />
+            </button>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
@@ -298,11 +477,10 @@ onUnmounted(() => {
     transform: translateX(100%);
 }
 
-.slide-left-enter-to {
-    transform: translateX(0);
-}
-
-.slide-left-leave-from {
+.slide-left-enter-to,
+.slide-left-leave-from,
+.slide-right-enter-to,
+.slide-right-leave-from {
     transform: translateX(0);
 }
 
@@ -314,15 +492,17 @@ onUnmounted(() => {
     transform: translateX(-100%);
 }
 
-.slide-right-enter-to {
-    transform: translateX(0);
-}
-
-.slide-right-leave-from {
-    transform: translateX(0);
-}
-
 .slide-right-leave-to {
     transform: translateX(100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 250ms ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

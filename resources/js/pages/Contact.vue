@@ -1,29 +1,30 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import Table from '../components/Table.vue'
-import FormField from '../components/FormField.vue'
-import Info from '../components/Info.vue'
 import Chat from '../components/Chat.vue'
+import Info from '../components/Info.vue'
+import Table from '../components/Table.vue'
 
 const route = useRoute()
-const { t } = useI18n()
+const { locale } = useI18n()
 
 type Variant = 'light' | 'dark'
+type LocalizedText = Record<string, string>
 
 interface RowAction {
     id: string
     text?: string
     icon?: string
+    onClick?: () => void
 }
 
 interface TableRow {
     id: string
     label: string
     actions: RowAction[]
-    onClick?: (row: TableRow) => void
+    onClick?: () => void
 }
 
 interface TableSection {
@@ -32,110 +33,180 @@ interface TableSection {
     rows: TableRow[]
 }
 
-interface RowActionPayload {
-    section: Pick<TableSection, 'id' | 'heading'>
-    row: Pick<TableRow, 'id' | 'label'>
+interface ContactItem {
+    id: string
+    label: string
+    href?: string
 }
 
-const title = ref('')
-const email = ref('')
-const phone = ref('')
-const message = ref('')
-const files = ref<File | File[] | null>(null)
+interface DbContactContent {
+    title: LocalizedText
+    infos: Array<{
+        id: string
+        heading: LocalizedText
+        text: LocalizedText
+        opened?: boolean
+    }>
+    contactSections: Array<{
+        id: string
+        heading: LocalizedText
+        rows: ContactItem[]
+    }>
+}
+
+const content = ref<DbContactContent | null>(null)
 
 const variant = computed<Variant>(() =>
     route.meta.theme === 'light' ? 'light' : 'dark'
 )
 
-const titleClass = computed(() =>
+const pageClass = computed(() =>
     variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
 )
 
-const sections = computed<TableSection[]>(() => [
-    {
-        id: 'section-1',
-        heading: "telefón",
-        rows: [
+function localize(value?: LocalizedText) {
+    if (!value) return ''
+
+    return value[locale.value] || value.sk || Object.values(value)[0] || ''
+}
+
+function loadMockContent() {
+    content.value = {
+        title: {
+            sk: 'Kontakt',
+            en: 'Contact',
+        },
+        infos: [
             {
-                id: 'row-1',
-                label: "+421 123 456 789",
-                actions: [
-                    { id: 'check', icon: 'bi bi-chevron-right' },
-                ],
-                onClick: (row: TableRow) => console.log('clicked', row),
+                id: 'reception',
+                heading: {
+                    sk: 'Recepcia',
+                    en: 'Reception',
+                },
+                text: {
+                    sk: 'Radi vám pomôžeme s rezerváciou alebo otázkami k pobytu.',
+                    en: 'We are happy to help with your reservation or stay-related questions.',
+                },
+                opened: true,
             },
             {
-                id: 'row-2',
-                label: "+421 123 456 789",
-                actions: [
-                    { id: 'check', icon: 'bi bi-chevron-right' },
-                ],
-                onClick: (row: TableRow) => console.log('clicked', row),
+                id: 'arrival',
+                heading: {
+                    sk: 'Príchod',
+                    en: 'Arrival',
+                },
+                text: {
+                    sk: 'Check-in je možný od 14:00. V prípade skoršieho príchodu nás kontaktujte.',
+                    en: 'Check-in is available from 14:00. Contact us for earlier arrival.',
+                },
+            },
+            {
+                id: 'parking',
+                heading: {
+                    sk: 'Parkovanie',
+                    en: 'Parking',
+                },
+                text: {
+                    sk: 'Parkovanie je dostupné priamo pri objekte.',
+                    en: 'Parking is available directly at the property.',
+                },
             },
         ],
-    },
-])
+        contactSections: [
+            {
+                id: 'phone',
+                heading: {
+                    sk: 'telefón',
+                    en: 'phone',
+                },
+                rows: [
+                    {
+                        id: 'phone-1',
+                        label: '+421 123 456 789',
+                        href: 'tel:+421123456789',
+                    },
+                    {
+                        id: 'phone-2',
+                        label: '+421 987 654 321',
+                        href: 'tel:+421987654321',
+                    },
+                ],
+            },
+            {
+                id: 'email',
+                heading: {
+                    sk: 'email',
+                    en: 'email',
+                },
+                rows: [
+                    {
+                        id: 'email-1',
+                        label: 'hello@parkfive.sk',
+                        href: 'mailto:hello@parkfive.sk',
+                    },
+                ],
+            },
+        ],
+    }
+}
 
-function handleRowAction({ section, row }: RowActionPayload) {
-    console.log(section, row)
+watch(locale, loadMockContent, { immediate: true })
+
+const contactSections = computed<TableSection[]>(() =>
+    content.value?.contactSections.map((section) => ({
+        id: section.id,
+        heading: localize(section.heading),
+        rows: section.rows.map((row) => ({
+            id: row.id,
+            label: row.label,
+            actions: [
+                {
+                    id: 'open',
+                    icon: 'bi bi-chevron-right',
+                    onClick: () => openContact(row),
+                },
+            ],
+            onClick: () => openContact(row),
+        })),
+    })) || []
+)
+
+function openContact(row: ContactItem) {
+    if (!row.href) return
+
+    window.location.href = row.href
 }
 </script>
 
 <template>
-  <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
+  <main
+    v-if="content"
+    class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start"
+    :class="pageClass"
+  >
     <section class="flex flex-col gap-10 p-8">
-      <h1 class="h1" :class="titleClass">
-        {{ t('room.subtitle') }}
+      <h1 class="h1">
+        {{ localize(content.title) }}
       </h1>
 
-      <Chat />
+      <Chat :variant="variant" />
     </section>
 
     <section class="flex flex-col gap-4 p-8">
       <Info
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
+        v-for="info in content.infos"
+        :key="info.id"
+        :heading="localize(info.heading)"
+        :text="localize(info.text)"
         :variant="variant"
-        :opened="true"
-      />
-
-      <Info
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
-        :variant="variant"
-        :opened="true"
-      />
-
-      <Info
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
-        :variant="variant"
-      />
-
-      <Info
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
-        :variant="variant"
-      />
-
-      <Info
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
-        :variant="variant"
-      />
-
-      <Info
-        :heading="t('home.info1.heading')"
-        :text="t('home.info1.text')"
-        :variant="variant"
+        :opened="info.opened"
       />
     </section>
 
     <section class="flex flex-col gap-10 p-8">
       <Table
-        :sections="sections"
+        :sections="contactSections"
         :variant="variant"
-        @row-action="handleRowAction"
       />
     </section>
   </main>

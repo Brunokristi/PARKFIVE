@@ -2,25 +2,20 @@ import { viewDepthKey } from "vue-router";
 
 export default {
     home: {
-        title: 'Webstránky, ktoré fungujú. Systémy, ktoré rastú.',
-        description: 'Čisté weby a inteligentné systémy nvrhnuté pre rast vášho biznisu.',
-        callToAction: 'Poďme tvoriť spolu',
-
-        subtitle1: 'Menej dizajnu. Väčší efekt.',
-        description1: 'Minimalistické, modulárne weby navrhnuté pre výkon. Čistá štruktúra, rýchle načítanie a jasná cesta k výsledkom.',
-
-        subtitle2: 'Systémy, ktoré šetria čas, nie ho plytvajú.',
-        description2: 'Menej klikov, automatizované systémy, plynulejšie procesy. AI tam, kde to dáva zmysel.',
-        workflow: 'Od nápadu k systému',
-
-        recentProjects: 'ďalšie projekty',
-
-        quote: 'Webstránka by nemala len dobre vyzerať. Mala by pre vás pracovať 24/7.',
-
-        contact: 'Kontaktujt',
-        vcard: 'Uložiť kontakt',
+        roomTypes: 'typy izieb',
+        menu: 'menu',
     },
-
+    nav: {
+        home: 'Úvod',
+        hotel: 'Hotel',
+        services: 'Služby',
+        policies: 'Informácie',
+        contact: 'Kontakt',
+        more: 'viac',
+        planner: 'Plánovač',
+        privacy: 'Súkromie',
+        language: 'jazyk',
+    },
     navigation: {
         home: 'Domov',
         portfolio: 'Projekty',
