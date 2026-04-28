@@ -41,7 +41,7 @@ function handleRowClick(section, row) {
             
             <!-- LEFT: heading -->
             <div class="flex items-center justify-center border-r" :class="colorClass">
-                <div class="-rotate-90 md:rotate-0 flex items-center gap-4 whitespace-nowrap md:pr-4">
+                <div class="-rotate-90 md:rotate-0 flex items-center gap-4 whitespace-nowrap md:pr-8">
                 <component
                     v-if="section.logo && typeof section.logo !== 'string'"
                     :is="section.logo"

@@ -7,7 +7,7 @@
 
     /* Headings */
     .h1 {
-        @apply text-sm leading-snug tracking-tight font-mono border-r pr-4 py-2 text-end;
+        @apply text-sm leading-snug tracking-tight font-mono border-r pr-8 py-2 text-end;
     }
 
     .h2 {

@@ -128,11 +128,6 @@ const sections = computed<TableSection[]>(() => [
   },
 ]);
 
-const slideshowImages = computed(() => [
-  { src: '/assets/image.jpg', alt: t('room.slideshow.project1Alt') },
-  { src: '/assets/image2.jpg', alt: t('room.slideshow.project2Alt') },
-]);
-
 function handleRowAction({ section, row }: RowActionPayload) {
   console.log(section, row);
 }
@@ -143,17 +138,19 @@ function handleRowAction({ section, row }: RowActionPayload) {
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
     <section class="flex flex-col gap-4 p-8">
       <h1 class="h1" :class="titleClass">{{ t('room.subtitle') }}</h1>
-
-      <Slideshow
-        :images="slideshowImages"
-        :variant="variant"
-      />
     </section>
 
     <section class="flex flex-col gap-10 p-8 lg:col-span-2">
-      <Text
-        :description="t('room.description')"
+      <Table
+        :sections="sections"
         :variant="variant"
+        @row-action="handleRowAction"
+      />
+
+      <Table
+        :sections="sections"
+        :variant="variant"
+        @row-action="handleRowAction"
       />
 
       <Table

@@ -28,7 +28,7 @@ const colorClass = computed(() =>
   <div class="flex items-center w-full" :class="colorClass">
         <div class="w-[20%] flex justify-center items-center">        
             <div class="transform -rotate-90 md:rotate-0 origin-center whitespace-nowrap">
-                <h2 class="h2 md:text-right md:pr-4" :class="colorClass">{{ props.heading }}</h2>
+                <h2 class="h2 md:text-right md:pr-8" :class="colorClass">{{ props.heading }}</h2>
             </div>
         </div>
 

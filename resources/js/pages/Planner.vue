@@ -3,7 +3,10 @@ import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import ItineraryTable from '../components/ItineraryTable.vue'
-import ActivitySlider from '../components/ActivitySlider.vue'
+import ActivitySlider from '../components/activitySlider.vue'
+import Text from '../components/Text.vue'
+
+
 
 const route = useRoute()
 
@@ -46,27 +49,22 @@ const activities = ref<Activity[]>([
         id: 'castle',
         title: 'Fiľakovský hrad',
         image: '/assets/image.jpg',
-        mapQuery: 'Fiľakovský hrad',
-        tags: ['Biela Labuť', 'reštaurácia'],
-        description: 'Lorem ipsum dolor sit amet.',
-      durationHours: 3,
+        lat: 48.267,
+        lng: 19.824,
+        tags: ['hrad', 'výhľad'],
+        description: 'Lorem ipsum...',
+        durationHours: 2,
     },
     {
-        id: 'restaurant',
-        title: 'Reštaurácia',
-        image: '/assets/image2.jpg',
-        tags: ['obed', 'večera'],
-        description: 'Aenean eu purus feugiat nisl hendrerit malesuada.',
-      durationHours: 2,
-    },
-    {
-        id: 'walk',
-        title: 'Prechádzka mestom',
-        image: '/assets/image3.jpg',
-        tags: ['prechádzka', 'centrum'],
-        description: 'Krátka aktivita vhodná na popoludnie.',
-      durationHours: 4,
-    },
+        id: 'viewpoint',
+        title: 'Haličský zámok ',
+        image: '/assets/image.jpg',
+        lat: 48.262,
+        lng: 19.724,
+        tags: ['hrad', 'výhľad'],
+        description: 'Lorem ipsum...',
+        durationHours: 1.5,
+    }
 ])
 
 const itineraryItems = ref<Activity[]>([])
@@ -160,12 +158,8 @@ function openActivity(activity: Activity) {
 </script>
 
 <template>
-  <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
-    <section class="flex flex-col gap-4 p-4">
-      <h1 class="h1" :class="titleClass">
-        Itinerár
-      </h1>
-
+  <main class="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:items-start">
+    <section class="flex flex-col gap-10 p-8">
       <ActivitySlider
         :activities="activities"
         :variant="variant"
@@ -174,35 +168,25 @@ function openActivity(activity: Activity) {
       />
     </section>
 
-    <section class="flex flex-col gap-10 p-4 lg:col-span-2">
-      <div :class="titleClass">
-        <h2 class="h2">
-          Vybrané aktivity
-        </h2>
 
-        <p class="p">
-          Vyberte aktivity zo slidera. Itinerár sa naplánuje automaticky na dni po 8 hodinách.
-        </p>
-      </div>
+    <section class="flex flex-col gap-10 p-8 lg:col-span-2">
+        <Text
+            heading="Planner"
+            description="Plánujte svoj výlet jednoducho a efektívne. Presúvajte aktivity, pridávajte ich do itinerára a sledujte, koľko času vám zostáva do naplánovania."
+            :variant="variant"
+        />
 
-      <div class="p" :class="titleClass">
-        <p>
-          Celkový čas: {{ totalPlannedHours }} h
-        </p>
-        <p>
-          Potrebný počet dní: {{ totalDaysNeeded }}
-        </p>
-      </div>
-
-      <ItineraryTable
-        :days="plannedDays"
-        :hours-per-day="HOURS_PER_DAY"
-        :variant="variant"
-        @remove="removeActivity"
-        @move-up="moveActivityUp"
-        @move-down="moveActivityDown"
-      />
-
+        <ItineraryTable
+            :days="plannedDays"
+            :variant="variant"
+            @remove="removeActivity"
+            @move-up="moveActivityUp"
+            @move-down="moveActivityDown"
+        />
     </section>
+
+    
+
+    
   </main>
 </template>

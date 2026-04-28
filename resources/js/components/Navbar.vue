@@ -12,8 +12,20 @@ const props = defineProps({
 
 const isOpen = ref(false)
 
+/* main header still respects page variant */
+const isLight = computed(() => props.variant === 'light')
+
 const colorClass = computed(() =>
-    props.variant === 'light' ? 'text-darkcolor' : 'text-lightcolor'
+    isLight.value ? 'text-darkcolor' : 'text-lightcolor'
+)
+
+/* force teleport to always use dark theme */
+const overlayVariant = 'dark'
+
+const overlayClass = computed(() =>
+    overlayVariant === 'dark'
+        ? 'bg-darkcolor text-lightcolor'
+        : 'bg-lightcolor text-darkcolor'
 )
 
 const sections = [
@@ -38,7 +50,8 @@ function closeMenu() {
 </script>
 
 <template>
-  <div class="sticky top-0 z-50 flex justify-between items-center p-4">
+  <!-- HEADER -->
+  <div class="sticky top-0 z-50 flex justify-between items-center px-8 py-4" :class="colorClass">
     <a href="/" :class="colorClass">
       <Logo :width="20" :height="20" />
     </a>
@@ -48,24 +61,28 @@ function closeMenu() {
     </button>
   </div>
 
-  <!-- TELEPORT -->
+  <!-- TELEPORT MENU -->
   <Teleport to="body">
     <div
       v-if="isOpen"
-      class="fixed inset-0 z-[999] flex flex-col bg-darkcolor backdrop-blur-sm"
+      class="fixed inset-0 z-[999] flex flex-col backdrop-blur-sm"
+      :class="overlayClass"
       @click.self="closeMenu"
     >
-      <!-- close button -->
-      <div class="flex justify-end p-4 ">
-        <button @click="closeMenu" :class="colorClass">
+      <!-- CLOSE BUTTON -->
+      <div class="flex justify-end p-8">
+        <button @click="closeMenu" class="text-lightcolor">
           <i class="bi bi-x-lg cursor-pointer"></i>
         </button>
       </div>
 
-      <!-- content -->
+      <!-- CONTENT -->
       <div class="flex-1 flex items-center justify-center px-4">
         <div class="w-full">
-          <Table :sections="sections" :variant="props.variant" />
+          <Table
+            :sections="sections"
+            variant="dark"
+          />
         </div>
       </div>
     </div>

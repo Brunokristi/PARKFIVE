@@ -219,7 +219,7 @@ function openRoomType(room: RoomType) {
 
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
-    <section class="flex flex-col gap-4 p-4">
+    <section class="flex flex-col gap-4 p-8">
       <h1 class="h1" :class="titleClass">
         {{ t('room.subtitle') }}
       </h1>
@@ -230,7 +230,7 @@ function openRoomType(room: RoomType) {
       />
     </section>
 
-    <section class="flex flex-col gap-10 p-4 lg:col-span-2">
+    <section class="flex flex-col gap-10 p-8 lg:col-span-2">
       <Text
         :description="t('room.description')"
         :variant="variant"
@@ -239,7 +239,6 @@ function openRoomType(room: RoomType) {
       <Table
         :sections="sections"
         :variant="variant"
-        @row-action="handleRowAction"
       />
 
       <Text

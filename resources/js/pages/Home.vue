@@ -140,7 +140,7 @@ function handleRowAction({
 
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
-    <section class="flex flex-col gap-4 p-4">
+    <section class="flex flex-col gap-4 p-8">
       <h1 class="h1 text-lightcolor">{{ t('home.subtitle1') }}</h1>
 
       <Info 
@@ -190,7 +190,7 @@ function handleRowAction({
       />
     </section>
 
-    <section class="flex flex-col gap-10 p-4 lg:col-span-2">
+    <section class="flex flex-col gap-10 p-8 lg:col-span-2">
       <Text
         :heading="t('home.heading')"
         :description="t('home.description')"

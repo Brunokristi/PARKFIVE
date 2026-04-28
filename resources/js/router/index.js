@@ -5,6 +5,7 @@ import Contact from '../pages/Contact.vue';
 import PrivacyPolicy from '../pages/PrivacyPolicy.vue';
 import Room from '../pages/Room.vue';
 import Planner from '../pages/Planner.vue';
+import Policies from '../pages/Policies.vue';
 
 const routes = [
     {
@@ -61,6 +62,16 @@ const routes = [
             footer: true,
         },
     },
+    {
+        path: '/policies',
+        name: 'policies',
+        component: Policies,
+        meta: {
+            theme: 'light',
+            footer: true,
+        },
+    },
+
 
 ];
 

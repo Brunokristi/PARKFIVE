@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Tag from './Tag.vue'
 import Button from './Button.vue'
+import Map from './Map.vue'
 
 const props = defineProps({
     activities: {
@@ -16,6 +17,15 @@ const props = defineProps({
         type: Boolean,
         default: true,
     },
+})
+const showAddLabel = ref(true)
+
+onMounted(() => {
+    window.addEventListener('keydown', handleKeydown)
+
+    window.setTimeout(() => {
+        showAddLabel.value = false
+    }, 2000)
 })
 
 const emit = defineEmits(['select-activity', 'more-info'])
@@ -105,7 +115,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col gap-4" :class="colorClass">
+  <div class="flex flex-col gap-2" :class="colorClass">
     <div class="relative h-[620px] w-full overflow-hidden border" :class="colorClass">
       <transition :name="transitionName">
         <div
@@ -115,24 +125,44 @@ onUnmounted(() => {
         >
           <!-- MAP -->
           <div class="h-[42%] w-full border-b" :class="colorClass">
+            <div class="absolute top-0 right-0 z-20 flex h-9">
             <button
                 type="button"
-                class="absolute top-0 right-0 z-20 h-9 w-9 flex items-center justify-center border-b border-l"
-                :class="isLight
-                    ? 'bg-lightcolor/80 text-darkcolor border-darkcolor'
-                    : 'bg-darkcolor/80 text-lightcolor border-lightcolor'"
+                class="h-9 overflow-hidden border-b border-l transition-[width,opacity] duration-500 ease-in-out"
+                :class="[
+                isLight
+                    ? 'bg-darkcolor text-lightcolor border-darkcolor'
+                    : 'bg-lightcolor text-darkcolor border-lightcolor',
+                showAddLabel ? 'w-[184px] opacity-100 px-2' : 'w-0 opacity-0 px-0'
+                ]"
                 @click.stop="selectCurrentActivity"
-                >
-                <i class="bi bi-plus-lg"></i>
+            >
+                <span class="p whitespace-nowrap">
+                pridať lokalitu do plánu
+                </span>
             </button>
 
-            <iframe
-              v-if="mapSrc"
-              :src="mapSrc"
-              class="h-full w-full border-0 pointer-events-none"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-            ></iframe>
+            <button
+                type="button"
+                class="flex h-9 w-9 items-center justify-center border-b border-l cursor-pointer"
+                :class="isLight
+                ? 'bg-darkcolor text-lightcolor border-darkcolor'
+                : 'bg-lightcolor text-darkcolor border-lightcolor'"
+                @click.stop="selectCurrentActivity"
+            >
+                <i class="bi bi-plus-lg"></i>
+            </button>
+            </div>
+
+            <Map
+                :lat="currentActivity.lat"
+                :lng="currentActivity.lng"
+                :name="currentActivity.title"
+                :home-lat="48.267"
+                :home-lng="19.824"
+                home-name="parkFIVE"
+                :variant="variant"
+            />
           </div>
 
           <!-- IMAGE -->
@@ -146,7 +176,7 @@ onUnmounted(() => {
 
             <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end">
               <div
-                class="bg-gradient-to-t px-4 pb-3 pt-20"
+                class="bg-gradient-to-t px-4 pb-0 pt-20"
                 :class="gradientClass"
               >
                 <div class="flex flex-wrap gap-2">
@@ -154,6 +184,11 @@ onUnmounted(() => {
                     v-for="tag in currentActivity.tags || []"
                     :key="tag"
                     :text="tag"
+                    :variant="variant"
+                  />
+                  <Tag
+                    v-if="currentActivity.durationHours"
+                    :text="`${currentActivity.durationHours} h`"
                     :variant="variant"
                   />
                 </div>
@@ -164,16 +199,12 @@ onUnmounted(() => {
                   {{ currentActivity.description }}
                 </p>
 
-                <p v-if="currentActivity.durationHours" class="p text-center opacity-80">
-                  Trvanie: {{ currentActivity.durationHours }} h
-                </p>
-
                 <div class="flex justify-center">
-                  <Button
-                    text="viac informácií"
-                    :variant="variant"
-                    @click="showMoreInfo"
-                  />
+                    <Button
+                        text="viac informácií"
+                        :variant="variant"
+                        @click="showMoreInfo"
+                    />
                 </div>
 
                 <div class="flex justify-center gap-2">

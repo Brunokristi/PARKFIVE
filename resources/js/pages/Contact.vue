@@ -83,7 +83,7 @@ function handleRowAction({ section, row }: RowActionPayload) {
 
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
-    <section class="flex flex-col gap-10 p-4">
+    <section class="flex flex-col gap-10 p-8">
       <h1 class="h1" :class="titleClass">
         {{ t('room.subtitle') }}
       </h1>
@@ -91,7 +91,7 @@ function handleRowAction({ section, row }: RowActionPayload) {
       <Chat />
     </section>
 
-    <section class="flex flex-col gap-4 p-4">
+    <section class="flex flex-col gap-4 p-8">
       <Info
         :heading="t('home.info1.heading')"
         :text="t('home.info1.text')"
@@ -131,7 +131,7 @@ function handleRowAction({ section, row }: RowActionPayload) {
       />
     </section>
 
-    <section class="flex flex-col gap-10 p-4">
+    <section class="flex flex-col gap-10 p-8">
       <Table
         :sections="sections"
         :variant="variant"

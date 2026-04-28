@@ -41,7 +41,7 @@ const footerSections = computed(() => [
 </script>
 
 <template>
-  <footer class="flex items-center w-full px-4">
+  <footer class="flex items-center w-full px-8">
       <Table
         :sections="footerSections"
         :variant="variant"
