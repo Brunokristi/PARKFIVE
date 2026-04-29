@@ -175,24 +175,39 @@ onUnmounted(() => {
             />
 
             <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end">
-              <div
-                class="bg-gradient-to-t px-4 pb-0 pt-20"
+                <div
+                class="flex min-w-0 items-center gap-2 bg-gradient-to-t px-4 pb-3 pt-16"
                 :class="gradientClass"
-              >
-                <div class="flex flex-wrap gap-2">
-                  <Tag
-                    v-for="tag in currentActivity.tags || []"
-                    :key="tag"
-                    :text="tag"
-                    :variant="variant"
-                  />
-                  <Tag
-                    v-if="currentActivity.durationHours"
-                    :text="`${currentActivity.durationHours} h`"
-                    :variant="variant"
-                  />
+                >
+                <h2
+                    v-if="currentActivity.title"
+                    class="h2 inline-flex h-7 shrink-0 items-center whitespace-nowrap border px-2"
+                    :class="isLight
+                    ? 'bg-darkcolor text-lightcolor border-darkcolor'
+                    : 'bg-lightcolor text-darkcolor border-lightcolor'"
+                >
+                    {{ currentActivity.title }}
+                </h2>
+
+                <div class="relative min-w-0 flex-1">
+                    <div class="scrollbar-hide flex h-7 gap-2 overflow-x-auto">
+                    <Tag
+                        v-for="tag in currentActivity.tags || []"
+                        :key="tag"
+                        class="inline-flex h-7 shrink-0 items-center"
+                        :text="tag"
+                        :variant="variant"
+                    />
+
+                    <Tag
+                        v-if="currentActivity.durationHours"
+                        class="inline-flex h-7 shrink-0 items-center"
+                        :text="`${currentActivity.durationHours} h`"
+                        :variant="variant"
+                    />
+                    </div>
                 </div>
-              </div>
+                </div>
 
               <div class="flex flex-col gap-4 px-4 py-4" :class="solidClass">
                 <p v-if="currentActivity.description" class="p text-center">

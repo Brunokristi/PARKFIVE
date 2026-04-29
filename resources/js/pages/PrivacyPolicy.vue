@@ -1,43 +1,74 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
+import Text from '../components/Text.vue'
+
+const route = useRoute()
+const { t } = useI18n()
+
+type Variant = 'light' | 'dark'
+
+const variant = computed<Variant>(() =>
+    route.meta.theme === 'light' ? 'light' : 'dark'
+)
+
+const pageClass = computed(() =>
+    variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
+)
+
+const sections = computed(() => [
+    {
+        id: 'overview',
+        heading: t('privacy.sectionOverviewTitle'),
+        description: t('privacy.sectionOverviewText'),
+    },
+    {
+        id: 'cookies',
+        heading: t('privacy.sectionCookiesTitle'),
+        description: t('privacy.sectionCookiesText'),
+    },
+    {
+        id: 'analytics',
+        heading: t('privacy.sectionAnalyticsTitle'),
+        description: t('privacy.sectionAnalyticsText'),
+    },
+    {
+        id: 'control',
+        heading: t('privacy.sectionControlTitle'),
+        description: t('privacy.sectionControlText'),
+    },
+    {
+        id: 'contact',
+        heading: t('privacy.sectionContactTitle'),
+        description: t('privacy.sectionContactText'),
+    },
+])
 </script>
 
 <template>
-  <main class="py-10 px-4 md:px-8">
-    <section class="mx-auto w-full max-w-3xl flex flex-col gap-8" data-theme="light">
-      <header class="flex flex-col gap-3 text-center md:text-left">
-        <h1 class="h2 text-accent">{{ t('privacy.title') }}</h1>
-        <p class="p text-center">{{ t('privacy.lastUpdated') }}</p>
-      </header>
+  <main
+    class="grid grid-cols-1 gap-10 p-8 lg:grid-cols-3 lg:items-start"
+    :class="pageClass"
+  >
+    <section class="flex flex-col gap-10 lg:col-span-1">
+      <h1
+        class="h1"
+        :class="pageClass"
+      >
+        {{ t('privacy.title') }}
+      </h1>
+    </section>
 
-      <div class="flex flex-col gap-6">
-        <section class="flex flex-col gap-2">
-          <h2 class="h3">{{ t('privacy.sectionOverviewTitle') }}</h2>
-          <p class="p">{{ t('privacy.sectionOverviewText') }}</p>
-        </section>
-
-        <section class="flex flex-col gap-2">
-          <h2 class="h3">{{ t('privacy.sectionCookiesTitle') }}</h2>
-          <p class="p">{{ t('privacy.sectionCookiesText') }}</p>
-        </section>
-
-        <section class="flex flex-col gap-2">
-          <h2 class="h3">{{ t('privacy.sectionAnalyticsTitle') }}</h2>
-          <p class="p">{{ t('privacy.sectionAnalyticsText') }}</p>
-        </section>
-
-        <section class="flex flex-col gap-2">
-          <h2 class="h3">{{ t('privacy.sectionControlTitle') }}</h2>
-          <p class="p">{{ t('privacy.sectionControlText') }}</p>
-        </section>
-
-        <section class="flex flex-col gap-2">
-          <h2 class="h3">{{ t('privacy.sectionContactTitle') }}</h2>
-          <p class="p">{{ t('privacy.sectionContactText') }}</p>
-        </section>
-      </div>
+    <section class="flex flex-col gap-10 lg:col-span-2">
+      <Text
+        v-for="section in sections"
+        :key="section.id"
+        :heading="section.heading"
+        :description="section.description"
+        :variant="variant"
+      />
     </section>
   </main>
 </template>

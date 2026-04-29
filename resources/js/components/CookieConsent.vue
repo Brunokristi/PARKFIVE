@@ -1,100 +1,214 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
-import { useRouter } from 'vue-router';
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const { t } = useI18n();
-const router = useRouter();
-const consentSet = ref(false);
+import Button from './Button.vue'
+import Info from './Info.vue'
+import { useToast } from '../composables/useToast'
 
-const isVisible = computed(() => !consentSet.value);
+import {
+    disableAnalytics,
+    enableAnalytics,
+    trackPageViewIfConsented,
+} from '../composables/useAnalytics'
 
-function acceptCookies() {
-  setCookiePreferences({ necessary: true, analytics: true, marketing: false });
-  consentSet.value = true;
-  enableAnalytics();
-  trackPageViewIfConsented();
+import {
+    getCookiePreferences,
+    setCookiePreferences,
+    type CookiePreferences,
+} from '../composables/useCookieConsent'
+
+const props = defineProps({
+    variant: {
+        type: String,
+        default: 'dark',
+    },
+})
+
+const { t } = useI18n()
+
+const isOpen = ref(false)
+const { show: showToast } = useToast()
+
+const preferences = ref<CookiePreferences>({
+    necessary: true,
+    analytics: false,
+    marketing: false,
+})
+
+const originalPreferences = ref<CookiePreferences>({
+    necessary: true,
+    analytics: false,
+    marketing: false,
+})
+
+const isLight = computed(() => props.variant === 'light')
+
+const toastClass = computed(() =>
+    isLight.value
+        ? 'bg-darkcolor text-lightcolor border-lightcolor'
+        : 'bg-lightcolor text-darkcolor border-darkcolor'
+)
+
+const invertedClass = computed(() =>
+    isLight.value
+        ? 'bg-lightcolor text-darkcolor border-darkcolor'
+        : 'bg-darkcolor text-lightcolor border-lightcolor'
+)
+
+const contentVariant = computed(() =>
+    isLight.value ? 'dark' : 'light'
+)
+
+const isModified = computed(() =>
+    JSON.stringify(preferences.value) !== JSON.stringify(originalPreferences.value)
+)
+
+function openModal() {
+    isOpen.value = true
+
+    const saved = getCookiePreferences()
+    if (saved) {
+        originalPreferences.value = { ...saved }
+        preferences.value = { ...saved }
+    }
 }
 
-function rejectCookies() {
-  setCookiePreferences({ necessary: true, analytics: false, marketing: false });
-  consentSet.value = true;
-  disableAnalytics();
+function closeModal() {
+    isOpen.value = false
 }
 
-function openPrivacyPage() {
-  router.push({ name: 'privacy-policy' });
+function savePreferences(heading: string, text: string) {
+    setCookiePreferences(preferences.value)
+
+    if (preferences.value.analytics) {
+        enableAnalytics()
+        trackPageViewIfConsented()
+    } else {
+        disableAnalytics()
+    }
+
+    originalPreferences.value = { ...preferences.value }
+    closeModal()
+
+    showToast(heading, text)
 }
+
+function acceptAll() {
+    preferences.value = {
+        necessary: true,
+        analytics: true,
+        marketing: true,
+    }
+
+    savePreferences(
+        t('cookies.toastAcceptedTitle'),
+        t('cookies.toastAcceptedText')
+    )
+}
+
+function rejectAll() {
+    preferences.value = {
+        necessary: true,
+        analytics: false,
+        marketing: false,
+    }
+
+    savePreferences(
+        t('cookies.toastRejectedTitle'),
+        t('cookies.toastRejectedText')
+    )
+}
+
+function onWindowOpenEvent() {
+    openModal()
+}
+
+onMounted(() => {
+    window.addEventListener('open-cookie-consent', onWindowOpenEvent)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('open-cookie-consent', onWindowOpenEvent)
+})
+
+defineExpose({ openModal })
 </script>
 
 <template>
-  <teleport to="body">
+  <Teleport to="body">
     <transition name="toast">
       <div
-        v-if="isVisible"
-        class="fixed bottom-6 inset-x-0 z-50 w-[70vw] mx-auto border border-dark bg-light px-4 py-4 shadow-lg"
+        v-if="isOpen"
+        class="fixed bottom-8 right-8 z-[1000] w-[calc(100vw-2rem)] max-w-lg border flex flex-col overflow-hidden max-h-[calc(100vh-8rem)]"
+        :class="toastClass"
         role="dialog"
-        aria-live="polite"
-        :aria-label="t('cookies.title')"
+        aria-modal="true"
+        :aria-label="t('cookies.policy.title')"
       >
+        <!-- CLOSE BUTTON -->
         <button
-          class="absolute right-3 top-3 text-dark cursor-pointer"
-          aria-label="Close cookie consent"
-          @click="rejectCookies"
+          type="button"
+          class="absolute right-0 top-0 flex h-8 w-8 items-center justify-center border cursor-pointer"
+          :class="invertedClass"
+          aria-label="Close cookie policy"
+          @click="closeModal"
         >
-          <i class="bi bi-x-lg"></i>
-        </button>
-        <div class="">
-          <h3 class="h3 mb-2">{{ t('cookies.title') }}</h3>
-          <p class="p">
-            {{ t('cookies.text') }}
-          </p>
-
-          <button
-            type="button"
-            class="p underline underline-offset-2 text-accent text-sm hover:text-dark transition-colors duration-200 mb-5"
-            @click="openPrivacyPage"
-        >
-            {{ t('cookies.learnMore') }}
+          <i class="bi bi-x-lg text-xs"></i>
         </button>
 
-          <div class="flex flex-col sm:flex-row gap-2">
-            <button
-              type="button"
-              class="px-4 py-2 border border-dark text-dark hover:bg-dark/10 transition-colors duration-200 font-mono text-xs uppercase tracking-wide cursor-pointer"
-              @click="rejectCookies"
-            >
-              {{ t('cookies.reject') }}
-            </button>
-            <button
-              type="button"
-              class="px-4 py-2 bg-accent text-light hover:brightness-110 transition-all duration-200 font-mono text-xs uppercase tracking-wide cursor-pointer"
-              @click="acceptCookies"
-            >
-              {{ t('cookies.accept') }}
-            </button>
-          </div>
+        <!-- HEADER -->
+        <div class="px-4 py-4 h-[100px] flex items-end justify-end" >
+          <h1 class="h1">
+            {{ t('cookies.consentTitle') }}
+          </h1>
+        </div>
+
+        <div class="flex flex-col gap-4 overflow-y-auto px-4 py-4">
+          <Info
+            :heading="t('cookies.policy.necessary')"
+            :text="`${t('cookies.policy.necessaryDesc')}\n\n${t('cookies.policy.necessaryList')}`"
+            :variant="contentVariant"
+          />
+
+          <Info
+            :heading="t('cookies.policy.analytics')"
+            :text="`${t('cookies.policy.analyticsDesc')}\n\n${t('cookies.policy.analyticsList')}`"
+            :variant="contentVariant"
+          />
+
+          <Info
+            :heading="t('cookies.policy.marketing')"
+            :text="`${t('cookies.policy.marketingDesc')}\n\n${t('cookies.policy.marketingList')}`"
+            :variant="contentVariant"
+          />
+        </div>
+
+        <!-- FOOTER -->
+        <div class="flex flex-col gap-2 border-t px-4 py-4">
+          <Button :text="t('cookies.policy.rejectAll')" :variant="contentVariant" @click="rejectAll" />
+          <Button :text="t('cookies.policy.acceptAll')" :variant="contentVariant" @click="acceptAll" />
         </div>
       </div>
     </transition>
-  </teleport>
+  </Teleport>
 </template>
 
 <style scoped>
 .toast-enter-active,
 .toast-leave-active {
-  transition: opacity 0.3s ease, transform 0.3s ease;
+    transition: opacity 300ms ease, transform 300ms ease;
 }
 
 .toast-enter-from,
 .toast-leave-to {
-  opacity: 0;
-  transform: translateY(24px);
+    opacity: 0;
+    transform: translate(24px, 24px);
 }
 
 .toast-enter-to,
 .toast-leave-from {
-  opacity: 1;
-  transform: translateY(0);
+    opacity: 1;
+    transform: translate(0, 0);
 }
 </style>

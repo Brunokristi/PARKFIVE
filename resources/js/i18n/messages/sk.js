@@ -150,7 +150,11 @@ export default {
             acceptAll: "Prijať všetko",
             save: "Uložiť nastavenia",
             cancel: "Zrušiť"
-        }
+        },
+        toastAcceptedTitle: 'Cookies povolené',
+        toastAcceptedText: 'Analytické a marketingové cookies boli povolené.',
+        toastRejectedTitle: 'Cookies odmietnuté',
+        toastRejectedText: 'Použijú sa iba nevyhnutné cookies.',
     },
 
     workflowPage: {

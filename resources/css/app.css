@@ -2,6 +2,15 @@
 @config "../../tailwind.config.js";
 @import "tailwindcss";
 
+:root {
+    /* Project color tokens used by components that read CSS variables */
+    --lightcolor: #D1D3C4;
+    --darkcolor: #353535;
+    /* legacy aliases */
+    --color-lightcolor: #D1D3C4;
+    --color-darkcolor: #353535;
+}
+
 
 @layer components {
 
@@ -21,4 +30,28 @@
     .p {
         @apply text-sm font-light leading-snug tracking-tight font-sans;
     }
+}
+
+*::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--color-darkcolor);
+    border-radius: 0px;
+    opacity: 0;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    opacity: 1;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-darkcolor) transparent;
 }
