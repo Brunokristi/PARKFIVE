@@ -54,6 +54,11 @@ interface DbPropertySection {
 }
 
 interface DbPropertyContent {
+    hotel: {
+        id: number
+        slug: string
+        name: string
+    }
     subtitle: LocalizedText
     description: LocalizedText
     compareHeading: LocalizedText
@@ -84,135 +89,21 @@ function localize(value?: LocalizedText) {
     return value[locale.value] || value.sk || Object.values(value)[0] || ''
 }
 
-function loadMockContent() {
-    content.value = {
-        subtitle: {},
-        description: {},
-        compareHeading: {},
-        compareDescription: {},
-        images: [
-            {
-                src: '/assets/image.jpg',
-                alt: {
-                    sk: t('property.images.alt1.sk'),
-                    en: t('property.images.alt1.en'),
-                },
-            },
-            {
-                src: '/assets/image2.jpg',
-                alt: {
-                    sk: t('property.images.alt2.sk'),
-                    en: t('property.images.alt2.en'),
-                },
-            },
-        ],
-        sections: [
-            {
-                id: 'amenities',
-                heading: {
-                    sk: t('property.sections.amenities.heading.sk'),
-                    en: t('property.sections.amenities.heading.en'),
-                },
-                rows: [
-                    {
-                        id: 'wifi',
-                        label: {
-                            sk: t('property.sections.amenities.rows.wifi.sk'),
-                            en: t('property.sections.amenities.rows.wifi.en'),
-                        },
-                        checked: true,
-                    },
-                    {
-                        id: 'parking',
-                        label: {
-                            sk: t('property.sections.amenities.rows.parking.sk'),
-                            en: t('property.sections.amenities.rows.parking.en'),
-                        },
-                        count: 12,
-                    },
-                    {
-                        id: 'breakfast',
-                        label: {
-                            sk: t('property.sections.amenities.rows.breakfast.sk'),
-                            en: t('property.sections.amenities.rows.breakfast.en'),
-                        },
-                        checked: true,
-                    },
-                ],
-            },
-            {
-                id: 'services',
-                heading: {
-                    sk: t('property.sections.services.heading.sk'),
-                    en: t('property.sections.services.heading.en'),
-                },
-                rows: [
-                    {
-                        id: 'reception',
-                        label: {
-                            sk: t('property.sections.services.rows.reception.sk'),
-                            en: t('property.sections.services.rows.reception.en'),
-                        },
-                        checked: true,
-                    },
-                    {
-                        id: 'cleaning',
-                        label: {
-                            sk: t('property.sections.services.rows.cleaning.sk'),
-                            en: t('property.sections.services.rows.cleaning.en'),
-                        },
-                        checked: true,
-                    },
-                    {
-                        id: 'pets',
-                        label: {
-                            sk: t('property.sections.services.rows.pets.sk'),
-                            en: t('property.sections.services.rows.pets.en'),
-                        },
-                    },
-                ],
-            },
-        ],
-        roomFeatures: [
-            t('property.roomFeatures.wifi'),
-            t('property.roomFeatures.tv'),
-            t('property.roomFeatures.bathroom'),
-            t('property.roomFeatures.balcony'),
-            t('property.roomFeatures.view'),
-        ],
-        roomTypes: [
-            {
-                id: 'standard',
-                slug: 'standard',
-                title: {
-                    sk: t('property.roomTypes.standard.sk'),
-                    en: t('property.roomTypes.standard.en'),
-                },
-                features: ['Wi-Fi', 'TV', 'Kúpeľňa'],
-            },
-            {
-                id: 'premium',
-                slug: 'premium',
-                title: {
-                    sk: t('property.roomTypes.premium.sk'),
-                    en: t('property.roomTypes.premium.en'),
-                },
-                features: ['Wi-Fi', 'TV', 'Kúpeľňa', 'Balkón'],
-            },
-            {
-                id: 'deluxe',
-                slug: 'deluxe',
-                title: {
-                    sk: t('property.roomTypes.deluxe.sk'),
-                    en: t('property.roomTypes.deluxe.en'),
-                },
-                features: ['Wi-Fi', 'TV', 'Kúpeľňa', 'Balkón', 'Výhľad'],
-            },
-        ],
+async function loadHotelContent() {
+    const response = await fetch(`/api/hotel/property?locale=${locale.value}`)
+
+    if (!response.ok) {
+        throw new Error('Failed to load hotel property content')
     }
+
+    content.value = await response.json()
 }
 
-watch(locale, loadMockContent, { immediate: true })
+watch(locale, () => {
+    loadHotelContent().catch((error) => {
+        console.error(error)
+    })
+}, { immediate: true })
 
 const slideshowImages = computed(() =>
     content.value?.images.map((image) => ({
@@ -302,7 +193,7 @@ function openRoomType(slug: string) {
   >
     <section class="flex flex-col gap-4 p-8">
             <h1 class="h1">
-                {{ t('property.subtitle') }}
+                {{ localize(content.subtitle) }}
             </h1>
 
       <Slideshow
@@ -313,7 +204,7 @@ function openRoomType(slug: string) {
 
     <section class="flex flex-col gap-10 p-8 lg:col-span-2">
             <Text
-                :description="t('property.description')"
+                :description="localize(content.description)"
                 :variant="variant"
             />
 
@@ -323,8 +214,8 @@ function openRoomType(slug: string) {
       />
 
             <Text
-                :heading="t('property.compareHeading')"
-                :description="t('property.compareDescription')"
+                :heading="localize(content.compareHeading)"
+                :description="localize(content.compareDescription)"
                 :variant="variant"
             />
 

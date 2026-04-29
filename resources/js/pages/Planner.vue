@@ -1,27 +1,25 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 
-import ActivitySlider from '../components/ActivitySlider.vue'
+import ActivitySlider from '../components/activitySlider.vue'
 import ItineraryTable from '../components/ItineraryTable.vue'
 import Text from '../components/Text.vue'
+import { useHotelPageContent } from '../composables/useHotelPageContent'
 
 const route = useRoute()
-const { locale } = useI18n()
 
 type Variant = 'light' | 'dark'
-type LocalizedText = Record<string, string>
 
 interface DbActivity {
     id: string
-    title: LocalizedText
+    title: string
     image: string
     mapQuery?: string
     lat?: number
     lng?: number
-    tags: LocalizedText[]
-    description: LocalizedText
+    tags: string[]
+    description: string
     durationHours: number
 }
 
@@ -48,13 +46,13 @@ interface PlannedDay {
 }
 
 interface DbPlannerContent {
-    heading: LocalizedText
-    description: LocalizedText
+    heading: string
+    description: string
     hoursPerDay: number
     activities: DbActivity[]
 }
 
-const content = ref<DbPlannerContent | null>(null)
+const { content } = useHotelPageContent<DbPlannerContent>('planner')
 const itineraryItems = ref<Activity[]>([])
 
 const variant = computed<Variant>(() =>
@@ -65,78 +63,16 @@ const pageClass = computed(() =>
     variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
 )
 
-function localize(value?: LocalizedText) {
-    if (!value) return ''
-
-    return value[locale.value] || value.sk || Object.values(value)[0] || ''
-}
-
-function loadMockContent() {
-    content.value = {
-        heading: {
-            sk: 'Plánovač',
-            en: 'Planner',
-        },
-        description: {
-            sk: 'Plánujte svoj výlet jednoducho a efektívne. Presúvajte aktivity, pridávajte ich do itinerára a sledujte, koľko času vám zostáva do naplánovania.',
-            en: 'Plan your trip easily and efficiently. Move activities, add them to your itinerary, and keep track of your planned time.',
-        },
-        hoursPerDay: 8,
-        activities: [
-            {
-                id: 'castle',
-                title: {
-                    sk: 'Fiľakovský hrad',
-                    en: 'Fiľakovo Castle',
-                },
-                image: '/assets/image.jpg',
-                lat: 48.267,
-                lng: 19.824,
-                tags: [
-                    { sk: 'hrad', en: 'castle' },
-                    { sk: 'výhľad', en: 'view' },
-                ],
-                description: {
-                    sk: 'Historická dominanta mesta s výhľadom na okolie.',
-                    en: 'A historic landmark with views of the surrounding area.',
-                },
-                durationHours: 2,
-            },
-            {
-                id: 'viewpoint',
-                title: {
-                    sk: 'Haličský zámok',
-                    en: 'Halič Castle',
-                },
-                image: '/assets/image.jpg',
-                lat: 48.262,
-                lng: 19.724,
-                tags: [
-                    { sk: 'zámok', en: 'chateau' },
-                    { sk: 'výlet', en: 'trip' },
-                ],
-                description: {
-                    sk: 'Zámok vhodný na krátky výlet v okolí.',
-                    en: 'A chateau suitable for a short trip nearby.',
-                },
-                durationHours: 1.5,
-            },
-        ],
-    }
-}
-
-watch(locale, loadMockContent, { immediate: true })
-
 const activities = computed<Activity[]>(() =>
     content.value?.activities.map((activity) => ({
         id: activity.id,
-        title: localize(activity.title),
+        title: activity.title,
         image: activity.image,
         mapQuery: activity.mapQuery,
         lat: activity.lat,
         lng: activity.lng,
-        tags: activity.tags.map((tag) => localize(tag)),
-        description: localize(activity.description),
+        tags: activity.tags,
+        description: activity.description,
         durationHours: activity.durationHours,
     })) || []
 )
@@ -244,8 +180,8 @@ function openActivity(activity: Activity) {
 
     <section class="flex flex-col gap-10 p-8 lg:col-span-2">
       <Text
-        :heading="localize(content.heading)"
-        :description="localize(content.description)"
+                :heading="content.heading"
+                :description="content.description"
         :variant="variant"
       />
 

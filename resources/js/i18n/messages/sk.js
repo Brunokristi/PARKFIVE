@@ -65,6 +65,10 @@ export default {
         contact: 'Kontakt',
     },
 
+    policies: {
+        title: 'Pravidlá',
+    },
+
     portfolio: {
         contact: 'Poďme vytvoriť váš projekt',
         loading: 'Načítavam projekty...',

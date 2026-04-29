@@ -70,6 +70,10 @@ export default {
         contact: 'Contact',
     },
 
+    policies: {
+        title: 'Policies',
+    },
+
     portfolio: {
         contact: 'Let\'s build your project',
         loading: 'Loading projects...',

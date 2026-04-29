@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
@@ -7,36 +8,32 @@ import Info from '../components/Info.vue'
 import Slideshow from '../components/Slideshow.vue'
 import Table from '../components/Table.vue'
 import Text from '../components/Text.vue'
-import Map from '../components/Map.vue'
-import Button from '../components/Button.vue'
+import { useHotelPageContent } from '../composables/useHotelPageContent'
 
 const route = useRoute()
 const router = useRouter()
-const { t, locale } = useI18n()
+const { t } = useI18n()
 
 type Variant = 'light' | 'dark'
 
-interface LocalizedText {
-    sk: string
-    en: string
-}
+type LocalizedText = Record<string, string>
 
 interface DbRoomType {
     id: string
     slug: string
-    title: LocalizedText
-    features: LocalizedText[]
+    title: string | LocalizedText
+    features: string[]
 }
 
 interface DbHomeContent {
-    heading: LocalizedText
-    description: LocalizedText
-    images: Array<{ src: string; alt: LocalizedText }>
+    heading: string
+    description: string
+    images: Array<{ src: string; alt: string }>
     roomTypes: DbRoomType[]
     infos: Array<{
         id: string
-        heading: LocalizedText
-        text: LocalizedText
+        heading: string
+        text: string
         opened?: boolean
     }>
 }
@@ -69,116 +66,23 @@ const pageClass = computed(() =>
     variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
 )
 
-const content = ref<DbHomeContent | null>(null)
+const { content } = useHotelPageContent<DbHomeContent>('home')
+const { locale } = useI18n()
 
-function localize(value?: LocalizedText) {
+function localize(value?: string | LocalizedText) {
     if (!value) return ''
+    if (typeof value === 'string') return value
 
-    return value[locale.value as keyof LocalizedText] || value.sk || ''
+    return (value as LocalizedText)[locale.value] || (value as LocalizedText).sk || Object.values(value as LocalizedText)[0] || ''
 }
 
-function loadMockContent() {
-    content.value = {
-        heading: {
-            sk: 'parkFIVE',
-            en: 'parkFIVE',
-        },
-        description: {
-            sk: 'Vyberte si izbu, služby alebo si naplánujte výlet v okolí.',
-            en: 'Choose a room, services, or plan a trip nearby.',
-        },
-        images: [
-            {
-                src: '/assets/image.jpg',
-                alt: {
-                    sk: 'Hotelová izba',
-                    en: 'Hotel room',
-                },
-            },
-            {
-                src: '/assets/image2.jpg',
-                alt: {
-                    sk: 'Okolie hotela',
-                    en: 'Hotel surroundings',
-                },
-            },
-        ],
-        roomTypes: [
-            {
-                id: 'standard',
-                slug: 'standard',
-                title: {
-                    sk: 'Štandard',
-                    en: 'Standard',
-                },
-                features: [
-                    { sk: 'Wi-Fi', en: 'Wi-Fi' },
-                    { sk: 'TV', en: 'TV' },
-                    { sk: 'Kúpeľňa', en: 'Bathroom' },
-                ],
-            },
-            {
-                id: 'premium',
-                slug: 'premium',
-                title: {
-                    sk: 'Premium',
-                    en: 'Premium',
-                },
-                features: [
-                    { sk: 'Wi-Fi', en: 'Wi-Fi' },
-                    { sk: 'Balkón', en: 'Balcony' },
-                    { sk: 'Výhľad', en: 'View' },
-                ],
-            },
-        ],
-        infos: [
-            {
-                id: 'parking',
-                heading: {
-                    sk: 'Parkovanie',
-                    en: 'Parking',
-                },
-                text: {
-                    sk: 'Parkovanie je dostupné priamo pri objekte.',
-                    en: 'Parking is available directly at the property.',
-                },
-                opened: true,
-            },
-            {
-                id: 'breakfast',
-                heading: {
-                    sk: 'Raňajky',
-                    en: 'Breakfast',
-                },
-                text: {
-                    sk: 'Raňajky sú dostupné každý deň od 7:00.',
-                    en: 'Breakfast is available daily from 7:00.',
-                },
-            },
-        ],
-    }
-}
-
-watch(
-    locale,
-    () => {
-        loadMockContent()
-    },
-    { immediate: true }
-)
-
-const slideshowImages = computed(() =>
-    content.value?.images.map((image) => ({
-        src: image.src,
-        alt: localize(image.alt),
-    })) || []
-)
+const slideshowImages = computed(() => content.value?.images || [])
 
 const roomTypeSections = computed<TableSection[]>(() => [
     {
         id: 'room-types',
         heading: t('home.roomTypes'),
-        rows:
+                rows:
             content.value?.roomTypes.map((room) => ({
                 id: room.id,
                 label: localize(room.title),
@@ -241,11 +145,11 @@ function openRoomType(slug: string) {
     </section>
 
     <section class="flex flex-col gap-10 p-8">
-      <Text
-        :heading="localize(content.heading)"
-        :description="localize(content.description)"
-        :variant="variant"
-      />
+            <Text
+                :heading="content.heading"
+                :description="content.description"
+                :variant="variant"
+            />
 
       <Table
         :sections="roomTypeSections"
@@ -255,8 +159,8 @@ function openRoomType(slug: string) {
       <Info
         v-for="info in content.infos"
         :key="info.id"
-        :heading="localize(info.heading)"
-        :text="localize(info.text)"
+                :heading="info.heading"
+                :text="info.text"
         :variant="variant"
         :opened="info.opened"
       />

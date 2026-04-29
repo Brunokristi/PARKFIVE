@@ -2,9 +2,8 @@
 import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
-import Text from '../components/Text.vue';
 import Table from '../components/Table.vue';
-import Slideshow from '../components/Slideshow.vue';
+import { useHotelPageContent } from '../composables/useHotelPageContent';
 
 const route = useRoute();
 const { t } = useI18n();
@@ -43,90 +42,9 @@ const titleClass = computed(() =>
   variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
 );
 
-const sections = computed<TableSection[]>(() => [
-  {
-    id: 'section-1',
-    heading: t('room.table.section1.heading'),
-    rows: [
-      {
-        id: 'row-1',
-        label: t('room.table.section1.row1'),
-        actions: [
-          {
-            id: 'count',
-            text: '2',
-          },
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-        onClick: (row: TableRow) => console.log('clicked', row),
-      },
-      {
-        id: 'row-2',
-        label: t('room.table.section1.row2'),
-        actions: [
-          {
-            id: 'count',
-            text: '1',
-          },
-        ],
-      },
-      {
-        id: 'row-3',
-        label: t('room.table.section1.row3'),
-        actions: [
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 'section-2',
-    heading: t('room.table.section2.heading'),
-    rows: [
-      {
-        id: 'row-1',
-        label: t('room.table.section2.row1'),
-        actions: [
-          {
-            id: 'count',
-            text: '2',
-          },
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-        onClick: (row: TableRow) => console.log('clicked', row),
-      },
-      {
-        id: 'row-2',
-        label: t('room.table.section2.row2'),
-        actions: [
-          {
-            id: 'count',
-            text: '1',
-          },
-        ],
-      },
-      {
-        id: 'row-3',
-        label: t('room.table.section2.row3'),
-        actions: [
-          {
-            id: 'check',
-            icon: 'bi bi-check-lg',
-          },
-        ],
-      },
-    ],
-  },
-]);
+const { content } = useHotelPageContent<{ sections: TableSection[] }>('policies');
+
+const sections = computed<TableSection[]>(() => content.value?.sections || []);
 
 function handleRowAction({ section, row }: RowActionPayload) {
   console.log(section, row);
@@ -137,7 +55,7 @@ function handleRowAction({ section, row }: RowActionPayload) {
 <template>
   <main class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start">
     <section class="flex flex-col gap-4 p-8">
-      <h1 class="h1" :class="titleClass">{{ t('room.subtitle') }}</h1>
+      <h1 class="h1" :class="titleClass">{{ t('policies.title') }}</h1>
     </section>
 
     <section class="flex flex-col gap-10 p-8 lg:col-span-2">

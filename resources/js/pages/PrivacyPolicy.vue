@@ -1,50 +1,37 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { useI18n } from 'vue-i18n'
 
 import Text from '../components/Text.vue'
+import { useHotelPageContent } from '../composables/useHotelPageContent'
 
 const route = useRoute()
-const { t } = useI18n()
 
 type Variant = 'light' | 'dark'
 
+interface PrivacySection {
+  id: string
+  heading: string
+  description: string
+}
+
+interface PrivacyContent {
+  title: string
+  lastUpdated: string
+  sections: PrivacySection[]
+}
+
+const { content } = useHotelPageContent<PrivacyContent>('privacy')
+
 const variant = computed<Variant>(() =>
-    route.meta.theme === 'light' ? 'light' : 'dark'
+  route.meta.theme === 'light' ? 'light' : 'dark'
 )
 
 const pageClass = computed(() =>
-    variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
+  variant.value === 'light' ? 'text-darkcolor' : 'text-lightcolor'
 )
 
-const sections = computed(() => [
-    {
-        id: 'overview',
-        heading: t('privacy.sectionOverviewTitle'),
-        description: t('privacy.sectionOverviewText'),
-    },
-    {
-        id: 'cookies',
-        heading: t('privacy.sectionCookiesTitle'),
-        description: t('privacy.sectionCookiesText'),
-    },
-    {
-        id: 'analytics',
-        heading: t('privacy.sectionAnalyticsTitle'),
-        description: t('privacy.sectionAnalyticsText'),
-    },
-    {
-        id: 'control',
-        heading: t('privacy.sectionControlTitle'),
-        description: t('privacy.sectionControlText'),
-    },
-    {
-        id: 'contact',
-        heading: t('privacy.sectionContactTitle'),
-        description: t('privacy.sectionContactText'),
-    },
-])
+const sections = computed(() => content.value?.sections || [])
 </script>
 
 <template>
@@ -57,7 +44,7 @@ const sections = computed(() => [
         class="h1"
         :class="pageClass"
       >
-        {{ t('privacy.title') }}
+        {{ content?.title || '' }}
       </h1>
     </section>
 
