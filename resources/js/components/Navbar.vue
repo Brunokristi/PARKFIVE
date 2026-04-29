@@ -36,7 +36,7 @@ const overlayButtonClass = 'bg-lightcolor text-darkcolor border-lightcolor'
 const hotelSections = computed(() => [
     {
         id: 'hotel-menu',
-        heading: t('home.menu'),
+        heading: t('nav.menu'),
         rows: [
             createMenuRow('home', t('nav.home'), '/'),
             createMenuRow('hotel', t('nav.hotel'), '/property'),

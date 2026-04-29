@@ -356,10 +356,8 @@ onUnmounted(() => {
       </div>
     </div>
 
-    <div class="flex w-full items-center">
-      <div class="flex-1"></div>
-
-      <div class="flex items-center justify-center gap-6">
+    <div class="flex w-full items-center justify-end">
+      <div class="flex items-center gap-6">
         <button
           v-if="showArrows && slideItems.length > 1"
           class="z-10 cursor-pointer"
@@ -380,8 +378,6 @@ onUnmounted(() => {
           <i class="bi bi-chevron-right"></i>
         </button>
       </div>
-
-      <div class="flex-1"></div>
     </div>
 
     <Teleport v-if="enableGallery" to="body">

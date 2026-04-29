@@ -2,19 +2,61 @@ import { viewDepthKey } from "vue-router";
 
 export default {
     home: {
-        roomTypes: 'typy izieb',
-        menu: 'menu',
+        roomTypes: 'izby',
+        menu: 'viac',
+    },
+
+    property: {
+        subtitle: 'Hotel',
+        description: 'Objavte naše izby, vybavenie a služby, ktoré sú dostupné počas vášho pobytu.',
+        compareHeading: 'Porovnanie',
+        compareDescription: 'Vyberte 2 typy izieb, ktoré chcete porovnať.',
+        images: {
+            alt1: 'Hotel',
+            alt2: 'Izba',
+        },
+        sections: {
+            amenities: {
+                heading: 'vybavenie',
+                rows: {
+                    wifi: 'Wi-Fi',
+                    parking: 'Parkovanie',
+                    breakfast: 'Raňajky',
+                },
+            },
+            services: {
+                heading: 'služby',
+                rows: {
+                    reception: 'Recepcia',
+                    cleaning: 'Upratovanie',
+                    pets: 'Domáce zvieratá',
+                },
+            },
+        },
+        roomFeatures: {
+            wifi: 'Wi-Fi',
+            tv: 'TV',
+            bathroom: 'Kúpeľňa',
+            balcony: 'Balkón',
+            view: 'Výhľad',
+        },
+        roomTypes: {
+            standard: 'Štandard',
+            premium: 'Premium',
+            deluxe: 'Deluxe',
+        },
     },
     nav: {
         home: 'Úvod',
-        hotel: 'Hotel',
+        hotel: 'Ubytovanie',
         services: 'Služby',
         policies: 'Informácie',
         contact: 'Kontakt',
-        more: 'viac',
         planner: 'Plánovač',
         privacy: 'Súkromie',
+        more: 'viac',
         language: 'jazyk',
+        menu: 'menu',
     },
     navigation: {
         home: 'Domov',

@@ -2,39 +2,46 @@
 import { computed } from 'vue'
 
 const props = defineProps({
-  text: {
-    type: String,
-    default: '',
-  },
-  variant: {
-    type: String,
-    default: 'dark',
-  },
+    text: {
+        type: String,
+        default: '',
+    },
+    variant: {
+        type: String,
+        default: 'dark',
+    },
+    align: {
+        type: String,
+        default: 'center', // start | center | end
+    },
 })
 
 const emit = defineEmits(['click'])
 
 const buttonColor = computed(() =>
-  props.variant === 'light' ? 'text-darkcolor' :
-  props.variant === 'dark' ? 'text-lightcolor' :
-  'text-lightcolor'
+    props.variant === 'light'
+        ? 'text-darkcolor'
+        : 'text-lightcolor'
 )
+
+const wrapperClass = computed(() => {
+    if (props.align === 'start') return 'justify-start'
+    if (props.align === 'end') return 'justify-end'
+    return 'justify-center'
+})
 </script>
 
 <template>
-    <div class="w-full flex justify-center">
+  <div class="w-full flex" :class="wrapperClass">
     <button
       type="button"
-            class="group inline-flex flex-col items-start cursor-pointer"
-            :class="buttonColor"
+      class="group inline-flex items-start cursor-pointer"
+      :class="buttonColor"
       @click="emit('click')"
-        >
-            <span class="p font-mono lowercase">
-            {{ props.text }}
-            </span>
-
-            <span class="relative mt-0.5 h-[1px] w-full bg-current transition-transform duration-300 group-hover:-translate-y-0.5">
-            </span>
-            </button>
-    </div>
+    >
+      <span class="p font-mono lowercase underline group-hover:no-underline transition">
+        {{ text }}
+      </span>
+    </button>
+  </div>
 </template>

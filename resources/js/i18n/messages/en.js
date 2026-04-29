@@ -22,6 +22,47 @@ export default {
         heading: 'about'
     },
 
+    property: {
+        subtitle: 'Hotel',
+        description: 'Discover our rooms, amenities, and services available during your stay.',
+        compareHeading: 'Comparison',
+        compareDescription: 'Choose 2 room types you want to compare.',
+        images: {
+            alt1: 'Hotel',
+            alt2: 'Room',
+        },
+        sections: {
+            amenities: {
+                heading: 'Amenities',
+                rows: {
+                    wifi: 'Wi-Fi',
+                    parking: 'Parking',
+                    breakfast: 'Breakfast',
+                },
+            },
+            services: {
+                heading: 'Services',
+                rows: {
+                    reception: 'Reception',
+                    cleaning: 'Cleaning',
+                    pets: 'Pets',
+                },
+            },
+        },
+        roomFeatures: {
+            wifi: 'Wi-Fi',
+            tv: 'TV',
+            bathroom: 'Bathroom',
+            balcony: 'Balcony',
+            view: 'View',
+        },
+        roomTypes: {
+            standard: 'Standard',
+            premium: 'Premium',
+            deluxe: 'Deluxe',
+        },
+    },
+
     navigation: {
         home: 'Home',
         portfolio: 'Work',

@@ -29,7 +29,7 @@ const { toastVisible: showConfirmationToast, toastHeading, toastText } = useToas
             v-model="showConfirmationToast"
             :heading="toastHeading"
             :text="toastText"
-            :variant="variant"
+            :variant="theme"
             :duration="3000"
         />
         </div>

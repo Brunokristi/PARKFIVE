@@ -7,6 +7,8 @@ import Info from '../components/Info.vue'
 import Slideshow from '../components/Slideshow.vue'
 import Table from '../components/Table.vue'
 import Text from '../components/Text.vue'
+import Map from '../components/Map.vue'
+import Button from '../components/Button.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -231,7 +233,7 @@ function openRoomType(slug: string) {
     class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:items-start"
     :class="pageClass"
   >
-    <section class="flex flex-col gap-4 p-8 lg:col-span-2">
+    <section class="flex flex-col gap-8 p-8 lg:col-span-2">
       <Slideshow
         :images="slideshowImages"
         :variant="variant"

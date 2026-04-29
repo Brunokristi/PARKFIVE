@@ -86,35 +86,23 @@ function localize(value?: LocalizedText) {
 
 function loadMockContent() {
     content.value = {
-        subtitle: {
-            sk: 'Hotel',
-            en: 'Hotel',
-        },
-        description: {
-            sk: 'Objavte naše izby, vybavenie a služby, ktoré sú dostupné počas vášho pobytu.',
-            en: 'Discover our rooms, amenities, and services available during your stay.',
-        },
-        compareHeading: {
-            sk: 'Porovnanie',
-            en: 'Comparison',
-        },
-        compareDescription: {
-            sk: 'Vyberte 2 typy izieb, ktoré chcete porovnať.',
-            en: 'Choose 2 room types you want to compare.',
-        },
+        subtitle: {},
+        description: {},
+        compareHeading: {},
+        compareDescription: {},
         images: [
             {
                 src: '/assets/image.jpg',
                 alt: {
-                    sk: 'Hotel',
-                    en: 'Hotel',
+                    sk: t('property.images.alt1.sk'),
+                    en: t('property.images.alt1.en'),
                 },
             },
             {
                 src: '/assets/image2.jpg',
                 alt: {
-                    sk: 'Izba',
-                    en: 'Room',
+                    sk: t('property.images.alt2.sk'),
+                    en: t('property.images.alt2.en'),
                 },
             },
         ],
@@ -122,31 +110,31 @@ function loadMockContent() {
             {
                 id: 'amenities',
                 heading: {
-                    sk: 'vybavenie',
-                    en: 'amenities',
+                    sk: t('property.sections.amenities.heading.sk'),
+                    en: t('property.sections.amenities.heading.en'),
                 },
                 rows: [
                     {
                         id: 'wifi',
                         label: {
-                            sk: 'Wi-Fi',
-                            en: 'Wi-Fi',
+                            sk: t('property.sections.amenities.rows.wifi.sk'),
+                            en: t('property.sections.amenities.rows.wifi.en'),
                         },
                         checked: true,
                     },
                     {
                         id: 'parking',
                         label: {
-                            sk: 'Parkovanie',
-                            en: 'Parking',
+                            sk: t('property.sections.amenities.rows.parking.sk'),
+                            en: t('property.sections.amenities.rows.parking.en'),
                         },
                         count: 12,
                     },
                     {
                         id: 'breakfast',
                         label: {
-                            sk: 'Raňajky',
-                            en: 'Breakfast',
+                            sk: t('property.sections.amenities.rows.breakfast.sk'),
+                            en: t('property.sections.amenities.rows.breakfast.en'),
                         },
                         checked: true,
                     },
@@ -155,44 +143,50 @@ function loadMockContent() {
             {
                 id: 'services',
                 heading: {
-                    sk: 'služby',
-                    en: 'services',
+                    sk: t('property.sections.services.heading.sk'),
+                    en: t('property.sections.services.heading.en'),
                 },
                 rows: [
                     {
                         id: 'reception',
                         label: {
-                            sk: 'Recepcia',
-                            en: 'Reception',
+                            sk: t('property.sections.services.rows.reception.sk'),
+                            en: t('property.sections.services.rows.reception.en'),
                         },
                         checked: true,
                     },
                     {
                         id: 'cleaning',
                         label: {
-                            sk: 'Upratovanie',
-                            en: 'Cleaning',
+                            sk: t('property.sections.services.rows.cleaning.sk'),
+                            en: t('property.sections.services.rows.cleaning.en'),
                         },
                         checked: true,
                     },
                     {
                         id: 'pets',
                         label: {
-                            sk: 'Domáce zvieratá',
-                            en: 'Pets',
+                            sk: t('property.sections.services.rows.pets.sk'),
+                            en: t('property.sections.services.rows.pets.en'),
                         },
                     },
                 ],
             },
         ],
-        roomFeatures: ['Wi-Fi', 'TV', 'Kúpeľňa', 'Balkón', 'Výhľad'],
+        roomFeatures: [
+            t('property.roomFeatures.wifi'),
+            t('property.roomFeatures.tv'),
+            t('property.roomFeatures.bathroom'),
+            t('property.roomFeatures.balcony'),
+            t('property.roomFeatures.view'),
+        ],
         roomTypes: [
             {
                 id: 'standard',
                 slug: 'standard',
                 title: {
-                    sk: 'Štandard',
-                    en: 'Standard',
+                    sk: t('property.roomTypes.standard.sk'),
+                    en: t('property.roomTypes.standard.en'),
                 },
                 features: ['Wi-Fi', 'TV', 'Kúpeľňa'],
             },
@@ -200,8 +194,8 @@ function loadMockContent() {
                 id: 'premium',
                 slug: 'premium',
                 title: {
-                    sk: 'Premium',
-                    en: 'Premium',
+                    sk: t('property.roomTypes.premium.sk'),
+                    en: t('property.roomTypes.premium.en'),
                 },
                 features: ['Wi-Fi', 'TV', 'Kúpeľňa', 'Balkón'],
             },
@@ -209,8 +203,8 @@ function loadMockContent() {
                 id: 'deluxe',
                 slug: 'deluxe',
                 title: {
-                    sk: 'Deluxe',
-                    en: 'Deluxe',
+                    sk: t('property.roomTypes.deluxe.sk'),
+                    en: t('property.roomTypes.deluxe.en'),
                 },
                 features: ['Wi-Fi', 'TV', 'Kúpeľňa', 'Balkón', 'Výhľad'],
             },
@@ -307,9 +301,9 @@ function openRoomType(slug: string) {
     :class="pageClass"
   >
     <section class="flex flex-col gap-4 p-8">
-      <h1 class="h1">
-        {{ localize(content.subtitle) }}
-      </h1>
+            <h1 class="h1">
+                {{ t('property.subtitle') }}
+            </h1>
 
       <Slideshow
         :images="slideshowImages"
@@ -318,21 +312,21 @@ function openRoomType(slug: string) {
     </section>
 
     <section class="flex flex-col gap-10 p-8 lg:col-span-2">
-      <Text
-        :description="localize(content.description)"
-        :variant="variant"
-      />
+            <Text
+                :description="t('property.description')"
+                :variant="variant"
+            />
 
       <Table
         :sections="propertySections"
         :variant="variant"
       />
 
-      <Text
-        :heading="localize(content.compareHeading)"
-        :description="localize(content.compareDescription)"
-        :variant="variant"
-      />
+            <Text
+                :heading="t('property.compareHeading')"
+                :description="t('property.compareDescription')"
+                :variant="variant"
+            />
 
       <Table
         :sections="roomTypeSections"

@@ -6,6 +6,7 @@ import { useI18n } from 'vue-i18n'
 import Chat from '../components/Chat.vue'
 import Info from '../components/Info.vue'
 import Table from '../components/Table.vue'
+import Map from '../components/Map.vue'
 
 const route = useRoute()
 const { locale } = useI18n()
@@ -41,6 +42,7 @@ interface ContactItem {
 
 interface DbContactContent {
     title: LocalizedText
+    address: LocalizedText
     infos: Array<{
         id: string
         heading: LocalizedText
@@ -75,6 +77,10 @@ function loadMockContent() {
         title: {
             sk: 'Kontakt',
             en: 'Contact',
+        },
+        address: {
+            sk: 'Adresa',
+            en: 'Address',
         },
         infos: [
             {
@@ -193,6 +199,21 @@ function openContact(row: ContactItem) {
     </section>
 
     <section class="flex flex-col gap-4 p-8">
+        <h1 class="h1">
+            {{ localize(content.address) }}
+        </h1>
+      
+      <div class="h-[500px] w-full border" >
+          <Map
+            :home-lat="48.267"
+            :home-lng="19.824"
+            home-name="parkFIVE"
+            :variant="variant"
+          />
+      </div>
+    </section>
+
+    <section class="flex flex-col gap-10 p-8">
       <Info
         v-for="info in content.infos"
         :key="info.id"
@@ -201,9 +222,7 @@ function openContact(row: ContactItem) {
         :variant="variant"
         :opened="info.opened"
       />
-    </section>
 
-    <section class="flex flex-col gap-10 p-8">
       <Table
         :sections="contactSections"
         :variant="variant"

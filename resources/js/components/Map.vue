@@ -2,8 +2,8 @@
 import { computed, onMounted, ref, watch } from 'vue'
 
 const props = defineProps<{
-    lat: number
-    lng: number
+    lat?: number
+    lng?: number
     name?: string
     homeLat?: number
     homeLng?: number
@@ -23,6 +23,19 @@ let marker: any = null
 let homeMarker: any = null
 
 const isLight = computed(() => props.variant === 'light')
+
+const hasPrimaryMarker = computed(() =>
+    props.lat !== undefined && props.lng !== undefined
+)
+
+const hasHomeMarker = computed(() =>
+    props.homeLat !== undefined && props.homeLng !== undefined
+)
+
+const mapCenter = computed(() => ({
+    lat: props.lat ?? props.homeLat ?? 0,
+    lng: props.lng ?? props.homeLng ?? 0,
+}))
 
 const mapsUrl = computed(() =>
     `https://www.google.com/maps/search/?api=1&query=${tooltipLat.value},${tooltipLng.value}`
@@ -82,8 +95,8 @@ function mixColors(colorA: string, colorB: string, amount: number) {
 }
 
 const colors = computed(() => {
-    const lightcolor = getProjectColor('lightcolor', '#')
-    const darkcolor = getProjectColor('darkcolor', '#')
+    const lightcolor = getProjectColor('lightcolor', '#f4f1ea')
+    const darkcolor = getProjectColor('darkcolor', '#1f1f1f')
 
     const background = isLight.value ? lightcolor : darkcolor
     const foreground = isLight.value ? darkcolor : lightcolor
@@ -103,70 +116,20 @@ const mapStyles = computed<any[]>(() => {
     const c = colors.value
 
     return [
-        {
-            elementType: 'geometry',
-            stylers: [{ color: c.background }],
-        },
-        {
-            elementType: 'labels.icon',
-            stylers: [{ visibility: 'off' }],
-        },
-        {
-            elementType: 'labels.text.fill',
-            stylers: [{ color: c.label }],
-        },
-        {
-            elementType: 'labels.text.stroke',
-            stylers: [{ color: c.labelStroke }],
-        },
-        {
-            featureType: 'landscape',
-            elementType: 'geometry',
-            stylers: [{ color: c.background }],
-        },
-        {
-            featureType: 'landscape.man_made',
-            elementType: 'geometry',
-            stylers: [{ color: c.background }],
-        },
-        {
-            featureType: 'road',
-            elementType: 'geometry',
-            stylers: [{ color: c.road }],
-        },
-        {
-            featureType: 'road',
-            elementType: 'geometry.stroke',
-            stylers: [{ color: c.background }],
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'geometry',
-            stylers: [{ color: c.roadStrong }],
-        },
-        {
-            featureType: 'road.highway',
-            elementType: 'geometry.stroke',
-            stylers: [{ color: c.background }],
-        },
-        {
-            featureType: 'water',
-            elementType: 'geometry',
-            stylers: [{ color: c.water }],
-        },
-        {
-            featureType: 'poi',
-            stylers: [{ visibility: 'off' }],
-        },
-        {
-            featureType: 'transit',
-            stylers: [{ visibility: 'off' }],
-        },
-        {
-            featureType: 'administrative',
-            elementType: 'geometry',
-            stylers: [{ color: c.roadStrong }],
-        },
+        { elementType: 'geometry', stylers: [{ color: c.background }] },
+        { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: c.label }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: c.labelStroke }] },
+        { featureType: 'landscape', elementType: 'geometry', stylers: [{ color: c.background }] },
+        { featureType: 'landscape.man_made', elementType: 'geometry', stylers: [{ color: c.background }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: c.road }] },
+        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: c.background }] },
+        { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: c.roadStrong }] },
+        { featureType: 'road.highway', elementType: 'geometry.stroke', stylers: [{ color: c.background }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: c.water }] },
+        { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+        { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+        { featureType: 'administrative', elementType: 'geometry', stylers: [{ color: c.roadStrong }] },
     ]
 })
 
@@ -186,7 +149,7 @@ function createMarkerIcon() {
 
     return {
         url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`,
-        scaledSize: new (window as any).google.maps.Size(24, 24),
+        scaledSize: new (window as any).google.maps.Size(20, 20),
         anchor: new (window as any).google.maps.Point(12, 24),
     }
 }
@@ -219,31 +182,43 @@ function openTooltip(title: string, lat: number, lng: number) {
     isTooltipOpen.value = true
 }
 
-function createMarkers(center: { lat: number; lng: number }) {
+function createPrimaryMarker() {
+    if (!hasPrimaryMarker.value || !map) return
+
+    const position = {
+        lat: props.lat!,
+        lng: props.lng!,
+    }
+
     marker = new (window as any).google.maps.Marker({
-        position: center,
+        position,
         map,
         icon: createMarkerIcon(),
         animation: (window as any).google.maps.Animation.DROP,
     })
 
     marker.addListener('mouseover', () => {
-        openTooltip(props.name || 'Miesto', props.lat, props.lng)
+        openTooltip(props.name || 'Miesto', props.lat!, props.lng!)
     })
 
     marker.addListener('click', () => {
-        openTooltip(props.name || 'Miesto', props.lat, props.lng)
+        openTooltip(props.name || 'Miesto', props.lat!, props.lng!)
     })
+}
 
-    if (props.homeLat === undefined || props.homeLng === undefined) return
+function createHomeMarker() {
+    if (!hasHomeMarker.value || !map) return
+
+    const position = {
+        lat: props.homeLat!,
+        lng: props.homeLng!,
+    }
 
     homeMarker = new (window as any).google.maps.Marker({
-        position: {
-            lat: props.homeLat,
-            lng: props.homeLng,
-        },
+        position,
         map,
         icon: createHomeMarkerIcon(),
+        animation: (window as any).google.maps.Animation.DROP,
     })
 
     homeMarker.addListener('mouseover', () => {
@@ -258,13 +233,8 @@ function createMarkers(center: { lat: number; lng: number }) {
 function initMap() {
     if (!mapEl.value || !(window as any).google?.maps) return
 
-    const center = {
-        lat: props.lat,
-        lng: props.lng,
-    }
-
     map = new (window as any).google.maps.Map(mapEl.value, {
-        center,
+        center: mapCenter.value,
         zoom: 10,
         styles: mapStyles.value,
         disableDefaultUI: true,
@@ -275,7 +245,46 @@ function initMap() {
         backgroundColor: colors.value.background,
     })
 
-    createMarkers(center)
+    createPrimaryMarker()
+    createHomeMarker()
+}
+
+function updateMarkers() {
+    if (!map) return
+
+    if (hasPrimaryMarker.value) {
+        const position = {
+            lat: props.lat!,
+            lng: props.lng!,
+        }
+
+        if (!marker) {
+            createPrimaryMarker()
+        } else {
+            marker.setPosition(position)
+            marker.setIcon(createMarkerIcon())
+        }
+    } else if (marker) {
+        marker.setMap(null)
+        marker = null
+    }
+
+    if (hasHomeMarker.value) {
+        const position = {
+            lat: props.homeLat!,
+            lng: props.homeLng!,
+        }
+
+        if (!homeMarker) {
+            createHomeMarker()
+        } else {
+            homeMarker.setPosition(position)
+            homeMarker.setIcon(createHomeMarkerIcon())
+        }
+    } else if (homeMarker) {
+        homeMarker.setMap(null)
+        homeMarker = null
+    }
 }
 
 function loadScript(src: string) {
@@ -291,7 +300,7 @@ function loadScript(src: string) {
 
         if (existingScript) {
             existingScript.addEventListener('load', () => resolve())
-            existingScript.addEventListener('error', () => reject())
+            existingScript.addEventListener('error', () => reject(new Error('Failed to load Google Maps script')))
             return
         }
 
@@ -334,57 +343,15 @@ watch(
         props.variant,
     ],
     () => {
-        if (!map || !marker) return
+        if (!map) return
 
-        const center = {
-            lat: props.lat,
-            lng: props.lng,
-        }
-
-        map.setCenter(center)
+        map.setCenter(mapCenter.value)
         map.setOptions({
             styles: mapStyles.value,
             backgroundColor: colors.value.background,
         })
 
-        marker.setPosition(center)
-        marker.setIcon(createMarkerIcon())
-        marker.setAnimation(null)
-
-        setTimeout(() => {
-            marker?.setAnimation((window as any).google.maps.Animation.DROP)
-        }, 0)
-
-        if (props.homeLat !== undefined && props.homeLng !== undefined) {
-            const homeCenter = {
-                lat: props.homeLat,
-                lng: props.homeLng,
-            }
-
-            if (!homeMarker) {
-                homeMarker = new (window as any).google.maps.Marker({
-                    position: homeCenter,
-                    map,
-                    icon: createHomeMarkerIcon(),
-                    animation: (window as any).google.maps.Animation.DROP,
-                })
-
-                homeMarker.addListener('mouseover', () => {
-                    openTooltip(props.homeName || 'Naša adresa', props.homeLat!, props.homeLng!)
-                })
-
-                homeMarker.addListener('click', () => {
-                    openTooltip(props.homeName || 'Naša adresa', props.homeLat!, props.homeLng!)
-                })
-            } else {
-                homeMarker.setPosition(homeCenter)
-                homeMarker.setIcon(createHomeMarkerIcon())
-            }
-        } else if (homeMarker) {
-            homeMarker.setMap(null)
-            homeMarker = null
-        }
-
+        updateMarkers()
         isTooltipOpen.value = false
     }
 )

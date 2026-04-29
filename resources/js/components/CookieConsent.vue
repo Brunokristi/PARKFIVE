@@ -140,7 +140,7 @@ defineExpose({ openModal })
     <transition name="toast">
       <div
         v-if="isOpen"
-        class="fixed bottom-8 right-8 z-[1000] w-[calc(100vw-2rem)] max-w-lg border flex flex-col overflow-hidden max-h-[calc(100vh-8rem)]"
+        class="fixed bottom-0 right-0 md:bottom-8 md:right-8 z-[1000] w-[calc(100vw-2rem)] max-w-lg border flex flex-col overflow-hidden max-h-[calc(100vh-8rem)]"
         :class="toastClass"
         role="dialog"
         aria-modal="true"
@@ -185,9 +185,9 @@ defineExpose({ openModal })
         </div>
 
         <!-- FOOTER -->
-        <div class="flex flex-col gap-2 border-t px-4 py-4">
-          <Button :text="t('cookies.policy.rejectAll')" :variant="contentVariant" @click="rejectAll" />
-          <Button :text="t('cookies.policy.acceptAll')" :variant="contentVariant" @click="acceptAll" />
+        <div class="flex flex-col gap-2 px-4 py-4 justify-end">
+          <Button :text="t('cookies.policy.rejectAll')" :variant="contentVariant" @click="rejectAll" align="end" />
+          <Button :text="t('cookies.policy.acceptAll')" :variant="contentVariant" @click="acceptAll" align="end" />
         </div>
       </div>
     </transition>

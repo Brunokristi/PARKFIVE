@@ -32,9 +32,15 @@ let timeoutId = null
 const isLight = computed(() => props.variant === 'light')
 
 const toastClass = computed(() =>
-  isLight.value
-    ? 'bg-lightcolor text-darkcolor border-darkcolor'
-    : 'bg-darkcolor text-lightcolor border-lightcolor'
+    isLight.value
+    ? 'bg-darkcolor text-lightcolor border-darkcolor'
+  : 'bg-lightcolor text-darkcolor border-lightcolor'
+)
+
+const closeButtonClass = computed(() =>
+    isLight.value
+    ? 'bg-lightcolor text-darkcolor border-lightcolor'
+    : 'bg-darkcolor text-lightcolor border-darkcolor'
 )
 
 function clearTimer() {
@@ -80,7 +86,7 @@ onBeforeUnmount(clearTimer)
     <transition name="toast">
       <div
         v-if="isVisible"
-        class="fixed bottom-4 right-4 z-[999] w-[calc(100vw-2rem)] max-w-sm border px-4 py-3"
+        class="fixed bottom-0 right-0 md:bottom-8 md:right-8 z-[999] w-[calc(100vw-2rem)] max-w-sm border px-4 py-3"
         :class="toastClass"
         role="status"
         aria-live="polite"
@@ -88,9 +94,7 @@ onBeforeUnmount(clearTimer)
         <button
           type="button"
           class="absolute right-0 top-0 flex h-7 w-7 items-center justify-center border cursor-pointer"
-          :class="isLight
-            ? 'bg-darkcolor text-lightcolor border-darkcolor'
-            : 'bg-lightcolor text-darkcolor border-lightcolor'"
+          :class="closeButtonClass"
           aria-label="Close toast"
           @click="closeToast"
         >
