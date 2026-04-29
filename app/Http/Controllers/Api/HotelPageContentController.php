@@ -45,7 +45,20 @@ class HotelPageContentController extends Controller
                 'slug' => $hotel->slug,
                 'name' => $hotel->name,
             ],
-            'content' => $pageContent->content_json,
+            'content' => $this->versionAssets($pageContent->content_json),
         ]);
+    }
+
+    private function versionAssets(array $content): array
+    {
+        if (isset($content['images']) && is_array($content['images'])) {
+            $content['images'] = array_map(function (array $image): array {
+                $image['src'] = $this->contentService->versionedAssetUrl($image['src'] ?? '');
+
+                return $image;
+            }, $content['images']);
+        }
+
+        return $content;
     }
 }

@@ -77,7 +77,9 @@ function localize(value?: string | LocalizedText) {
 }
 
 async function loadHotelContent() {
-    const response = await fetch(`/api/hotel/property?locale=${locale.value}`)
+  const response = await fetch(`/api/hotel/property?locale=${locale.value}`, {
+    cache: 'no-store',
+  })
 
     if (!response.ok) {
         throw new Error('Failed to load hotel property content')

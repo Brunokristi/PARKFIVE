@@ -6,7 +6,9 @@ export function useHotelPageContent<T>(pageKey: string) {
     const content = ref<T | null>(null)
 
     async function load() {
-        const response = await fetch(`/api/hotel/pages/${pageKey}?locale=${locale.value}`)
+        const response = await fetch(`/api/hotel/pages/${pageKey}?locale=${locale.value}`, {
+            cache: 'no-store',
+        })
 
         if (!response.ok) {
             throw new Error(`Failed to load ${pageKey} content`)

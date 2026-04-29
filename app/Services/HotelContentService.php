@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Hotel;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Collection;
 
 class HotelContentService
@@ -48,5 +49,22 @@ class HotelContentService
         $first = $translations->first();
 
         return $first?->{$field} ?? '';
+    }
+
+    public function versionedAssetUrl(string $path): string
+    {
+        if ($path === '' || ! str_starts_with($path, '/assets/')) {
+            return $path;
+        }
+
+        $publicPath = public_path(ltrim($path, '/'));
+
+        if (! File::exists($publicPath)) {
+            return $path;
+        }
+
+        $version = (string) File::lastModified($publicPath);
+
+        return $path.(str_contains($path, '?') ? '&' : '?').'v='.$version;
     }
 }

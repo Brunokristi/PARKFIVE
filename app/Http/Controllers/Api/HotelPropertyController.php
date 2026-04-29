@@ -61,7 +61,7 @@ class HotelPropertyController extends Controller
             'compareDescription' => $this->contentService->localizedObject($contentTranslations, 'compare_description'),
             'images' => $images->map(function ($image) {
                 return [
-                    'src' => $image->src,
+                    'src' => $this->contentService->versionedAssetUrl($image->src),
                     'alt' => $this->contentService->localizedObject($image->translations, 'alt'),
                 ];
             })->values(),

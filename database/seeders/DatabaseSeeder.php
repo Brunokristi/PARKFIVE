@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\Hotel;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -14,6 +16,15 @@ class DatabaseSeeder extends Seeder
         $hotel = Hotel::firstOrCreate(
             ['slug' => 'parkfive'],
             ['name' => 'parkFIVE', 'status' => 'active']
+        );
+
+        User::firstOrCreate(
+            ['email' => 'admin@parkfive.test'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('password'),
+                'is_admin' => true,
+            ]
         );
 
         $domains = [
