@@ -19,13 +19,17 @@ const routes = [
         },
     },
     {
-        path: '/room',
+        path: '/rooms/:slug',
         name: 'room',
         component: Room,
         meta: {
             theme: 'dark',
             footer: true,
         },
+    },
+    {
+        path: '/room',
+        redirect: '/rooms/standard',
     },
     {
         path: '/property',
